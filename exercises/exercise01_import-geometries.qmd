@@ -17,12 +17,12 @@ editor: source
 
 In this exercise, we will import and map the following datasets for [**Camden County, NJ**](https://en.wikipedia.org/wiki/Camden_County,_New_Jersey):
 
--   county boundary
--   census tracts (2020)
--   census blocks (2020)
--   zip code tabulation areas (ZCTAs) (2020)
--   municipalities
--   wards
+ - county boundary
+ - census tracts (2020)
+ - census blocks (2020)
+ - zip code tabulation areas (ZCTAs) (2020)
+ - municipalities
+ - wards
 
 As we import them, we will:
 
