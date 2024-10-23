@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <meta name="author" content=" Data for Democracy, Fall 2024 Andy Lyons" />
+  <meta name="copyright" content="<a href='https://ajlyons.github.io/d4d2024/' style='color:#444;'>https://ajlyons.github.io/d4d2024/</a>"/>
+  <title>DFD Pt3</title>
+  <style type="text/css">
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+            pre > code.sourceCode { white-space: pre; position: relative; }
+            pre > code.sourceCode > span { line-height: 1.25; }
+            pre > code.sourceCode > span:empty { height: 1.2em; }
+            .sourceCode { overflow: visible; }
+            code.sourceCode > span { color: inherit; text-decoration: inherit; }
+            div.sourceCode { margin: 1em 0; }
+            pre.sourceCode { margin: 0; }
+            @media screen {
+            div.sourceCode { overflow: auto; }
+            }
+            @media print {
+            pre > code.sourceCode { white-space: pre-wrap; }
+            pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+            }
+            pre.numberSource code
+              { counter-reset: source-line 0; }
+            pre.numberSource code > span
+              { position: relative; left: -4em; counter-increment: source-line; }
+            pre.numberSource code > span > a:first-child::before
+              { content: counter(source-line);
+                position: relative; left: -1em; text-align: right; vertical-align: baseline;
+                border: none; display: inline-block;
+                -webkit-touch-callout: none; -webkit-user-select: none;
+                -khtml-user-select: none; -moz-user-select: none;
+                -ms-user-select: none; user-select: none;
+                padding: 0 4px; width: 4em;
+                color: #aaaaaa;
+              }
+            pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+            div.sourceCode
+              {   }
+            @media screen {
+            pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+            }
+            code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+            code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+            code span.at { color: #7d9029; } /* Attribute */
+            code span.bn { color: #40a070; } /* BaseN */
+            code span.bu { color: #008000; } /* BuiltIn */
+            code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+            code span.ch { color: #4070a0; } /* Char */
+            code span.cn { color: #880000; } /* Constant */
+            code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+            code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+            code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+            code span.dt { color: #902000; } /* DataType */
+            code span.dv { color: #40a070; } /* DecVal */
+            code span.er { color: #ff0000; font-weight: bold; } /* Error */
+            code span.ex { } /* Extension */
+            code span.fl { color: #40a070; } /* Float */
+            code span.fu { color: #06287e; } /* Function */
+            code span.im { color: #008000; font-weight: bold; } /* Import */
+            code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+            code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+            code span.op { color: #666666; } /* Operator */
+            code span.ot { color: #007020; } /* Other */
+            code span.pp { color: #bc7a00; } /* Preprocessor */
+            code span.sc { color: #4070a0; } /* SpecialChar */
+            code span.ss { color: #bb6688; } /* SpecialString */
+            code span.st { color: #4070a0; } /* String */
+            code span.va { color: #19177c; } /* Variable */
+            code span.vs { color: #4070a0; } /* VerbatimString */
+            code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+          </style>
+  <style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <script src="lib/header-attrs-2.27/header-attrs.js"></script>
+  <link href="lib/slidy-2/styles/slidy.css" rel="stylesheet" />
+  <script src="lib/slidy-2/scripts/slidy.js"></script>
+  <script src="lib/slidy_shiny-1/slidy_shiny.js"></script>
+  <link rel="stylesheet" type="text/css" media="screen, projection, print"
+   href="slidy2022.css" />
+</head>
+<body>
+<div class="slide titlepage">
+  <h1 class="title">Analyzing Voter Turnout Data with R</h1>
+  <h1 class="subtitle">Part 3: Importing Census Data</h1>
+  <p class="author">
+<img src='images/savi-logo_500x130.jpg' style='width:500px; height:130px; margin-top:0.5em; margin-bottom:1em;'/><br/>Data
+for Democracy, Fall 2024<br/>Andy Lyons
+  </p>
+  <p class="date"><a href='https://ajlyons.github.io/d4d2024/' style='color:darkgreen; font-size:105%; font-family:monospace;'>https://ajlyons.github.io/d4d2024/</a></p>
+</div>
+<div class="slide section level1">
+
+<script>
+w3c_slidy.mouse_click_enabled = false;
+</script>
+<p><br />
+</p>
+<p><br />
+</p>
+<p><img src="images/postit_bg-trans_with-note_320x320.png"
+style="display:block; margin:1em auto; border:none;" /></p>
+<p><br />
+</p>
+</div>
+<div id="outline" class="slide section level1">
+<h1>Outline</h1>
+<div class="compact">
+<ul>
+<li>tidyCensus</li>
+<li>finding variables</li>
+<li><span class="exercise">Exercise 3. Importing Data from the Decennial
+and ACS Census</span></li>
+</ul>
+</div>
+<p><br />
+</p>
+</div>
+<div id="tidycensus" class="slide section level1">
+<h1>tidycensus</h1>
+<p><img src="images/tidycensus_logo_240x278.png"
+style="float:right;" /></p>
+<p><a
+href="https://walker-data.com/tidycensus/"><code>tidycensus</code></a>
+(Kyle Walker and Matt Herman) is an R package that allows users to
+<strong>request data from the US Census Bureau</strong> APIs.</p>
+<h2 id="highlights">Highlights</h2>
+<div class="indented2 li-single">
+<ul>
+<li>import US Census datasets into R using the census API<br />
+</li>
+<li>a census API key is required (free, <a
+href="https://api.census.gov/data/key_signup.html">https://api.census.gov/data/key_signup.html</a>)<br />
+</li>
+<li>get data back in tidyverse-friendly dataframes (long or wide), or
+<code>sf</code> objects</li>
+<li>get multiple variables at once; ask for a summary variable (i.e.,
+total population)<br />
+</li>
+<li>well-supported including tutorials, workshop recordings, a <a
+href="(https://walker-data.com/census-r/)">book</a>, and other
+resources</li>
+</ul>
+</div>
+<p><br />
+</p>
+<h2 id="main-functions">Main functions</h2>
+<div class="indented2">
+<p><code>get_decennial()</code>. Decennial Census</p>
+<p><code>get_acs()</code>. American Community Survey 1-year and 5-year
+summaries</p>
+<p><code>get_estimates()</code>. Population estimates</p>
+</div>
+<p><br />
+</p>
+</div>
+<div id="example" class="slide section level1">
+<h1>Example</h1>
+<p>Our goal here is to make a map showing the <strong>percentage of
+renter occupied housing units</strong> for Alachua County FL by Census
+Tract.</p>
+<h2 id="step-1.-get-the-data">Step 1. Get the data</h2>
+<p>We’ll request data from the 2020 Decennial Census for the following
+variables:</p>
+<div class="indented2">
+<p><code>H1_001N</code>: total housing units<br />
+<code>H1_003N</code>: renter-occupied housing units</p>
+</div>
+<div class="indented2 indented2r">
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(tidycensus)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="co"># census_api_key(&quot;YOUR KEY GOES HERE&quot;, install = TRUE)</span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>alch_rntr_hsng_num_sf <span class="ot">&lt;-</span> <span class="fu">get_decennial</span>(<span class="at">geography =</span> <span class="st">&quot;tract&quot;</span>, </span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>                                                <span class="at">variables =</span> <span class="st">&quot;H1_003N&quot;</span>, </span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>                                                <span class="at">state =</span> <span class="st">&quot;FL&quot;</span>, </span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>                                                <span class="at">county =</span> <span class="st">&quot;Alachua&quot;</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a>                                                <span class="at">geometry =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a>                                                <span class="at">progress_bar =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a><span class="do">## Preview</span></span>
+<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a><span class="fu">head</span>(alch_rntr_hsng_num_sf)</span></code></pre></div>
+<pre><code>## Simple feature collection with 6 features and 4 fields
+## Geometry type: MULTIPOLYGON
+## Dimension:     XY
+## Bounding box:  xmin: -82.44682 ymin: 29.59316 xmax: -82.28928 ymax: 29.68903
+## Geodetic CRS:  NAD83
+## # A tibble: 6 × 5
+##   GEOID       NAME                      variable value                  geometry
+##   &lt;chr&gt;       &lt;chr&gt;                     &lt;chr&gt;    &lt;dbl&gt;        &lt;MULTIPOLYGON [°]&gt;
+## 1 12001000400 Census Tract 4, Alachua … H1_003N    171 (((-82.32413 29.66919, -…
+## 2 12001110800 Census Tract 1108, Alach… H1_003N    131 (((-82.37101 29.60378, -…
+## 3 12001002218 Census Tract 22.18, Alac… H1_003N    151 (((-82.42245 29.63678, -…
+## 4 12001001522 Census Tract 15.22, Alac… H1_003N    539 (((-82.39578 29.63124, -…
+## 5 12001001701 Census Tract 17.01, Alac… H1_003N    414 (((-82.4391 29.68895, -8…
+## 6 12001001000 Census Tract 10, Alachua… H1_003N    345 (((-82.37246 29.65214, -…</code></pre>
+<p><br />
+</p>
+<h2 id="step-2-map-the-results">Step 2: Map the results</h2>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="fu">ggplot</span>(alch_rntr_hsng_num_sf, <span class="fu">aes</span>(<span class="at">fill =</span> value)) <span class="sc">+</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>  <span class="fu">geom_sf</span>() <span class="sc">+</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Renter-Occupied Housing Units (number)&quot;</span>, </span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">&quot;Alachua County FL, 2020 Decennial Census, by Tract&quot;</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">&quot;Renter-Occupied Housing Units (number)&quot;</span>) <span class="sc">+</span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>  <span class="fu">scale_fill_distiller</span>(<span class="at">palette =</span> <span class="st">&quot;Purples&quot;</span>, <span class="at">direction =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>  <span class="fu">theme_void</span>()</span></code></pre></div>
+<p><img src="slides_03_files/figure-slidy/unnamed-chunk-11-1.png" width="768" style="display: block; margin: auto;" /></p>
+</div>
+<p><br />
+</p>
+<h2 id="step-3-get-the-data-with-a-summary-variable">Step 3: Get the
+data with a summary variable</h2>
+<p>To get the percentage of units that are renter-occupied, we add a
+<strong>summary variable</strong>:</p>
+<div class="indented2 indented2r">
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>alch_rntr_hsng_pct_sf <span class="ot">&lt;-</span> <span class="fu">get_decennial</span>(<span class="at">geography =</span> <span class="st">&quot;tract&quot;</span>, </span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>                                                <span class="at">variables =</span> <span class="st">&quot;H1_003N&quot;</span>, </span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>                                                <span class="at">summary_var =</span> <span class="st">&quot;H1_001N&quot;</span>, </span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>                                                <span class="at">state =</span> <span class="st">&quot;FL&quot;</span>, </span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>                                                <span class="at">county =</span> <span class="st">&quot;Alachua&quot;</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>                                                <span class="at">geometry =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a>                                                <span class="at">progress_bar =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">rntr_hsng_pct =</span> value <span class="sc">/</span> summary_value)</span></code></pre></div>
+<pre><code>## Getting data from the 2020 decennial Census</code></pre>
+<pre><code>## Downloading feature geometry from the Census website.  To cache shapefiles for use in future sessions, set `options(tigris_use_cache = TRUE)`.</code></pre>
+<pre><code>## Using the PL 94-171 Redistricting Data Summary File</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="do">## Preview</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="fu">head</span>(alch_rntr_hsng_pct_sf)</span></code></pre></div>
+<pre><code>## Simple feature collection with 6 features and 6 fields
+## Geometry type: MULTIPOLYGON
+## Dimension:     XY
+## Bounding box:  xmin: -82.44682 ymin: 29.59316 xmax: -82.28928 ymax: 29.68903
+## Geodetic CRS:  NAD83
+## # A tibble: 6 × 7
+##   GEOID       NAME        variable value summary_value                  geometry
+##   &lt;chr&gt;       &lt;chr&gt;       &lt;chr&gt;    &lt;dbl&gt;         &lt;dbl&gt;        &lt;MULTIPOLYGON [°]&gt;
+## 1 12001000400 Census Tra… H1_003N    171          2288 (((-82.32413 29.66919, -…
+## 2 12001110800 Census Tra… H1_003N    131          1042 (((-82.37101 29.60378, -…
+## 3 12001002218 Census Tra… H1_003N    151          1208 (((-82.42245 29.63678, -…
+## 4 12001001522 Census Tra… H1_003N    539          4620 (((-82.39578 29.63124, -…
+## 5 12001001701 Census Tra… H1_003N    414          3673 (((-82.4391 29.68895, -8…
+## 6 12001001000 Census Tra… H1_003N    345          3725 (((-82.37246 29.65214, -…
+## # ℹ 1 more variable: rntr_hsng_pct &lt;dbl&gt;</code></pre>
+<p><br />
+</p>
+<h2 id="step-4-map-the-results">Step 4: Map the results</h2>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">ggplot</span>(alch_rntr_hsng_pct_sf, <span class="fu">aes</span>(<span class="at">fill =</span> rntr_hsng_pct)) <span class="sc">+</span></span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>  <span class="fu">geom_sf</span>() <span class="sc">+</span></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Renter-Occupied Housing Units (percent)&quot;</span>, </span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">&quot;Alachua County FL, 2020 Decennial Census, by Tract&quot;</span>,</span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">&quot;Renter-Occupied Housing Units (percent)&quot;</span>) <span class="sc">+</span></span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a>  <span class="fu">scale_fill_distiller</span>(<span class="at">palette =</span> <span class="st">&quot;Blues&quot;</span>, <span class="at">labels=</span>scales<span class="sc">::</span>percent, <span class="at">direction =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a>  <span class="fu">theme_void</span>()</span></code></pre></div>
+<p><img src="slides_03_files/figure-slidy/unnamed-chunk-13-1.png" width="768" style="display: block; margin: auto;" /></p>
+</div>
+<p><br />
+</p>
+<p><br />
+</p>
+</div>
+<div id="exercise-3-importing-data-from-the-decennial-and-acs-census"
+class="slide section level1">
+<h1>Exercise 3: Importing Data from the Decennial and ACS Census</h1>
+<p>In this exercise, we will:</p>
+<div class="indented1 compact">
+<ol style="list-style-type: decimal">
+<li>import the 2020 voting tabulation districts (VTDs) for Camden County
+NJ from a Shapefile<br />
+</li>
+<li>import a CSV with voter turnout data from the 2020 primary
+election<br />
+</li>
+<li>join the tabular voter turnout data to the VTD polygons<br />
+</li>
+<li>save the data to disk (for use in other exercises)<br />
+</li>
+<li>map the voter turnout for the July 2020 primary<br />
+</li>
+<li>reshape the attribute table from a wide to long format<br />
+</li>
+<li>create facet maps (i.e., one map for each subset of the data)</li>
+</ol>
+</div>
+<p><br />
+</p>
+<div style="text-align:center; font-family:monospace; font-size:150%;">
+<p><a
+href="https://posit.cloud/content/8521414">https://posit.cloud/content/8521414</a></p>
+</div>
+</div>
+<div id="break" class="slide section level1">
+<h1>Break!</h1>
+<p><img src="images/stretch-break-1130x590x256.png"
+style="display:block; margin:1em auto; border:none;" /></p>
+</div>
+
+  <!-- dynamically load mathjax for compatibility with self-contained -->
+  <script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script>
+
+</body>
+</html>

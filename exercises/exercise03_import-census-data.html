@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Exercise 3. Importing Data from the Decennial and ACS Census</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+<script src="exercise03_import-census-data_files/libs/clipboard/clipboard.min.js"></script>
+<script src="exercise03_import-census-data_files/libs/quarto-html/quarto.js"></script>
+<script src="exercise03_import-census-data_files/libs/quarto-html/popper.min.js"></script>
+<script src="exercise03_import-census-data_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="exercise03_import-census-data_files/libs/quarto-html/anchor.min.js"></script>
+<link href="exercise03_import-census-data_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="exercise03_import-census-data_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="exercise03_import-census-data_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="exercise03_import-census-data_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="exercise03_import-census-data_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><link href="exercise03_import-census-data_files/libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="exercise03_import-census-data_files/libs/pagedtable-1.1/js/pagedtable.js"></script>
+</head>
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="2"><h2 id="toc-title">Table of contents</h2>
+   
+  <ul class="collapse">
+<li><a href="#summary" id="toc-summary" class="nav-link active" data-scroll-target="#summary"><span class="header-section-number">1</span> Summary</a></li>
+  <li>
+<a href="#setup" id="toc-setup" class="nav-link" data-scroll-target="#setup"><span class="header-section-number">2</span> Setup</a>
+  <ul class="collapse">
+<li><a href="#load-the-packages-we-need" id="toc-load-the-packages-we-need" class="nav-link" data-scroll-target="#load-the-packages-we-need"><span class="header-section-number">2.1</span> Load the packages we need:</a></li>
+  <li><a href="#load-our-census-api-key" id="toc-load-our-census-api-key" class="nav-link" data-scroll-target="#load-our-census-api-key"><span class="header-section-number">2.2</span> Load our census API key</a></li>
+  <li><a href="#define-the-common-directory-for-local-copies" id="toc-define-the-common-directory-for-local-copies" class="nav-link" data-scroll-target="#define-the-common-directory-for-local-copies"><span class="header-section-number">2.3</span> Define the common directory for local copies:</a></li>
+  <li><a href="#import-the-county-boundary-for-plotting" id="toc-import-the-county-boundary-for-plotting" class="nav-link" data-scroll-target="#import-the-county-boundary-for-plotting"><span class="header-section-number">2.4</span> Import the county boundary for plotting:</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#import-decennial-census-variables" id="toc-import-decennial-census-variables" class="nav-link" data-scroll-target="#import-decennial-census-variables"><span class="header-section-number">3</span> Import Decennial Census Variables</a>
+  <ul class="collapse">
+<li><a href="#map-the-results" id="toc-map-the-results" class="nav-link" data-scroll-target="#map-the-results"><span class="header-section-number">3.1</span> Map the results</a></li>
+  <li><a href="#finding-the-right-variable-name" id="toc-finding-the-right-variable-name" class="nav-link" data-scroll-target="#finding-the-right-variable-name"><span class="header-section-number">3.2</span> Finding the right variable name</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#getting-data-from-the-acs" id="toc-getting-data-from-the-acs" class="nav-link" data-scroll-target="#getting-data-from-the-acs"><span class="header-section-number">4</span> Getting data from the ACS</a>
+  <ul class="collapse">
+<li><a href="#map-results" id="toc-map-results" class="nav-link" data-scroll-target="#map-results"><span class="header-section-number">4.1</span> Map results</a></li>
+  <li><a href="#challenge" id="toc-challenge" class="nav-link" data-scroll-target="#challenge"><span class="header-section-number">4.2</span> CHALLENGE</a></li>
+  </ul>
+</li>
+  <li><a href="#done" id="toc-done" class="nav-link" data-scroll-target="#done"><span class="header-section-number">5</span> DONE!</a></li>
+  </ul></nav>
+</div>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<h1 class="title">Exercise 3. Importing Data from the Decennial and ACS Census</h1>
+<p class="subtitle lead">Population Profiling with R, August 2024</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header><section id="summary" class="level1" data-number="1"><h1 data-number="1">
+<span class="header-section-number">1</span> Summary</h1>
+<p>In this notebook, we will:</p>
+<ul>
+<li>import data from the Decennial and American Community Survey censuses using <code>tidyCensus</code><br>
+</li>
+<li>learn how to identify which variables to ask for</li>
+<li>make a map of total voting age population by Census Tract</li>
+</ul>
+<p><br></p>
+</section><section id="setup" class="level1" data-number="2"><h1 data-number="2">
+<span class="header-section-number">2</span> Setup</h1>
+<section id="load-the-packages-we-need" class="level2" data-number="2.1"><h2 data-number="2.1" class="anchored" data-anchor-id="load-the-packages-we-need">
+<span class="header-section-number">2.1</span> Load the packages we need:</h2>
+<div class="cell">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://walker-data.com/tidycensus/">tidycensus</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><br></p>
+</section><section id="load-our-census-api-key" class="level2" data-number="2.2"><h2 data-number="2.2" class="anchored" data-anchor-id="load-our-census-api-key">
+<span class="header-section-number">2.2</span> Load our census API key</h2>
+<div class="callout callout-style-default callout-tip callout-titled" title="Managing Your Census API Key">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Managing Your Census API Key
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>To get your own Census API Key, sign-up here: <a href="http://api.census.gov/data/key_signup.html" class="uri">http://api.census.gov/data/key_signup.html</a></p>
+<p>To protect your key from accidental escape, it’s better to put it in .Renviron (<code><a href="https://usethis.r-lib.org/reference/edit.html">usethis::edit_r_environ()</a></code>) and bring it into your script with <code>Sys.getenv("WHAT-YOU-NAMED-IT")</code>.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Use one of the following to enter your Census API Key</span></span>
+<span></span>
+<span><span class="co">## Bring it in as an environment variable</span></span>
+<span><span class="va">my_census_api_key</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html">Sys.getenv</a></span><span class="op">(</span><span class="st">"CENSUS_API_KEY"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## Bring it in as an external text file</span></span>
+<span><span class="co">## my_census_api_key &lt;- readLines(here::here("./exercises/my-census-api-key.txt"), 1)</span></span>
+<span></span>
+<span><span class="co">## Hardcode it</span></span>
+<span><span class="co">## my_census_api_key &lt;- "1234567890abcdefg"</span></span>
+<span></span>
+<span><span class="fu">tidycensus</span><span class="fu">::</span><span class="fu"><a href="https://walker-data.com/tidycensus/reference/census_api_key.html">census_api_key</a></span><span class="op">(</span><span class="va">my_census_api_key</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>To install your API key for use in future sessions, run this function with `install = TRUE`.</code></pre>
+</div>
+</div>
+<p><br></p>
+</section><section id="define-the-common-directory-for-local-copies" class="level2" data-number="2.3"><h2 data-number="2.3" class="anchored" data-anchor-id="define-the-common-directory-for-local-copies">
+<span class="header-section-number">2.3</span> Define the common directory for local copies:</h2>
+<div class="cell">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">my_data_dir</span> <span class="op">&lt;-</span> <span class="fu">tools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/tools/userdir.html">R_user_dir</a></span><span class="op">(</span><span class="st">"datafordemocracy"</span>, which <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/files2.html">dir.exists</a></span><span class="op">(</span><span class="va">my_data_dir</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/files2.html">dir.create</a></span><span class="op">(</span><span class="va">my_data_dir</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu">tools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/tools/fileutils.html">file_path_as_absolute</a></span><span class="op">(</span><span class="va">my_data_dir</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "C:/Users/Andy/AppData/Roaming/R/data/R/datafordemocracy"</code></pre>
+</div>
+</div>
+<p><br></p>
+</section><section id="import-the-county-boundary-for-plotting" class="level2" data-number="2.4"><h2 data-number="2.4" class="anchored" data-anchor-id="import-the-county-boundary-for-plotting">
+<span class="header-section-number">2.4</span> Import the county boundary for plotting:</h2>
+<div class="cell">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">camden_bnd_sf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">my_data_dir</span>, <span class="st">"camden_bnd_sf.Rds"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section></section><section id="import-decennial-census-variables" class="level1" data-number="3"><h1 data-number="3">
+<span class="header-section-number">3</span> Import Decennial Census Variables</h1>
+<p>The decennial census provides a complete count of the population, and many of the variables are available down to the small spatial unit (block). That being said, the number of variables are quite limited, focused on age and race.</p>
+<p>You can get Decennial census variables with <code><a href="https://walker-data.com/tidycensus/reference/get_decennial.html">tidycensus::get_decennial()</a></code>. Example:</p>
+<div class="cell">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Get the total population and population of voting age per block</span></span>
+<span><span class="va">camden_pop20_blk_sf</span> <span class="op">&lt;-</span> <span class="fu">tidycensus</span><span class="fu">::</span><span class="fu"><a href="https://walker-data.com/tidycensus/reference/get_decennial.html">get_decennial</a></span><span class="op">(</span></span>
+<span>  geography <span class="op">=</span> <span class="st">"block"</span>,</span>
+<span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>total_pop <span class="op">=</span> <span class="st">"P1_001N"</span>, voting_age_pop <span class="op">=</span> <span class="st">"P4_001N"</span><span class="op">)</span>,</span>
+<span>  year <span class="op">=</span> <span class="fl">2020</span>,</span>
+<span>  sumfile <span class="op">=</span> <span class="st">"pl"</span>,</span>
+<span>  state <span class="op">=</span> <span class="st">"NJ"</span>,</span>
+<span>  county <span class="op">=</span> <span class="st">"Camden"</span>,</span>
+<span>  output <span class="op">=</span> <span class="st">"wide"</span>,</span>
+<span>  geometry <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  progress_bar <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Getting data from the 2020 decennial Census</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Downloading feature geometry from the Census website.  To cache shapefiles for use in future sessions, set `options(tigris_use_cache = TRUE)`.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Using the PL 94-171 Redistricting Data Summary File</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Note: 2020 decennial Census data use differential privacy, a technique that
+introduces errors into data to preserve respondent confidentiality.
+ℹ Small counts should be interpreted with caution.
+ℹ See https://www.census.gov/library/fact-sheets/2021/protecting-the-confidentiality-of-the-2020-census-redistricting-data.html for additional guidance.
+This message is displayed once per session.</code></pre>
+</div>
+</div>
+<p><br></p>
+<div class="callout callout-style-default callout-note callout-titled" title="Arguments for `tidycensus::get_decennial()`">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Arguments for <code><a href="https://walker-data.com/tidycensus/reference/get_decennial.html">tidycensus::get_decennial()</a></code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>
+<code>year</code> - if you don’t specify the year, it will default to the most recent</li>
+<li>
+<code>state = "NJ"</code> and <code>county = "Camden"</code> - these aren’t just for convenience, you <em>must</em> reduce your geography to get back data at the block level</li>
+<li>
+<code>geography = "block"</code> - block groups are the small spatial unit, and not every variable is available at this scale. In general, estimates for the larger areas are more trustworthy.</li>
+<li>
+<code>variables = c(total_pop = "P1_001N", voting_age_pop = "P4_001N")</code> - by passing a named vector for the variables argument, the human-friendly labels will be used instead of the cryptic census variables</li>
+<li>
+<code>geometry = TRUE</code> - return a sf object</li>
+<li>
+<code>output = "wide"</code> - put each variable in its own column (this is what you want if you are asking for a sf object back)</li>
+</ul>
+</div>
+</div>
+<p><br></p>
+<p>View what we imported:</p>
+<div class="cell">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">camden_pop20_blk_sf</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 8770    5</code></pre>
+</div>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">camden_pop20_blk_sf</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["GEOID"],"name":[1],"type":["chr"],"align":["left"]},{"label":["NAME"],"name":[2],"type":["chr"],"align":["left"]},{"label":["total_pop"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["voting_age_pop"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["geometry"],"name":[5],"type":["s_MULTIP"],"align":["right"]}],"data":[{"1":"340076113002020","2":"Block 2020, Block Group 2, Census Tract 6113, Camden County, New Jersey","3":"65","4":"63","5":"<s_MULTIP>"},{"1":"340076087004029","2":"Block 4029, Block Group 4, Census Tract 6087, Camden County, New Jersey","3":"0","4":"0","5":"<s_MULTIP>"},{"1":"340076075051009","2":"Block 1009, Block Group 1, Census Tract 6075.05, Camden County, New Jersey","3":"76","4":"64","5":"<s_MULTIP>"},{"1":"340076075032008","2":"Block 2008, Block Group 2, Census Tract 6075.03, Camden County, New Jersey","3":"37","4":"28","5":"<s_MULTIP>"},{"1":"340076109001000","2":"Block 1000, Block Group 1, Census Tract 6109, Camden County, New Jersey","3":"0","4":"0","5":"<s_MULTIP>"},{"1":"340076064004018","2":"Block 4018, Block Group 4, Census Tract 6064, Camden County, New Jersey","3":"25","4":"13","5":"<s_MULTIP>"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p><br></p>
+<section id="map-the-results" class="level2" data-number="3.1"><h2 data-number="3.1" class="anchored" data-anchor-id="map-the-results">
+<span class="header-section-number">3.1</span> Map the results</h2>
+<div class="cell">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">camden_pop20_blk_sf</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">voting_age_pop</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf</a></span><span class="op">(</span>col <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">camden_bnd_sf</span>, fill <span class="op">=</span> <span class="cn">NA</span>, lwd <span class="op">=</span> <span class="fl">1.2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_fill_distiller</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Oranges"</span>, direction <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Voting Age Population by Block"</span>, </span>
+<span>       subtitle <span class="op">=</span> <span class="st">"Camden County NJ, 2020 Decennial Census"</span>,</span>
+<span>       fill <span class="op">=</span> <span class="st">"Voting Age Population"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_void</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="exercise03_import-census-data_files/figure-html/chunk07-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><br></p>
+</section><section id="finding-the-right-variable-name" class="level2" data-number="3.2"><h2 data-number="3.2" class="anchored" data-anchor-id="finding-the-right-variable-name">
+<span class="header-section-number">3.2</span> Finding the right variable name</h2>
+<p>Census datasets have 100s (if not 1000s) of variable names. Finding the right one is not trivial. In addition to finding the right variable, not all variables are available for all years and geographies. To make matters even worse, they often change with each new census.</p>
+<section id="approach-1." class="level3"><h3 class="anchored" data-anchor-id="approach-1.">Approach 1.</h3>
+<p><code>tidyCensus</code> has a <code><a href="https://walker-data.com/tidycensus/reference/load_variables.html">tidycensus::load_variables()</a></code> function that downloads the variable tables and returns them as a data frame. You can open this data frame in a RStudio View pane and use the sort and filter buttons to find the variable you’re interested in.</p>
+<div class="cell">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Detailed Tables: </span></span>
+<span><span class="fu"><a href="https://walker-data.com/tidycensus/reference/load_variables.html">load_variables</a></span><span class="op">(</span><span class="fl">2020</span>, <span class="st">"acs5"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Data Profile: </span></span>
+<span><span class="fu"><a href="https://walker-data.com/tidycensus/reference/load_variables.html">load_variables</a></span><span class="op">(</span><span class="fl">2020</span>, <span class="st">"acs5/profile"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Subject Tables: </span></span>
+<span><span class="fu"><a href="https://walker-data.com/tidycensus/reference/load_variables.html">load_variables</a></span><span class="op">(</span><span class="fl">2020</span>, <span class="st">"acs5/subject"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="approach-2" class="level3"><h3 class="anchored" data-anchor-id="approach-2">Approach 2</h3>
+<p>ChatGPT does a pretty good job at finding variables, provided you ask her a clear question. Remember to cross-check the answer!</p>
+<p><strong>Qtn.</strong> <em>Which variable from the US Census 2018-2022 ACS measures median household income at the tract level?</em></p>
+<p><strong>ChatGPT:</strong></p>
+<div style="color:#555; margin-left:1em; font-style:italic;">
+<p>The census variable from the 5-year American Community Survey (ACS) that measures median household income at the tract level is <strong>B19013_001E</strong>.</p>
+<p>This variable represents the estimated median household income in the past 12 months (in inflation-adjusted dollars) for a given geographic area, such as a census tract.</p>
+</div>
+</section></section></section><section id="getting-data-from-the-acs" class="level1" data-number="4"><h1 data-number="4">
+<span class="header-section-number">4</span> Getting data from the ACS</h1>
+<p>The American Community Survey Data from the US Census has many more interesting variables. Unfortunately, these variables are based on an sample so they are not as precise as the decennial census variables. ACS data should be thought of as estimates, and the margin-of-error is return.</p>
+<p>Another limitation of ACS data is that most of the variables are not available at the small spatial areas (due to the sampling methodology), and may only be available for the 5-year summaries (although 1 and 3-year summaries are available also for some variables and some geographies).</p>
+<p>Import median household income by census tract:</p>
+<div class="cell">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">camden_medhhinc22_trct_sf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://walker-data.com/tidycensus/reference/get_acs.html">get_acs</a></span><span class="op">(</span></span>
+<span>  geography <span class="op">=</span> <span class="st">"tract"</span>,</span>
+<span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>median_hh_income <span class="op">=</span> <span class="st">"B19013_001E"</span><span class="op">)</span>,</span>
+<span>  state <span class="op">=</span> <span class="st">"NJ"</span>,</span>
+<span>  county <span class="op">=</span> <span class="st">"Camden"</span>,</span>
+<span>  geometry <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  output <span class="op">=</span> <span class="st">"wide"</span>,</span>
+<span>  progress_bar <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Getting data from the 2018-2022 5-year ACS</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Downloading feature geometry from the Census website.  To cache shapefiles for use in future sessions, set `options(tigris_use_cache = TRUE)`.</code></pre>
+</div>
+</div>
+<p>Inspect results:</p>
+<div class="cell">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">camden_medhhinc22_trct_sf</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["GEOID"],"name":[1],"type":["chr"],"align":["left"]},{"label":["NAME"],"name":[2],"type":["chr"],"align":["left"]},{"label":["median_hh_income"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["B19013_001M"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["geometry"],"name":[5],"type":["s_MULTIP"],"align":["right"]}],"data":[{"1":"34007603700","2":"Census Tract 6037; Camden County; New Jersey","3":"76992","4":"28772","5":"<s_MULTIP>","_rn_":"1"},{"1":"34007605300","2":"Census Tract 6053; Camden County; New Jersey","3":"58288","4":"15131","5":"<s_MULTIP>","_rn_":"2"},{"1":"34007607300","2":"Census Tract 6073; Camden County; New Jersey","3":"74295","4":"13795","5":"<s_MULTIP>","_rn_":"3"},{"1":"34007600900","2":"Census Tract 6009; Camden County; New Jersey","3":"28198","4":"3390","5":"<s_MULTIP>","_rn_":"4"},{"1":"34007603603","2":"Census Tract 6036.03; Camden County; New Jersey","3":"139028","4":"10718","5":"<s_MULTIP>","_rn_":"5"},{"1":"34007608303","2":"Census Tract 6083.03; Camden County; New Jersey","3":"81833","4":"24687","5":"<s_MULTIP>","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p><br></p>
+<section id="map-results" class="level2" data-number="4.1"><h2 data-number="4.1" class="anchored" data-anchor-id="map-results">
+<span class="header-section-number">4.1</span> Map results</h2>
+<p>Map the Results:</p>
+<div class="cell">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">camden_medhhinc22_trct_sf</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">median_hh_income</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">camden_bnd_sf</span>, fill <span class="op">=</span> <span class="cn">NA</span>, lwd <span class="op">=</span> <span class="fl">1.2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_fill_distiller</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Purples"</span>, direction <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Median Household Income by Census Tract"</span>, </span>
+<span>       subtitle <span class="op">=</span> <span class="st">"Camden County NJ, Estimate from the 5-Year 2018-2022 ACS"</span>,</span>
+<span>       fill <span class="op">=</span> <span class="st">"Median HH Value"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_void</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="exercise03_import-census-data_files/figure-html/chunk11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><br></p>
+<p>Save to disk:</p>
+<div class="cell">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">saveRDS</a></span><span class="op">(</span><span class="va">camden_medhhinc22_trct_sf</span>, <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">my_data_dir</span>, <span class="st">"camden_medhhinc22_trct_sf.Rds"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><br></p>
+</section><section id="challenge" class="level2" data-number="4.2"><h2 data-number="4.2" class="anchored" data-anchor-id="challenge">
+<span class="header-section-number">4.2</span> CHALLENGE</h2>
+<ol type="1">
+<li><p>Think of a variable of interest to your work that might have been collected on the American Community Survey (e.g., home ownership).</p></li>
+<li><p>Ask <a href="https://chat.openai.com/">ChatGPT</a> what ACS variable measures it. Be sure to specify which ACS census product (e.g., the 2018-2022 5-year Summary), and cross-check the result with Google.</p></li>
+<li><p>Import that variable at the census tract level for a county of your choice, and plot it.</p></li>
+</ol>
+<p><br></p>
+</section></section><section id="done" class="level1" data-number="5"><h1 data-number="5">
+<span class="header-section-number">5</span> DONE!</h1>
+</section></main><!-- /main column --><script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

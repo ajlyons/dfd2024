@@ -1,0 +1,1501 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <meta name="author" content=" Data for Democracy, Fall 2024 Andy Lyons" />
+  <meta name="copyright" content="<a href='https://ajlyons.github.io/d4d2024/' style='color:#444;'>https://ajlyons.github.io/d4d2024/</a>"/>
+  <title>DFD Pt1</title>
+  <style type="text/css">
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+            pre > code.sourceCode { white-space: pre; position: relative; }
+            pre > code.sourceCode > span { line-height: 1.25; }
+            pre > code.sourceCode > span:empty { height: 1.2em; }
+            .sourceCode { overflow: visible; }
+            code.sourceCode > span { color: inherit; text-decoration: inherit; }
+            div.sourceCode { margin: 1em 0; }
+            pre.sourceCode { margin: 0; }
+            @media screen {
+            div.sourceCode { overflow: auto; }
+            }
+            @media print {
+            pre > code.sourceCode { white-space: pre-wrap; }
+            pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+            }
+            pre.numberSource code
+              { counter-reset: source-line 0; }
+            pre.numberSource code > span
+              { position: relative; left: -4em; counter-increment: source-line; }
+            pre.numberSource code > span > a:first-child::before
+              { content: counter(source-line);
+                position: relative; left: -1em; text-align: right; vertical-align: baseline;
+                border: none; display: inline-block;
+                -webkit-touch-callout: none; -webkit-user-select: none;
+                -khtml-user-select: none; -moz-user-select: none;
+                -ms-user-select: none; user-select: none;
+                padding: 0 4px; width: 4em;
+                color: #aaaaaa;
+              }
+            pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+            div.sourceCode
+              {   }
+            @media screen {
+            pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+            }
+            code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+            code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+            code span.at { color: #7d9029; } /* Attribute */
+            code span.bn { color: #40a070; } /* BaseN */
+            code span.bu { color: #008000; } /* BuiltIn */
+            code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+            code span.ch { color: #4070a0; } /* Char */
+            code span.cn { color: #880000; } /* Constant */
+            code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+            code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+            code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+            code span.dt { color: #902000; } /* DataType */
+            code span.dv { color: #40a070; } /* DecVal */
+            code span.er { color: #ff0000; font-weight: bold; } /* Error */
+            code span.ex { } /* Extension */
+            code span.fl { color: #40a070; } /* Float */
+            code span.fu { color: #06287e; } /* Function */
+            code span.im { color: #008000; font-weight: bold; } /* Import */
+            code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+            code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+            code span.op { color: #666666; } /* Operator */
+            code span.ot { color: #007020; } /* Other */
+            code span.pp { color: #bc7a00; } /* Preprocessor */
+            code span.sc { color: #4070a0; } /* SpecialChar */
+            code span.ss { color: #bb6688; } /* SpecialString */
+            code span.st { color: #4070a0; } /* String */
+            code span.va { color: #19177c; } /* Variable */
+            code span.vs { color: #4070a0; } /* VerbatimString */
+            code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+          </style>
+  <style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <script src="lib/header-attrs-2.27/header-attrs.js"></script>
+  <link href="lib/slidy-2/styles/slidy.css" rel="stylesheet" />
+  <script src="lib/slidy-2/scripts/slidy.js"></script>
+  <script src="lib/slidy_shiny-1/slidy_shiny.js"></script>
+  <link rel="stylesheet" type="text/css" media="screen, projection, print"
+   href="slidy2022.css" />
+</head>
+<body>
+<div class="slide titlepage">
+  <h1 class="title">Analyzing Voter Turnout Data with R</h1>
+  <h1 class="subtitle">Part 1: Data Wrangling and Geospatial
+Fundamentals</h1>
+  <p class="author">
+<img src='images/savi-logo_500x130.jpg' style='width:500px; height:130px; margin-top:0.5em; margin-bottom:1em;'/><br/>Data
+for Democracy, Fall 2024<br/>Andy Lyons
+  </p>
+  <p class="date"><a href='https://ajlyons.github.io/d4d2024/' style='color:darkgreen; font-size:105%; font-family:monospace;'>https://ajlyons.github.io/d4d2024/</a></p>
+</div>
+<div class="slide section level1">
+
+<script>
+w3c_slidy.mouse_click_enabled = false;
+</script>
+<p><br />
+</p>
+<p><br />
+</p>
+<p><img src="images/postit_bg-trans_with-note_320x320.png"
+style="display:block; margin:1em auto; border:none;" /></p>
+<p><br />
+</p>
+</div>
+<div id="about-me" class="slide section level1">
+<h1>About Me…</h1>
+<p><img src="images/anr_montage-wide_1120x520.png" /></p>
+</div>
+<div id="some-of-my-r-work" class="slide section level1">
+<h1>Some of My R Work</h1>
+<h2 id="t-locoh">T-Locoh</h2>
+<div class="sbs_icontext_contain">
+<div class="sbs_icontext_child">
+<p>Homerange and spatial-temporal pattern analysis for wildlife tracking
+data<br/> <a href="http://tlocoh.r-forge.r-project.org/"
+target="_blank">http://tlocoh.r-forge.r-project.org/</a></p>
+</div>
+</div>
+<p><br />
+</p>
+<h2 id="uasimg">uasimg</h2>
+<div class="sbs_icontext_contain">
+<div class="sbs_icontext_child">
+<p><img src="images/uasimg_hex-logo1c_104x120.png"/></p>
+</div>
+<div class="sbs_icontext_child">
+<p>Data management utilities for drone mapping<br/> <a
+href="https://ucanr-igis.github.io/uasimg/"
+target="_blank">https://ucanr-igis.github.io/uasimg/</a></p>
+</div>
+</div>
+<p><br />
+</p>
+<h2 id="caladaptr">caladaptR</h2>
+<div class="sbs_icontext_contain">
+<div class="sbs_icontext_child">
+<p><img src="images/caladaptr-hexlogo_104x120.png"/></p>
+</div>
+<div class="sbs_icontext_child">
+<p>Bring climate data from Cal-Adapt into R using the API<br/> <a
+href="https://ucanr-igis.github.io/caladaptr/"
+target="_blank">https://ucanr-igis.github.io/caladaptr/</a></p>
+</div>
+</div>
+<p><br />
+</p>
+<h2 id="degday">degday</h2>
+<div class="sbs_icontext_contain">
+<div class="sbs_icontext_child">
+<p><img src="images/degday_hexlogo_v1a_104x120.png"/></p>
+</div>
+<div class="sbs_icontext_child">
+<p>Compute degree days in R<br/> <a
+href="https://ucanr-igis.github.io/degday/"
+target="_blank">https://ucanr-igis.github.io/degday/</a></p>
+</div>
+</div>
+<p><br />
+</p>
+<h2 id="shiny-apps">Shiny Apps</h2>
+<p>Chill Portions Under Climate Change Calculator<br />
+<a href="https://ucanr-igis.shinyapps.io/chill/" target="_blank"
+rel="noopener">https://ucanr-igis.shinyapps.io/chill/</a></p>
+<p>Drone Mission Planner for Reforestation Monitoring Protocol<br />
+<a href="https://ucanr-igis.shinyapps.io/uav_stocking_survey/"
+target="_blank">https://ucanr-igis.shinyapps.io/uav_stocking_survey/</a></p>
+<p>Stock Pond Volume Calculator<br />
+<a href="https://ucanr-igis.shinyapps.io/PondCalc/"
+target="_blank">https://ucanr-igis.shinyapps.io/PondCalc/</a></p>
+<p>Pistachio Nut Growth Calculator<br />
+<a href="https://ucanr-igis.shinyapps.io/pist_gdd/"
+target="_blank">https://ucanr-igis.shinyapps.io/pist_gdd/</a></p>
+</div>
+<div id="about-you" class="slide section level1">
+<h1>About You…</h1>
+</div>
+<div id="todays-outline" class="slide section level1">
+<h1>Today’s Outline</h1>
+<h2 id="part-1a.-data-wrangling-fundamentals">Part 1a. Data Wrangling
+Fundamentals</h2>
+<div class="compact">
+<ul>
+<li>packages<br />
+</li>
+<li>functions<br />
+</li>
+<li>piping syntax<br />
+</li>
+<li>selecting rows and columns with dplyr</li>
+</ul>
+</div>
+<p><br />
+</p>
+<h2 id="part-1b.-geospatial-data-fundamentals">Part 1b. Geospatial Data
+Fundamentals</h2>
+<div class="compact">
+<ul>
+<li>geospatial data in R</li>
+<li>common spatial data manipulations<br />
+</li>
+<li>making maps with ggplot<br />
+</li>
+<li>importing administrative boundaries and enumeration areas with
+<code>tigris</code></li>
+<li>importing data from ArcGIS with <code>arcgislayers</code></li>
+<li><span class="exercise">Exercise 1. Import Census and Municipal
+Geometries</span></li>
+</ul>
+</div>
+<p><br />
+</p>
+<h2
+id="part-2.-importing-joining-and-plotting-shapefiles-and-tabular-data">Part
+2. Importing, Joining, and Plotting Shapefiles and Tabular Data</h2>
+<div class="compact">
+<ul>
+<li>better ways to import tabular data</li>
+<li>importing Shapefiles and other GIS data on disk</li>
+<li>importing spatial data from US Census with
+<code>tidyCensus</code></li>
+<li>joining tables</li>
+<li>reshaping data from wide to long</li>
+<li><span class="exercise">Exercise 2. Import and Map Voter Turnout
+Data</span></li>
+</ul>
+</div>
+<p><br />
+</p>
+<h2 id="part-3.-importing-census-data">Part 3. Importing Census
+Data</h2>
+<div class="compact">
+<ul>
+<li>tidyCensus</li>
+<li>finding variables</li>
+<li><span class="exercise">Exercise 3. Importing Data from the Decennial
+and ACS Census</span></li>
+</ul>
+</div>
+<p><br />
+</p>
+<h2 id="part-4.-areal-interpolation">Part 4. Areal Interpolation</h2>
+<div class="compact">
+<ul>
+<li>Areal interpolation</li>
+<li><span class="exercise">Exercise 4. Areal Interpolation</span></li>
+</ul>
+</div>
+</div>
+<div id="part-1a-data-wrangling-fundamentals"
+class="slide section level1 subsection">
+<h1 class="subsection"><span class="subsecttitle-pre">Part 1a:
+</span><span class="subsecttitle-main">Data Wrangling
+Fundamentals</span></h1>
+</div>
+<div id="functions" class="slide section level1">
+<h1>Functions</h1>
+<p>The keys to R’s superpowers are <strong>functions</strong>! There are
+<strong>four things</strong> you need to know to use a function:</p>
+<style>img.stackme {position:absolute; top:0; left:0;}</style>
+<div style='position:relative; border:none; height:450px;width:901px; margin:0 auto; '>
+<img src="images/foo_01.png"/>
+<img src="images/foo_02.png" class="incremental stackme"/>
+<img src="images/foo_03.png" class="incremental stackme"/>
+<img src="images/foo_04.png" class="incremental stackme"/>
+<img src="images/foo_05.png" class="incremental stackme"/>
+</div>
+<p><br />
+</p>
+</div>
+<div id="what-do-functions-return" class="slide section level1">
+<h1>What Do Functions Return?</h1>
+<div class="indented2 li-single">
+<ul class="incremental">
+<li>numbers<br />
+</li>
+<li>dates<br />
+</li>
+<li>text<br />
+</li>
+<li>data frames and matrices<br />
+</li>
+<li>spatial data<br />
+</li>
+<li>plots<br />
+</li>
+<li>trained regression models<br />
+</li>
+<li>HTML widgets<br />
+</li>
+<li>another function that returns a color ramp<br />
+</li>
+<li>a drone image collection metadata record<br />
+</li>
+<li><span style="color:crimson;">⇒ almost anything you can think of can
+be returned by a function!!</span></li>
+<li><span style="color:crimson;">⇒ anything returned by a function can
+also be saved to an object</span></li>
+</ul>
+</div>
+</div>
+<div id="which-function-should-i-use" class="slide section level1">
+<h1>Which function should I use?</h1>
+<center>
+<table>
+<tbody>
+<tr>
+<td style="text-align:right; font-style:italic; padding:10px; border:none;">
+Finding the right R function, half the battle is.<br><br>- Jedi MasteR
+Yoda
+</td>
+<td style="padding:5px;">
+<img src="images/yoda_bg-white_200x170.jpg" style="width:200px; height:170px;">
+</td>
+</tr>
+</tbody>
+</table>
+</center>
+<p><strong>Ask your friends</strong></p>
+<p><strong>Ask Google</strong></p>
+<p><strong>Cheatsheets!</strong></p>
+<div class="indented2 li-single">
+<ul>
+<li><a href="../extras/base-r_cheatsheet.pdf" target="_blank"
+rel="noopener">Base R cheatsheet</a><br />
+</li>
+<li><a
+href="https://www.rforecology.com/uploads/The_essential_R_Cheatsheet_v1_0.pdf"
+target="_blank" rel="noopener">R for Ecology cheatsheet</a><br />
+</li>
+<li><a href="https://www.rstudio.com/resources/cheatsheets/"
+target="_blank" rel="noopener">RStudio cheatsheets</a></li>
+</ul>
+</div>
+</div>
+<div id="function-help" class="slide section level1">
+<h1>Function Help</h1>
+<p>Every function has a help page. To get to it enter <code>?</code>
+followed by the name of the function (without parentheses):</p>
+<div class="indented2 indented2r">
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>?rnorm</span></code></pre></div>
+</div>
+<p><img src="images/rnorm_help_16cols_930x690.png"
+style="display:block; margin:1em auto; border:1px solid grey;" /></p>
+<p><br />
+</p>
+</div>
+<div id="function-arguments" class="slide section level1">
+<h1>Function Arguments</h1>
+<p>Most functions take arguments. Arguments can be <em>required</em> or
+<em>optional</em> (i.e. have a default value).</p>
+<p>See the function’s help page to determine which arguments are
+expected. Example:</p>
+<p><img src="images/function-help-args_560x290x256.png"
+style="display:block; margin:1em auto; border:1px solid grey;" /></p>
+<div style="text-align:center;">
+<p><code>x</code> and <code>size</code> have no default value → they are
+<em>required</em></p>
+<p><code>replace</code> and <code>prob</code> have default values → they
+are <em>optional</em></p>
+</div>
+<p><br />
+</p>
+<h2 id="to-name-or-not-to-name-your-arguments-that-is-the-question.">To
+name or not to name your arguments? That is the question.</h2>
+<p>All arguments have names. You can explicitly name arguments when
+calling a function as follows:</p>
+<div class="indented2 indented2r">
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">rnorm</span>(<span class="at">n =</span> <span class="dv">100</span>, <span class="at">mean =</span> <span class="dv">10</span>, <span class="at">sd =</span> <span class="fl">0.3</span>)</span></code></pre></div>
+</div>
+<p><br />
+</p>
+<p>Benefits of naming your arguments:</p>
+<div class="indented2 li-single">
+<ol style="list-style-type: decimal">
+<li>Helps you remember what each argument is<br />
+</li>
+<li>You can enter then in any order<br />
+</li>
+<li>You can skip arguments if you’re happy with the default value</li>
+</ol>
+</div>
+<p><br />
+</p>
+<p>But you can <em>omit argument names</em> if you pass them <strong>in
+the order expected</strong> and <strong>don’t skip any</strong>.</p>
+<div class="indented2 indented2r">
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">rnorm</span>(<span class="dv">500</span>, <span class="dv">50</span>, <span class="dv">3</span>)  <span class="do">## generate 500 normally distributed random</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>                   <span class="do">## numbers with a mean of 50 and stand dev = 3.</span></span></code></pre></div>
+</div>
+<p><br />
+</p>
+</div>
+<div id="r-packages" class="slide section level1">
+<h1>R Packages</h1>
+<p><img src="images/packages_200x202.png" style="float:right;" /></p>
+<p>Packages are what R calls <em>extensions</em> or
+<em>add-ons</em>.</p>
+<div id="whats-in-a-package" class="incremental">
+<h2>What’s in a package?</h2>
+<div class="indented2 li-single">
+<ul>
+<li>additional functions!<br />
+</li>
+<li>function help pages</li>
+<li>tutorials (Vignettes)</li>
+<li>datasets</li>
+</ul>
+</div>
+</div>
+<!---- incremental --->
+<div id="where-do-you-find-them" class="incremental">
+<h2>Where do you find them?</h2>
+<div class="indented2 li-single">
+<ul>
+<li>people in your field<br />
+</li>
+<li><a href="https://cran.r-project.org/web/views/" target="_blank"
+rel="noopener">CRAN - Task Views</a><br />
+</li>
+<li><a
+href="https://cran.r-project.org/web/packages/available_packages_by_name.html"
+target="_blank" rel="noopener">CRAN - List of all packages by
+name</a><br />
+</li>
+<li>publications</li>
+<li>blog posts (e.g., <a
+href="https://agstats.io/post/keeping-up-with-r/" target="_blank"
+rel="noopener"><em>R packages for Agricultural Research</em></a>)</li>
+</ul>
+</div>
+</div>
+<!---- incremental --->
+</div>
+<div id="installing-and-using-packages" class="slide section level1">
+<h1>Installing and Using Packages</h1>
+<p>Three simple steps to use the functions in a package:</p>
+<ol style="list-style-type: decimal">
+<li><p>Figure out which package you need</p></li>
+<li><p>Install (i.e., download) it (just once)</p></li>
+</ol>
+<p><img src="images/install-package-tab_575x170x256.png"
+style="display:block; margin:1em auto;" /></p>
+<ol start="3" style="list-style-type: decimal">
+<li>Load it into memory (must do this <em>every</em> time you start
+RStudio)</li>
+</ol>
+<div class="indented2 indented2r">
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
+</div>
+</div>
+<div id="piping" class="slide section level1">
+<h1>Piping</h1>
+<p><img src="images/piping_200x44x256.png"
+style="float:right; margin-top:-2em;" /></p>
+<p><strong>Piping syntax</strong> is an alternative way of writing
+arguments into functions.</p>
+<style type="text/css">
+span.inline-code {
+  font-family: courier, monospace;
+  font-weight: bold;
+  color: darkgreen;
+}
+</style>
+<p>With piping, you use the pipe operator <span
+class="inline-code">|&gt;</span> (or <span
+class="inline-code">%&gt;%</span>) to ‘feed’ the result of one function
+into the next function.</p>
+<p>Piping allows the results of one function to be passed as the
+<strong>first argument</strong> of the next function. Hence a series of
+commands to be written like a sentence.</p>
+<h2 id="example">Example</h2>
+<p>Consider the expression:</p>
+<p style="text-align:center; font-family:Consolas, monospace; font-size:120%;">
+zoo(moo(boo(foo(99)),n=4))
+</p>
+<div style='position:relative; border:none; height:192px;width:797px; margin:0 auto; '>
+<img src="images/functions-piping_001.png" class="incremental stackme"/>
+<img src="images/functions-piping_002.png" class="incremental stackme"/>
+<img src="images/functions-piping_003.png" class="incremental stackme"/>
+<img src="images/functions-piping_004.png" class="incremental stackme"/>
+<img src="images/functions-piping_005.png" class="incremental stackme"/>
+</div>
+<p><br />
+</p>
+</div>
+<div id="piping-tips-and-tricks" class="slide section level1">
+<h1>Piping Tips and Tricks</h1>
+<p>Keyboard shortcut for inserting the pipe operator:
+<code>ctrl + shift + m</code></p>
+<div class="indented2">
+<p>You can tell RStudio which pipe to insert under Global Options
+&gt;&gt; Code</p>
+<div class="indented2">
+<p><span class="inline-code"><code>|&gt;</code></span> (‘native’ pipe
+introduced R4.0)</p>
+<p><span class="inline-code"><code>%&gt;%</code></span> (from
+<code>magrittr</code> package)</p>
+</div>
+</div>
+<p><br />
+</p>
+<p>To split a chain of functions across <em>multiple lines</em>, end
+each line with a pipe operator:</p>
+<div class="indented2 indented2r">
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">seq</span>(<span class="dv">1</span>, <span class="dv">10</span>, <span class="fl">0.1</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  <span class="fu">log</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="fu">sum</span>() </span></code></pre></div>
+<pre><code>## [1] 141.4023</code></pre>
+</div>
+<p><br />
+</p>
+<p>If the receiving function requires additional arguments, just add
+them <em>starting with the 2nd argument</em> (or use named
+arguments):</p>
+<div class="indented2 indented2r">
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">runif</span>(<span class="dv">5</span>) <span class="sc">|&gt;</span> <span class="fu">round</span>(<span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 0.07 0.87 0.09 0.80 0.60</code></pre>
+</div>
+<p><br />
+</p>
+</div>
+<div id="same-function-name-different-packages"
+class="slide section level1">
+<h1>Same Function Name, Different Packages</h1>
+<p>Occasionally two or more packages will have different functions that
+use the same name. <img src="images/sad-face-32x32.png" /></p>
+<p>When this happens, R will use whichever one was loaded first.</p>
+<p>Best practice: use the package name and the <code>::</code> reference
+to specify which package a function is from.</p>
+<div class="indented1 indented1r">
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>x <span class="ot">&lt;-</span> sp<span class="sc">::</span><span class="fu">over</span>()</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>x <span class="ot">&lt;-</span> grDevices<span class="sc">::</span><span class="fu">over</span>()</span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>y <span class="ot">&lt;-</span> raster<span class="sc">::</span><span class="fu">select</span>()</span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>y <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">select</span>()</span></code></pre></div>
+</div>
+<div class="tip">
+<p>When you use the <em><code>package_name::function_name</code></em>
+syntax, you don’t actually have to first load the package with
+<tt>library()</tt>.</p>
+</div>
+<p><br />
+</p>
+<div class="tip">
+<p><strong>Resolving Name Conflicts with the <code>conflicted</code>
+Package</strong></p>
+<p>When you call a function that exists in multiple packages, R uses
+whichever package was loaded first.</p>
+<p>The <code>conflicted</code> package helps you avoid problems with
+duplicate function names, by specifying which one to prioritize <em>no
+matter what order</em> they were loaded.</p>
+<div class="indented1 indented1r">
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode r klippy copyme"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">library</span>(conflicted)</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="co"># Set conflict preference</span></span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="fu">conflict_prefer</span>(<span class="st">&quot;filter&quot;</span>, <span class="st">&quot;dplyr&quot;</span>)</span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a><span class="fu">conflict_prefer</span>(<span class="st">&quot;count&quot;</span>, <span class="st">&quot;dplyr&quot;</span>)</span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a><span class="fu">conflict_prefer</span>(<span class="st">&quot;select&quot;</span>, <span class="st">&quot;dplyr&quot;</span>)</span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a><span class="co"># From here on out, anytime we call select() or filter(), R will</span></span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a><span class="co"># always use the dplyr version.</span></span></code></pre></div>
+</div>
+</div>
+<p><br />
+</p>
+</div>
+<div id="data-wrangling-what-do-we-mean" class="slide section level1">
+<h1>Data Wrangling: What do we mean?</h1>
+<p style="text-align:center; font-style:italic; font-weight:bold; line-height:180%;">
+<u>Whatever</u> is needed to get your data frame ready<br />
+for the function(s) you want to use for analysis and visualization.
+</p>
+<p><img src="images/jello_sculpture_575x340.jpg"
+style="display:block; margin:1em auto; border:none;" /></p>
+<p style="font-style:italic; text-align:center;">
+also called data munging, manipulation, transformation, etc.
+</p>
+<p>Often includes one or more of:</p>
+<div class="indented1 li-single compact">
+<ol style="list-style-type: decimal">
+<li>dropping columns<br />
+</li>
+<li>renaming columns<br />
+</li>
+<li>changing the order of columns<br />
+</li>
+<li>creating new columns with an expression<br />
+</li>
+<li>filtering rows<br />
+</li>
+<li>sorting rows<br />
+</li>
+<li>going from ‘long’ to ‘wide’ formats<br />
+</li>
+<li>joining data frames based on a common field<br />
+</li>
+<li>merging / stacking data frames together<br />
+</li>
+<li>splitting tables<br />
+</li>
+<li>aggregating rows into groups</li>
+<li>splitting columns into new columns / rows</li>
+</ol>
+</div>
+<p><br />
+</p>
+</div>
+<div id="data-wrangling-with-dplyr" class="slide section level1">
+<h1>Data Wrangling with <code>dplyr</code></h1>
+<p><img src="images/dplyr-logo_86x100x256.png"
+style="float:right;" /></p>
+<p>An alternative (usually better) way to wrangle data frames than base
+R.</p>
+<p>Part of the <a href="https://www.tidyverse.org"
+target="_blank">tidyverse</a>.</p>
+<p>Best way to familiarize yourself - explore the <a
+href="https://posit.co/wp-content/uploads/2022/10/data-transformation-1.pdf"
+target="_blank">cheat sheet</a>:</p>
+<div class="centerblock">
+<p><a
+href="https://posit.co/wp-content/uploads/2022/10/data-transformation-1.pdf"
+target="_blank" rel="noopener"><img
+src="images/data-transformation-600x464.png"
+style="border:1px solid grey;" /></a></p>
+</div>
+<p><br />
+</p>
+</div>
+<div id="popular-dplyr-functions" class="slide section level1">
+<h1>Popular <code>dplyr</code> Functions</h1>
+<h2 id="row-and-column-manipulations">Row and Column Manipulations</h2>
+<table class="tbl_compact">
+<tbody>
+<tr>
+<td style="text-align:left;width: 12em; ">
+subset rows
+</td>
+<td style="text-align:left;font-family: monospace;">
+filter(), slice()
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 12em; ">
+order rows
+</td>
+<td style="text-align:left;font-family: monospace;">
+arrange()
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 12em; ">
+pick column(s)
+</td>
+<td style="text-align:left;font-family: monospace;">
+select(), pull()
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 12em; ">
+add new columns
+</td>
+<td style="text-align:left;font-family: monospace;">
+mutate()
+</td>
+</tr>
+</tbody>
+</table>
+<!----- taken out for another slide:
+, "join data frames on a column", "left_join(), right_join(), inner_join()", "stack data frame", "bind_rows()"
+----->
+<p><br />
+</p>
+<h2 id="chaining-dplyr-functions">Chaining dplyr functions</h2>
+<div class="indented2 indented2r">
+<p>Most <code>dplyr</code> functions <em>take a tibble</em> as the first
+argument , and <em>return a tibble</em>.</p>
+<p>This makes them very <em>pipe friendly</em>.</p>
+</div>
+<p><br />
+</p>
+</div>
+<div id="example-1" class="slide section level1">
+<h1>Example</h1>
+<p>Look at the <em>storms</em> tibble:</p>
+<div class="indented2 indented2r">
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a><span class="fu">head</span>(storms)</span></code></pre></div>
+<pre><code>## # A tibble: 6 × 13
+##   name   year month   day  hour   lat  long status       category  wind pressure
+##   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;           &lt;dbl&gt; &lt;int&gt;    &lt;int&gt;
+## 1 Amy    1975     6    27     0  27.5 -79   tropical de…       NA    25     1013
+## 2 Amy    1975     6    27     6  28.5 -79   tropical de…       NA    25     1013
+## 3 Amy    1975     6    27    12  29.5 -79   tropical de…       NA    25     1013
+## 4 Amy    1975     6    27    18  30.5 -79   tropical de…       NA    25     1013
+## 5 Amy    1975     6    28     0  31.5 -78.8 tropical de…       NA    25     1012
+## 6 Amy    1975     6    28     6  32.4 -78.7 tropical de…       NA    25     1012
+## # ℹ 2 more variables: tropicalstorm_force_diameter &lt;int&gt;,
+## #   hurricane_force_diameter &lt;int&gt;</code></pre>
+</div>
+<p><br />
+</p>
+<p><em>Filter out only the records for category 3 or higher storms
+</em></p>
+<div class="indented2 indented2r">
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>storms <span class="sc">|&gt;</span> </span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>  <span class="fu">select</span>(name, year, month, category) <span class="sc">|&gt;</span>     <span class="do">## select the columns we need</span></span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a>  <span class="fu">filter</span>(category <span class="sc">&gt;=</span> <span class="dv">3</span>)                      <span class="do">## select just the rows we want</span></span></code></pre></div>
+<pre><code>## # A tibble: 1,262 × 4
+##    name      year month category
+##    &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
+##  1 Caroline  1975     8        3
+##  2 Caroline  1975     8        3
+##  3 Eloise    1975     9        3
+##  4 Eloise    1975     9        3
+##  5 Gladys    1975    10        3
+##  6 Gladys    1975    10        3
+##  7 Gladys    1975    10        4
+##  8 Gladys    1975    10        4
+##  9 Gladys    1975    10        3
+## 10 Belle     1976     8        3
+## # ℹ 1,252 more rows</code></pre>
+</div>
+<div class="protip">
+<p><code>dplyr</code> functions generally allow you to enter column
+names without quotes.</p>
+</div>
+<p><br />
+</p>
+</div>
+<div id="summary-data-wrangling-fundamentals"
+class="slide section level1">
+<h1>Summary: Data Wrangling Fundamentals</h1>
+<div class="indented2 li-single">
+<ul>
+<li><p>the keys to using are lie in <strong>functions</strong></p></li>
+<li><p>four key things to know about <strong>functions</strong></p>
+<ol style="list-style-type: decimal">
+<li><strong>which function</strong> to use<br />
+</li>
+<li><strong>arguments</strong> - names, order, which are required,
+default values</li>
+<li>what the function <strong>returns</strong><br />
+</li>
+<li><strong>side actions</strong> the function performs (if any)</li>
+</ol></li>
+<li><p><strong>packages</strong> give you additional functions</p></li>
+<li><p><strong>piping</strong> is a way to chain functions
+together</p></li>
+<li><p>R is quite good at <strong>data wrangling</strong></p></li>
+<li><p><strong><code>dplyr</code></strong> is a good data wrangling
+package from the tidyverse</p></li>
+<li><p>use <strong><code>filter()</code></strong> and
+<strong><code>select()</code></strong> to select rows and
+columns</p></li>
+</ul>
+</div>
+</div>
+<div id="part-1b-geospatial-data-fundamentals"
+class="slide section level1 subsection">
+<h1 class="subsection"><span class="subsecttitle-pre">Part 1b:
+</span><span class="subsecttitle-main">Geospatial Data
+Fundamentals</span></h1>
+</div>
+<div id="sf" class="slide section level1">
+<h1><code>sf</code></h1>
+<p><img src="images/sf-logo-animated_200x200.gif"
+style="float:right;" /></p>
+<p><strong><code>sf</code></strong> is a popular package for working
+with <strong>vector</strong> geospatial data</p>
+<div class="indented1 indented1r">
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="fu">library</span>(sf)</span></code></pre></div>
+</div>
+<p><code>sf</code> stands for ‘simple feature’, which is a standard
+(developed by the Open Geospatial Consortium) for storing various
+geometry types in a hierarchical data model.</p>
+<p>A ‘feature’ is just a representation of a thing in the real world
+(e.g. a building, a city, ).</p>
+<p>Package features:</p>
+<div class="indented2 li-single">
+<ul>
+<li>read / write / create / edit / manipulate GIS data in R</li>
+<li>leverages open source libraries: GDAL, GEOS, PROJ<br />
+</li>
+<li>fast IO</li>
+<li>enhanced plotting<br />
+</li>
+<li>objects are supported by an increasing number of other geospatial
+packages<br />
+</li>
+<li>aligns with other GIS software that use the sf data model
+(e.g. QGIS, PostGIS)</li>
+</ul>
+</div>
+<p><br />
+</p>
+</div>
+<div id="sf-functions" class="slide section level1">
+<h1><code>sf</code> functions</h1>
+<div class="compact">
+<ul>
+<li>consistent function names (most start with <code>st_</code>)<br />
+</li>
+<li><code>|&gt;</code> pipe friendly!<br />
+</li>
+<li>everything you can do with a regular data frame, you can do with a
+sf data frame (almost)<br />
+</li>
+<li>integrated with the tidyverse packages<br />
+</li>
+</ul>
+</div>
+<p style="text-align:center;">
+<a href="https://github.com/rstudio/cheatsheets/blob/main/sf.pdf" target="_blank"><img src="images/sf-cheatsheet_544x420x256.png" style="border:1px solid gray;"/></a>
+</p>
+<p><br />
+</p>
+</div>
+<div id="projections" class="slide section level1">
+<h1>Projections</h1>
+<p>How do we squish a round planet onto flat maps / screens?</p>
+<p><img src="images/projections_546x676x256.png" /></p>
+<div class="infobox">
+<p>There are <strong>1000s</strong> of projections!</p>
+<p>Each one has an <strong>EPSG number</strong>.</p>
+<p>The more generic term for projections is <strong>Coordinate Reference
+System</strong> (CRS).</p>
+<p><strong>CRS</strong> also includes ‘unprojected’ geographic
+coordinates (longitude &amp; latitude).</p>
+</div>
+<p><br />
+</p>
+<h2 id="why-do-i-need-to-know-this">Why do I need to know this?</h2>
+<div class="indented2">
+<p>Projections are particularly important in R whenever you want to:</p>
+<div class="indented1">
+<ul>
+<li>overlay layers in a plot (most R packages do <strong>not</strong>
+reproject on the fly)</li>
+<li>compute or use geometric measurements, like distance or area<br />
+</li>
+<li>do spatial queries or joins</li>
+</ul>
+</div>
+</div>
+<p><br />
+</p>
+</div>
+<div id="crs-functions-in-sf" class="slide section level1">
+<h1>CRS functions in <code>sf</code></h1>
+<p>All <tt><strong>sf</strong></tt> objects are able to store projection
+info.</p>
+<div class="indented1">
+<p><tt>st_read()</tt> <strong>imports</strong> the CRS info from
+standard GIS file formats</p>
+<p><tt>st_crs()</tt> <strong>creates</strong>, <strong>views</strong>,
+or <strong>assigns</strong> the CRS</p>
+<p><tt>st_transform()</tt> <strong>(re)projects</strong> sf objects into
+a different crs</p>
+</div>
+<p><br />
+</p>
+</div>
+<div id="common-epsg-numbers" class="slide section level1">
+<h1>Common EPSG Numbers</h1>
+<h2 id="geographic-crss">Geographic CRSs</h2>
+<div class="indented2">
+<p>4326. Geographic, WGS84 (default for lon/lat)<br />
+4269. Geographic, NAD83 (USA Fed agencies like Census)</p>
+</div>
+<h2 id="projected-crss">Projected CRSs</h2>
+<div class="indented2">
+<p>5070. USA Contiguous Albers Equal Area Conic<br />
+3310. CA Albers Equal Area<br />
+32610. UTM Zone 10, WGS84 (Northern Cal)<br />
+32611. UTM Zone 11, WGS84 (Southern Cal)<br />
+3857. Web Mercator (web maps)</p>
+</div>
+<div class="infobox">
+<p>The one-stop shop for finding EPSG numbers and PROJ4 strings is <a
+href="http://www.spatialreference.org"
+target="_blank">http://www.spatialreference.org</a>. (Google usually
+works also).</p>
+<p>Reference code for your convenience:</p>
+<div class="indented2 indented2r">
+<div class="sourceCode" id="cb16"><pre
+class="sourceCode r klippy copyme"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="do">## Some common epsg numbers in California</span></span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a>epsg_geo_wgs84 <span class="ot">&lt;-</span> <span class="dv">4326</span></span>
+<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a>epsg_geo_nad83 <span class="ot">&lt;-</span> <span class="dv">4269</span></span>
+<span id="cb16-4"><a href="#cb16-4" tabindex="-1"></a>epsg_utm10n_wgs84 <span class="ot">&lt;-</span> <span class="dv">32610</span></span>
+<span id="cb16-5"><a href="#cb16-5" tabindex="-1"></a>epsg_utm11n_wgs84 <span class="ot">&lt;-</span> <span class="dv">32611</span></span>
+<span id="cb16-6"><a href="#cb16-6" tabindex="-1"></a>epsg_utm10n_nad83 <span class="ot">&lt;-</span> <span class="dv">26910</span></span>
+<span id="cb16-7"><a href="#cb16-7" tabindex="-1"></a>epsg_utm11n_nad83 <span class="ot">&lt;-</span> <span class="dv">26911</span></span>
+<span id="cb16-8"><a href="#cb16-8" tabindex="-1"></a>epsg_webmerc <span class="ot">&lt;-</span> <span class="dv">3857</span></span>
+<span id="cb16-9"><a href="#cb16-9" tabindex="-1"></a>epsg_caalbers <span class="ot">&lt;-</span> <span class="dv">3310</span></span></code></pre></div>
+</div>
+<p>To view <em>all</em> EPSG codes (&gt;5,500), run
+<code>rgdal::make_EPSG()</code></p>
+<p>See also <a
+href="https://nrm.dfg.ca.gov/FileHandler.ashx?DocumentID=109326&amp;inline"
+target="_blank">Projection and Datum Guidelines for California</a>
+(CDFW)</p>
+</div>
+</div>
+<div id="tigris" class="slide section level1">
+<h1><code>tigris</code></h1>
+<p><img src="images/tigris-logo_240x278.png"
+style="float:right;" /></p>
+<p>The <a
+href="https://github.com/walkerke/tigris"><code>tigris</code></a>
+package (by Kyle Walker) provides functions to download Shapefiles from
+the US Census Bureau.</p>
+<h2 id="geometries-from-the-us-census-bureau">Geometries from the US
+Census Bureau</h2>
+<p><img src="images/census_areas_diagram_771x646.png"
+style="display:block; margin:1em auto;" /></p>
+<p><br />
+</p>
+<p><code>tigris</code> features:</p>
+<div class="indented2 li-single">
+<ul>
+<li>easy-to-use functions to import data</li>
+<li>no Census API key required!</li>
+<li>get enumeration areas for any year available (<a
+href="https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html">more
+info</a>)</li>
+<li>most functions allow you to query by state and/or county<br />
+</li>
+<li>objects come into R as simple features (sf)</li>
+<li>request ‘cartographic boundary’ areas (<code>cb = TRUE</code>) to
+mask areas by coastlines &amp; water features</li>
+<li>reduced resolution versions available (1:500k, 1:5m, 1:20m) for
+better performance over large areas</li>
+<li>caching supported (no need to download the same file twice)</li>
+<li>option to keep the downloaded Shapefile<br />
+</li>
+</ul>
+</div>
+<p><br />
+</p>
+<div class="protip">
+<p><code>tigris</code> only downloads the geometries. To get census data
+as spatial objects, see <a
+href="https://walker-data.com/tidycensus/">tidyCensus.</a></p>
+</div>
+</div>
+<div id="tigris-functions" class="slide section level1">
+<h1><code>tigris</code> functions</h1>
+<div class="compact" style="font-family:monospace;">
+<ul>
+<li>states()</li>
+<li>counties()</li>
+<li>tracts()</li>
+<li>block_groups()</li>
+<li>blocks()</li>
+<li>school_districts()</li>
+<li>congressional_districts()</li>
+<li>state_legislative_districts()</li>
+<li>voting_districts() **</li>
+<li>zctas()</li>
+</ul>
+</div>
+<div style="margin-left:4em; font-style:italic;">
+<p>** where available</p>
+</div>
+<p><br />
+</p>
+<div class="protip">
+<p>Most of these functions have arguments you can use to limit the
+results to specific state(s) and/or county(s).</p>
+</div>
+<h2 id="example-2">Example</h2>
+<div class="indented2 indented2r">
+<p>Import census tracts boundaries for Alachua County, FL:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a><span class="fu">library</span>(tigris)</span>
+<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a>alachua_tracts_sf <span class="ot">&lt;-</span> tigris<span class="sc">::</span><span class="fu">tracts</span>(<span class="at">state =</span> <span class="st">&quot;FL&quot;</span>, <span class="at">county =</span> <span class="st">&quot;Alachua&quot;</span>, <span class="at">cb =</span> <span class="cn">TRUE</span>, <span class="at">progress_bar =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb17-5"><a href="#cb17-5" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" tabindex="-1"></a><span class="fu">plot</span>(alachua_tracts_sf<span class="sc">$</span>geometry, <span class="at">axes =</span> <span class="cn">TRUE</span>, <span class="at">main =</span> <span class="st">&quot;Census Tracts, Alachua County, FL&quot;</span>)</span></code></pre></div>
+<p><img src="slides_01_files/figure-slidy/unnamed-chunk-62-1.png" width="768" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="arcgislayers" class="slide section level1">
+<h1><code>arcgislayers</code></h1>
+<p><img src="images/arcgislayers-logo_240x279.png"
+style="float:right;" /></p>
+<p><a
+href="https://r.esri.com/arcgislayers/"><code>arcgislayers</code></a>
+package (by Josiah Parry) provides an R interface to work with ArcGIS
+services on ArcGIS.com and ArcGIS Portal using the API</p>
+<p>Key functions include:</p>
+<div class="compact">
+<ul>
+<li>importing vector and raster data from ArcGIS.com into R</li>
+<li>publishing / updated data that you have created in R</li>
+<li>performing raster functions (on the server)</li>
+</ul>
+</div>
+<p><br />
+</p>
+<p>This is <em>really</em> useful, because:</p>
+<div class="compact">
+<ul>
+<li><em>many</em> government agencies publish GIS data with ArcGIS<br />
+</li>
+<li>if the data are publicly available, you <strong>don’t</strong> need
+an ArcGIS.com account to download it</li>
+<li>you <strong>don’t need ArcGIS Pro</strong><br />
+</li>
+<li>you can pass both <strong>attribute</strong> and
+<strong>spatial</strong> filters when requesting data (which will be
+executed on the server)</li>
+</ul>
+</div>
+<p><br />
+</p>
+<h2 id="import-data-from-arcgis.com---workflow">Import Data from
+ArcGIS.com - Workflow</h2>
+<ol style="list-style-type: decimal">
+<li><p>Go to the “item details” page on ArcGIS.com for the layer you
+want.</p></li>
+<li><p>Find the URL for the <strong>FeatureServer</strong> or
+<strong>MapServer</strong>.</p></li>
+<li><p>Create a connection to the FeatureServer or MapServer (with
+<code>arc_open()</code>).</p></li>
+<li><p>Use <code>get_layer()</code> to create a connection to the
+specific FeatureLayer you want to import.</p></li>
+<li><p>Import the layer using <code>arc_select()</code>, providing an
+attribute and/or spatial query expression if needed.</p></li>
+<li><p>The layer comes into R as a simple feature (sf) object</p></li>
+</ol>
+<p><br />
+</p>
+</div>
+<div id="example-import-public-data-from-arcgis.com"
+class="slide section level1">
+<h1>Example: Import Public Data from ArcGIS.com</h1>
+<div class="indented1 indented1r">
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a><span class="fu">library</span>(arcgislayers)</span>
+<span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" tabindex="-1"></a><span class="do">## URL for a pubicly available Feature Server</span></span>
+<span id="cb18-5"><a href="#cb18-5" tabindex="-1"></a>counties_featsrv_url <span class="ot">&lt;-</span> <span class="st">&quot;https://services.arcgis.com/P3ePLMYs2RVChkJx/ArcGIS/rest/services/USA_Counties_Generalized_Boundaries/FeatureServer/&quot;</span></span>
+<span id="cb18-6"><a href="#cb18-6" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" tabindex="-1"></a><span class="do">## Create a FeatureServer object</span></span>
+<span id="cb18-8"><a href="#cb18-8" tabindex="-1"></a>counties_featsrv_fs <span class="ot">&lt;-</span> <span class="fu">arc_open</span>(counties_featsrv_url)</span>
+<span id="cb18-9"><a href="#cb18-9" tabindex="-1"></a>counties_featsrv_fs</span></code></pre></div>
+<pre><code>## &lt;FeatureServer &lt;1 layer, 0 tables&gt;&gt;
+## CRS: 4326
+## Capabilities: Query,Extract
+##   0: USA Counties - Generalized (esriGeometryPolygon)</code></pre>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a><span class="do">## List the layers available</span></span>
+<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a>arcgislayers<span class="sc">::</span><span class="fu">list_items</span>(counties_featsrv_fs)</span></code></pre></div>
+<pre><code>## # A data frame: 1 × 9
+##      id name       parentLayerId defaultVisibility subLayerIds minScale maxScale
+## * &lt;int&gt; &lt;chr&gt;              &lt;int&gt; &lt;lgl&gt;             &lt;lgl&gt;          &lt;int&gt;    &lt;int&gt;
+## 1     0 USA Count…            -1 TRUE              NA                 0        0
+## # ℹ 2 more variables: type &lt;chr&gt;, geometryType &lt;chr&gt;</code></pre>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a><span class="do">## Create a FeatureLayer object</span></span>
+<span id="cb22-2"><a href="#cb22-2" tabindex="-1"></a>counties_featsrv_fl <span class="ot">&lt;-</span> arcgislayers<span class="sc">::</span><span class="fu">get_layer</span>(counties_featsrv_fs, <span class="at">id =</span> <span class="dv">0</span>)</span>
+<span id="cb22-3"><a href="#cb22-3" tabindex="-1"></a>counties_featsrv_fl</span></code></pre></div>
+<pre><code>## &lt;FeatureLayer&gt;
+## Name: USA Counties - Generalized
+## Geometry Type: esriGeometryPolygon
+## CRS: 4326
+## Capabilities: Query,Extract</code></pre>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a><span class="do">## View the fields in the attribute table</span></span>
+<span id="cb24-2"><a href="#cb24-2" tabindex="-1"></a><span class="do">## list_fields(counties_featsrv_fl) |&gt; View()</span></span>
+<span id="cb24-3"><a href="#cb24-3" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="#cb24-4" tabindex="-1"></a><span class="do">## Import just the Florida Counties</span></span>
+<span id="cb24-5"><a href="#cb24-5" tabindex="-1"></a>fl_counties_sf <span class="ot">&lt;-</span> <span class="fu">arc_select</span>(counties_featsrv_fl, <span class="at">where =</span> <span class="st">&quot;STATE_FIPS = &#39;12&#39;&quot;</span>)</span>
+<span id="cb24-6"><a href="#cb24-6" tabindex="-1"></a></span>
+<span id="cb24-7"><a href="#cb24-7" tabindex="-1"></a><span class="fu">plot</span>(fl_counties_sf<span class="sc">$</span>geometry, <span class="at">axes =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p><img src="slides_01_files/figure-slidy/unnamed-chunk-66-1.png" width="768" style="display: block; margin: auto;" /></p>
+</div>
+<p><br />
+</p>
+<div class="protip">
+<p>To import <strong>non-public</strong> data from ArcGIS online /
+portal, you need to authenticate by:</p>
+<ol style="list-style-type: decimal">
+<li><p>Create a Developer Auth Credentials (i.e., a service account) by
+logging into ArcGIS.com &gt; Content &gt; Add Content &gt; New Developer
+Auth Credentials).</p></li>
+<li><p>Feed your ‘client id’ and ‘client secret’ into
+<code>arcgisutils::auth_code()</code> or
+<code>arcgisutils::auth_client()</code> to generate a temporary
+<strong>token</strong>.</p></li>
+<li><p>Pass the token to <code>arc_open()</code>,
+<code>arc_select()</code>, and other functions where needed.</p></li>
+<li><p>Refresh the token when needed with
+<code>arcgisutils::refresh_token()</code>.</p></li>
+</ol>
+</div>
+</div>
+<div id="ggplot" class="slide section level1">
+<h1>ggplot</h1>
+<p>ggplot2 is an extremely popular plotting package for R.</p>
+<p>Plots are constructed using the ‘grammar of graphics’ metaphor.</p>
+<h2 id="example-3">Example</h2>
+<p>Load Palmer Penguins data frame:</p>
+<div class="indented2 indented2r">
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a><span class="fu">library</span>(palmerpenguins)</span>
+<span id="cb25-2"><a href="#cb25-2" tabindex="-1"></a><span class="fu">head</span>(penguins)</span></code></pre></div>
+<pre><code>## # A tibble: 6 × 8
+##   species island    bill_length_mm bill_depth_mm flipper_length_mm body_mass_g
+##   &lt;fct&gt;   &lt;fct&gt;              &lt;dbl&gt;         &lt;dbl&gt;             &lt;int&gt;       &lt;int&gt;
+## 1 Adelie  Torgersen           39.1          18.7               181        3750
+## 2 Adelie  Torgersen           39.5          17.4               186        3800
+## 3 Adelie  Torgersen           40.3          18                 195        3250
+## 4 Adelie  Torgersen           NA            NA                  NA          NA
+## 5 Adelie  Torgersen           36.7          19.3               193        3450
+## 6 Adelie  Torgersen           39.3          20.6               190        3650
+## # ℹ 2 more variables: sex &lt;fct&gt;, year &lt;int&gt;</code></pre>
+</div>
+<p><br />
+</p>
+<p>Use ggplot to make a scatter plot:</p>
+<div class="indented2 indented2r">
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb27-2"><a href="#cb27-2" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">x =</span> flipper_length_mm, <span class="at">y =</span> bill_length_mm, <span class="at">color =</span> species)) <span class="sc">+</span></span>
+<span id="cb27-3"><a href="#cb27-3" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb27-4"><a href="#cb27-4" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Bill Length vs Flipper Length for 3 Species of Penguins&quot;</span>)</span></code></pre></div>
+<p><img src="slides_01_files/figure-slidy/ggplot_demo-1.png" width="768" style="display: block; margin: auto;" /></p>
+</div>
+<p><br />
+</p>
+</div>
+<div id="anatomy-of-a-ggplot" class="slide section level1">
+<h1>Anatomy of a ggplot</h1>
+<div class="indented2 indented2r">
+<div style='position:relative; border:none; height:592px;'>
+<img src="images/ggplot_anatomy_001.png"/>
+<img src="images/ggplot_anatomy_002.png" class="incremental stackme"/>
+<img src="images/ggplot_anatomy_003.png" class="incremental stackme"/>
+<img src="images/ggplot_anatomy_004.png" class="incremental stackme"/>
+<img src="images/ggplot_anatomy_005.png" class="incremental stackme"/>
+<img src="images/ggplot_anatomy_006.png" class="incremental stackme"/>
+<img src="images/ggplot_anatomy_007.png" class="incremental stackme"/>
+</div>
+</div>
+<p><br />
+</p>
+</div>
+<div id="maping-columns-to-symbology-properties-with-aes"
+class="slide section level1">
+<h1>Maping Columns to Symbology Properties with <code>aes()</code></h1>
+<pre style="font-weight:normal;">
+ggplot(penguins, <strong>aes(x = flipper_length_mm , y = bill_length_mm , color = species)</strong>) +
+  geom_point() +
+  ggtitle("Bill Length vs Flipper Length for 3 Species of Penguins")
+</pre>
+<div class="indented1 singlespace">
+<ul>
+<li><code>aes()</code> sets the default source for each visual property
+(or aesthetic) of the plot layers
+<ul>
+<li>note you don’t need to put column names in quotes<br />
+</li>
+</ul></li>
+<li>some common visual properties:</li>
+</ul>
+<div class="indented2">
+<p><code>x</code> - where it falls along the x-axis<br />
+<code>y</code> - where it falls along the y-axis<br />
+<code>color</code><br />
+<code>fill</code><br />
+<code>size</code><br />
+<code>linewidth</code></p>
+</div>
+<ul>
+<li>which visual properties are needed depends on the
+<code>geom_xxxx()</code> functions you use<br />
+</li>
+<li>only put in <code>aes()</code> the visual properties you want linked
+to the data</li>
+</ul>
+</div>
+</div>
+<div id="geoms" class="slide section level1">
+<h1>Geoms</h1>
+<div class="indented1">
+<ul>
+<li><p><code>geom_xxxx()</code> functions draw layers on the plot
+canvas</p></li>
+<li><p>drawn from the bottom up</p></li>
+<li><p>some common geoms:</p></li>
+</ul>
+<div class="indented2 singlespace" style="font-family:monospace;">
+<ul>
+<li>geom_point()<br />
+</li>
+<li>geom_bar()<br />
+</li>
+<li>geom_boxplot()<br />
+</li>
+<li>geom_histogram()<br />
+</li>
+</ul>
+</div>
+<ul>
+<li>visual properties can be linked to a column in the data frame or
+manually specified</li>
+</ul>
+<div class="indented2" style="font-family:monospace;">
+<p>geom_point(col = pop_size)<br />
+geom_point(col = “red”)</p>
+</div>
+<ul>
+<li><p>visual properties are inherited (from
+<code>aes()</code>)</p></li>
+<li><p>each geom has default color palettes and legend settings</p></li>
+</ul>
+</div>
+<p><br />
+</p>
+<h2 id="example-4">Example:</h2>
+<p>In the example below, note where <code>geom_boxplot()</code> gets its
+visual properties:</p>
+<div class="indented1 singlespace">
+<ul>
+<li><strong>x</strong> and <strong>y</strong> are linked to columns in
+the dataframe and inherited from <code>aes()</code><br />
+</li>
+<li><strong>color</strong>, <strong>fill</strong>, and
+<strong>size</strong> are manually specified</li>
+</ul>
+</div>
+<div class="indented2 indented2r">
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">x =</span> species, <span class="at">y =</span> bill_length_mm)) <span class="sc">+</span></span>
+<span id="cb28-2"><a href="#cb28-2" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">color =</span> <span class="st">&quot;navy&quot;</span>, <span class="at">fill =</span> <span class="st">&quot;yellow&quot;</span>, <span class="at">size =</span> <span class="fl">1.5</span>)</span></code></pre></div>
+<pre><code>## Warning: Removed 2 rows containing non-finite outside the scale range
+## (`stat_boxplot()`).</code></pre>
+<p><img src="slides_01_files/figure-slidy/unnamed-chunk-70-1.png" width="768" style="display: block; margin: auto;" /></p>
+</div>
+<p><br />
+</p>
+<h2 id="adding-visual-elements-to-a-plot">Adding visual elements to a
+plot</h2>
+<p><code>geom_xxxx()</code> functions can also be used to add other
+graphic elements:</p>
+<div class="indented2 indented2r">
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">x =</span> species, <span class="at">y =</span> bill_length_mm)) <span class="sc">+</span></span>
+<span id="cb30-2"><a href="#cb30-2" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">color =</span> <span class="st">&quot;navy&quot;</span>, <span class="at">fill =</span> <span class="st">&quot;yellow&quot;</span>, <span class="at">size =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
+<span id="cb30-3"><a href="#cb30-3" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fl">43.9</span>, <span class="at">linewidth =</span> <span class="dv">3</span>, <span class="at">color=</span><span class="st">&quot;red&quot;</span>) <span class="sc">+</span></span>
+<span id="cb30-4"><a href="#cb30-4" tabindex="-1"></a>  <span class="fu">geom_label</span>(<span class="at">x =</span> <span class="dv">3</span>, <span class="at">y =</span> <span class="dv">58</span>, <span class="at">label =</span> <span class="st">&quot;Gentoo penguins </span><span class="sc">\n</span><span class="st"> are just the best!&quot;</span>)</span></code></pre></div>
+<pre><code>## Warning: Removed 2 rows containing non-finite outside the scale range
+## (`stat_boxplot()`).</code></pre>
+<p><img src="slides_01_files/figure-slidy/unnamed-chunk-71-1.png" width="768" style="display: block; margin: auto;" /></p>
+</div>
+<p><br />
+</p>
+</div>
+<div id="making-maps-with-ggplot" class="slide section level1">
+<h1>Making maps with ggplot</h1>
+<p>Making ggplots with geospatial data (i.e., maps) is not that
+different than regular ggplots.</p>
+<p>A few differences:</p>
+<div class="indented2 singlespace">
+<ul>
+<li>we use sf objects as the data source (must all be in the same
+CRS)<br />
+</li>
+<li>draw layers with <code>geom_sf()</code><br />
+</li>
+<li>most layers will be based on different spatial data, so in general
+there is no need to define data in the opening
+<code>ggplot()</code><br />
+</li>
+<li>order of the layers matters<br />
+</li>
+<li>the <code>ggspatial</code> package has functions you can use to add
+other map elements (e.g., scale bar)</li>
+</ul>
+</div>
+<p><br />
+</p>
+</div>
+<div id="geom_sf" class="slide section level1">
+<h1><code>geom_sf()</code></h1>
+<p>The magical powers of <code>geom_sf()</code>:</p>
+<div class="indented2">
+<ul>
+<li>no need to define the columns for ‘x’ and ‘y’ in <code>aes()</code>,
+<code>geom_sf()</code> figures it out!<br />
+</li>
+<li><code>geom_sf()</code> will draw points, lines or polygons,
+depending on the feature type<br />
+</li>
+<li>Just like other geom functions, <code>geom_sf()</code> provides lots
+of options to customize the visual properties. Most of these can be
+mapped to attribute fields!<br />
+</li>
+</ul>
+</div>
+<div class="li-single" style="margin-left:4em;">
+<ul>
+<li>fill color<br />
+</li>
+<li>outline color<br />
+</li>
+<li>point size and shape<br />
+</li>
+<li>line color<br />
+</li>
+<li>etc.<br />
+</li>
+</ul>
+</div>
+<p><br />
+</p>
+</div>
+<div id="example-make-a-map-of-yosemite-fire-points"
+class="slide section level1">
+<h1>Example: Make a map of Yosemite Fire Points</h1>
+<h2 id="import-the-layers">1) Import the layers</h2>
+<div class="indented1 indented1r">
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb32-2"><a href="#cb32-2" tabindex="-1"></a>epsg_utm11n_nad83 <span class="ot">&lt;-</span> <span class="dv">26911</span></span>
+<span id="cb32-3"><a href="#cb32-3" tabindex="-1"></a></span>
+<span id="cb32-4"><a href="#cb32-4" tabindex="-1"></a><span class="do">## Park boundary</span></span>
+<span id="cb32-5"><a href="#cb32-5" tabindex="-1"></a>yose_bnd_utm <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_read</span>(<span class="at">dsn=</span><span class="st">&quot;./data&quot;</span>, <span class="at">layer=</span><span class="st">&quot;yose_boundary&quot;</span>, <span class="at">quiet=</span><span class="cn">TRUE</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb32-6"><a href="#cb32-6" tabindex="-1"></a>  <span class="fu">st_transform</span>(epsg_utm11n_nad83)</span>
+<span id="cb32-7"><a href="#cb32-7" tabindex="-1"></a></span>
+<span id="cb32-8"><a href="#cb32-8" tabindex="-1"></a><span class="do">## Fire ignition points</span></span>
+<span id="cb32-9"><a href="#cb32-9" tabindex="-1"></a>yose_firehist_pts_utm <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_read</span>(<span class="st">&quot;./data/yose_firehistory.gdb&quot;</span>, <span class="st">&quot;YNP_FireHistoryPoints&quot;</span>, <span class="at">quiet=</span><span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb32-10"><a href="#cb32-10" tabindex="-1"></a>  <span class="fu">st_transform</span>(epsg_utm11n_nad83)</span></code></pre></div>
+</div>
+<p><br />
+</p>
+<h2 id="plot">2) Plot</h2>
+<div class="indented1 indented1r">
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb33-2"><a href="#cb33-2" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb33-3"><a href="#cb33-3" tabindex="-1"></a></span>
+<span id="cb33-4"><a href="#cb33-4" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb33-5"><a href="#cb33-5" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> yose_bnd_utm) <span class="sc">+</span></span>
+<span id="cb33-6"><a href="#cb33-6" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> yose_firehist_pts_utm <span class="sc">|&gt;</span> <span class="fu">filter</span>(DECADE <span class="sc">&gt;=</span> <span class="dv">2010</span>), <span class="at">color=</span><span class="st">&quot;#f01616&quot;</span>, <span class="at">shape=</span><span class="dv">16</span>, <span class="at">cex=</span><span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb33-7"><a href="#cb33-7" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Fire ignition points in Yosemite NP&quot;</span>, <span class="at">subtitle =</span> <span class="st">&quot;2010-2019&quot;</span>)</span></code></pre></div>
+<p><img src="slides_01_files/figure-slidy/unnamed-chunk-79-1.png" width="768" style="display: block; margin: auto;" /></p>
+</div>
+<p><br />
+</p>
+</div>
+<div id="summary-geospatial-data-fundamentals"
+class="slide section level1">
+<h1>Summary: Geospatial Data Fundamentals</h1>
+<div class="indented2 li-single">
+<ul>
+<li><p>the <strong><code>sf</code></strong> package is the go-to package
+for importing and working with vector geospatial data</p></li>
+<li><p>projections have to be dealt with when:</p>
+<ol style="list-style-type: decimal">
+<li>overlaying data on maps<br />
+</li>
+<li>using geoprocessing functions that use or compute geometric
+properties (e.g., distance, area)</li>
+</ol></li>
+<li><p>memorize the EPSG codes for the CRS’s that you commonly work
+with</p></li>
+<li><p><a
+href="https://github.com/walkerke/tigris"><strong><code>tigris</code></strong></a>
+provides R functions to download TIGER Line Shapefiles from the US
+Census Bureau</p></li>
+<li><p><a
+href="https://r.esri.com/arcgislayers/"><strong><code>arcgislayers</code></strong></a>
+provides R functions to import data from ArcGIS in the cloud (both
+ArcGIS Online and ArcGIS Enterprise)</p></li>
+<li><p>ggplot works really well for making simple maps in R (thanks to
+<code>geom_sf()</code>)</p></li>
+</ul>
+</div>
+</div>
+<div id="exercise-1-import-census-and-municipal-geometries"
+class="slide section level1">
+<h1>Exercise 1: Import Census and Municipal Geometries</h1>
+<p>In this exercise, we will:</p>
+<div class="indented1 compact">
+<ol style="list-style-type: decimal">
+<li><strong>import</strong><br />
+</li>
+<li><strong>map</strong><br />
+</li>
+<li><strong>save to disk</strong></li>
+</ol>
+</div>
+<p>the following datasets for Camden County, NJ:</p>
+<div class="compact">
+<ul>
+<li>county boundary<br />
+</li>
+<li>census tracts (2020)<br />
+</li>
+<li>census blocks (2020)<br />
+</li>
+<li>zip code tabulation areas (ZCTAs) (2020)<br />
+</li>
+<li>municipalities<br />
+</li>
+<li>wards</li>
+</ul>
+</div>
+<div style="text-align:center; font-family:monospace; font-size:150%;">
+<p><a
+href="https://posit.cloud/content/8521414">https://posit.cloud/content/8521414</a></p>
+</div>
+</div>
+<div id="break" class="slide section level1">
+<h1>Break!</h1>
+<p><img src="images/stretch-break-1130x590x256.png"
+style="display:block; margin:1em auto; border:none;" /></p>
+</div>
+
+  <!-- dynamically load mathjax for compatibility with self-contained -->
+  <script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Exercise 1. Import Census and Municipal Geometries</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+<script src="exercise01_import-geometries_files/libs/clipboard/clipboard.min.js"></script>
+<script src="exercise01_import-geometries_files/libs/quarto-html/quarto.js"></script>
+<script src="exercise01_import-geometries_files/libs/quarto-html/popper.min.js"></script>
+<script src="exercise01_import-geometries_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="exercise01_import-geometries_files/libs/quarto-html/anchor.min.js"></script>
+<link href="exercise01_import-geometries_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="exercise01_import-geometries_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="exercise01_import-geometries_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="exercise01_import-geometries_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="exercise01_import-geometries_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><link href="exercise01_import-geometries_files/libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="exercise01_import-geometries_files/libs/pagedtable-1.1/js/pagedtable.js"></script>
+</head>
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="2"><h2 id="toc-title">Table of contents</h2>
+   
+  <ul class="collapse">
+<li><a href="#summary" id="toc-summary" class="nav-link active" data-scroll-target="#summary"><span class="header-section-number">1</span> Summary</a></li>
+  <li>
+<a href="#spatial-data-from-the-us-census-bureau" id="toc-spatial-data-from-the-us-census-bureau" class="nav-link" data-scroll-target="#spatial-data-from-the-us-census-bureau"><span class="header-section-number">2</span> Spatial Data from the US Census Bureau</a>
+  <ul class="collapse">
+<li><a href="#setup" id="toc-setup" class="nav-link" data-scroll-target="#setup"><span class="header-section-number">2.1</span> Setup</a></li>
+  <li><a href="#set-up-a-local-data-directory" id="toc-set-up-a-local-data-directory" class="nav-link" data-scroll-target="#set-up-a-local-data-directory"><span class="header-section-number">2.2</span> Set Up a Local Data Directory</a></li>
+  <li><a href="#import-the-county-boundary" id="toc-import-the-county-boundary" class="nav-link" data-scroll-target="#import-the-county-boundary"><span class="header-section-number">2.3</span> Import the County Boundary</a></li>
+  <li><a href="#challenge" id="toc-challenge" class="nav-link" data-scroll-target="#challenge"><span class="header-section-number">2.4</span> CHALLENGE</a></li>
+  <li><a href="#import-census-tracts" id="toc-import-census-tracts" class="nav-link" data-scroll-target="#import-census-tracts"><span class="header-section-number">2.5</span> Import Census Tracts</a></li>
+  <li><a href="#import-census-blocks" id="toc-import-census-blocks" class="nav-link" data-scroll-target="#import-census-blocks"><span class="header-section-number">2.6</span> Import Census Blocks</a></li>
+  <li><a href="#challenge-1" id="toc-challenge-1" class="nav-link" data-scroll-target="#challenge-1"><span class="header-section-number">2.7</span> CHALLENGE</a></li>
+  <li><a href="#import-zip-codes" id="toc-import-zip-codes" class="nav-link" data-scroll-target="#import-zip-codes"><span class="header-section-number">2.8</span> Import Zip Codes</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#import-data-from-arcgis" id="toc-import-data-from-arcgis" class="nav-link" data-scroll-target="#import-data-from-arcgis"><span class="header-section-number">3</span> Import Data from ArcGIS</a>
+  <ul class="collapse">
+<li><a href="#setup-1" id="toc-setup-1" class="nav-link" data-scroll-target="#setup-1"><span class="header-section-number">3.1</span> Setup</a></li>
+  <li><a href="#import-municipality-boundaries" id="toc-import-municipality-boundaries" class="nav-link" data-scroll-target="#import-municipality-boundaries"><span class="header-section-number">3.2</span> Import Municipality Boundaries</a></li>
+  <li><a href="#import-wards" id="toc-import-wards" class="nav-link" data-scroll-target="#import-wards"><span class="header-section-number">3.3</span> Import Wards</a></li>
+  <li><a href="#challenge-2" id="toc-challenge-2" class="nav-link" data-scroll-target="#challenge-2"><span class="header-section-number">3.4</span> CHALLENGE</a></li>
+  </ul>
+</li>
+  <li><a href="#done" id="toc-done" class="nav-link" data-scroll-target="#done"><span class="header-section-number">4</span> DONE!</a></li>
+  </ul></nav>
+</div>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<h1 class="title">Exercise 1. Import Census and Municipal Geometries</h1>
+<p class="subtitle lead">Population Profiling with R, August 2024</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header><section id="summary" class="level1" data-number="1"><h1 data-number="1">
+<span class="header-section-number">1</span> Summary</h1>
+<p>In this exercise, we will import and map the following datasets for <a href="https://en.wikipedia.org/wiki/Camden_County,_New_Jersey"><strong>Camden County, NJ</strong></a>:</p>
+<ul>
+<li>county boundary</li>
+<li>census tracts (2020)</li>
+<li>census blocks (2020)</li>
+<li>zip code tabulation areas (ZCTAs) (2020)</li>
+<li>municipalities</li>
+<li>wards</li>
+</ul>
+<p>As we import them, we will:</p>
+<ul>
+<li>make sure they are in the same CRS (specifically geographic coordinates NAD83, EPSG:4269)<br>
+</li>
+<li>save copies to disk so we can use them in other notebooks</li>
+</ul>
+<p>This notebook will feature functions from the following packages:</p>
+<ul>
+<li><code>tigris</code></li>
+<li><code>sf</code></li>
+<li><code>dplyr</code></li>
+<li><code>arcgislayers</code></li>
+<li><code>ggplot</code></li>
+</ul></section><section id="spatial-data-from-the-us-census-bureau" class="level1" data-number="2"><h1 data-number="2">
+<span class="header-section-number">2</span> Spatial Data from the US Census Bureau</h1>
+<p>The US Census Bureau is a good choice for spatial data for the following reasons:</p>
+<ul>
+<li>they are an official government source</li>
+<li>they provide boundaries for a wide range of spatial units researchers like to work with, from States all the way down to Census Blocks (see diagram below)</li>
+<li>they also publish other kinds of spatial units, including things like zip codes, school districts and congressional districts (<a href="https://walker-data.com/tidycensus/articles/basic-usage.html#geography-in-tidycensus">complete list</a>)</li>
+<li>you can import boundaries via an API (i.e., don’t have to go to a website and download zip files)</li>
+<li>they come with a standard identifier (i.e., <code>geoid</code>) that the Census Bureau and many other data publishers use when publishing socio demographic data</li>
+<li>they provide historical data for statistical areas that change over time (e.g., census enumeration units)</li>
+<li>the <a href="https://github.com/walkerke/tigris">tigris</a> and <a href="https://walker-data.com/tidycensus/">tidyCensus</a> packages make downloading them easy</li>
+</ul>
+<p><br></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="./images/census_areas_diagram_771x646.png" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
+</figure>
+</div>
+<p><br></p>
+<section id="setup" class="level2" data-number="2.1"><h2 data-number="2.1" class="anchored" data-anchor-id="setup">
+<span class="header-section-number">2.1</span> Setup</h2>
+<p>First we load the packages we’ll be needing:</p>
+<div class="cell">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><br></p>
+<p>The main package we’ll be using to download spatial data from the US Census is <a href="https://github.com/walkerke/tigris">tigris</a>. You do not need an API key to download spatial data from the Census.</p>
+<div class="cell">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/walkerke/tigris">tigris</a></span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>To enable caching of data, set `options(tigris_use_cache = TRUE)`
+in your R script or .Rprofile.</code></pre>
+</div>
+</div>
+<p><br></p>
+<p><code>tigris</code> supports caching for the files it downloads, which we certainly want to enable:</p>
+<div class="cell">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>tigris_use_cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><br></p>
+</section><section id="set-up-a-local-data-directory" class="level2" data-number="2.2"><h2 data-number="2.2" class="anchored" data-anchor-id="set-up-a-local-data-directory">
+<span class="header-section-number">2.2</span> Set Up a Local Data Directory</h2>
+<p>We also want to save the spatial files we download to our hard drive, so we can use them in other notebooks.</p>
+<p>We’ll do this by creating a folder in your operating system’s ‘AppData’ folder, and copies of our “finished products” there.</p>
+<div class="cell">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">my_data_dir</span> <span class="op">&lt;-</span> <span class="fu">tools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/tools/userdir.html">R_user_dir</a></span><span class="op">(</span><span class="st">"datafordemocracy"</span>, which <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/files2.html">dir.exists</a></span><span class="op">(</span><span class="va">my_data_dir</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/files2.html">dir.create</a></span><span class="op">(</span><span class="va">my_data_dir</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu">tools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/tools/fileutils.html">file_path_as_absolute</a></span><span class="op">(</span><span class="va">my_data_dir</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "C:/Users/Andy/AppData/Roaming/R/data/R/datafordemocracy"</code></pre>
+</div>
+</div>
+</section><section id="import-the-county-boundary" class="level2" data-number="2.3"><h2 data-number="2.3" class="anchored" data-anchor-id="import-the-county-boundary">
+<span class="header-section-number">2.3</span> Import the County Boundary</h2>
+<p>The tigris package doesn’t have a function to download a single county boundary. So we start by getting all the counties in NJ:</p>
+<div class="cell">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">nj_counties_sf</span> <span class="op">&lt;-</span> <span class="fu">tigris</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/tigris/man/counties.html">counties</a></span><span class="op">(</span>state <span class="op">=</span> <span class="st">"NJ"</span>, cb <span class="op">=</span> <span class="cn">TRUE</span>, progress_bar <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Retrieving data for the year 2022</code></pre>
+</div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">nj_counties_sf</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["STATEFP"],"name":[1],"type":["chr"],"align":["left"]},{"label":["COUNTYFP"],"name":[2],"type":["chr"],"align":["left"]},{"label":["COUNTYNS"],"name":[3],"type":["chr"],"align":["left"]},{"label":["AFFGEOID"],"name":[4],"type":["chr"],"align":["left"]},{"label":["GEOID"],"name":[5],"type":["chr"],"align":["left"]},{"label":["NAME"],"name":[6],"type":["chr"],"align":["left"]},{"label":["NAMELSAD"],"name":[7],"type":["chr"],"align":["left"]},{"label":["STUSPS"],"name":[8],"type":["chr"],"align":["left"]},{"label":["STATE_NAME"],"name":[9],"type":["chr"],"align":["left"]},{"label":["LSAD"],"name":[10],"type":["chr"],"align":["left"]},{"label":["ALAND"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["AWATER"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["geometry"],"name":[13],"type":["s_MULTIP"],"align":["right"]}],"data":[{"1":"34","2":"011","3":"00882275","4":"0500000US34011","5":"34011","6":"Cumberland","7":"Cumberland County","8":"NJ","9":"New Jersey","10":"06","11":"1251948172","12":"503663199","13":"<s_MULTIP>","_rn_":"85"},{"1":"34","2":"041","3":"00882237","4":"0500000US34041","5":"34041","6":"Warren","7":"Warren County","8":"NJ","9":"New Jersey","10":"06","11":"923435921","12":"15825319","13":"<s_MULTIP>","_rn_":"86"},{"1":"34","2":"005","3":"00882272","4":"0500000US34005","5":"34005","6":"Burlington","7":"Burlington County","8":"NJ","9":"New Jersey","10":"06","11":"2070137467","12":"54133685","13":"<s_MULTIP>","_rn_":"87"},{"1":"34","2":"023","3":"00882230","4":"0500000US34023","5":"34023","6":"Middlesex","7":"Middlesex County","8":"NJ","9":"New Jersey","10":"06","11":"800946846","12":"35297517","13":"<s_MULTIP>","_rn_":"88"},{"1":"34","2":"009","3":"00882274","4":"0500000US34009","5":"34009","6":"Cape May","7":"Cape May County","8":"NJ","9":"New Jersey","10":"06","11":"651437193","12":"955149826","13":"<s_MULTIP>","_rn_":"440"},{"1":"34","2":"015","3":"00882277","4":"0500000US34015","5":"34015","6":"Gloucester","7":"Gloucester County","8":"NJ","9":"New Jersey","10":"06","11":"833996720","12":"38239948","13":"<s_MULTIP>","_rn_":"441"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p><br></p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Notes">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Notes
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>
+<code>GEOID</code> is the unique identifier for each county. It is a combination of <code>STATEFP</code> (State ID) and <code>COUNTYFP</code> (county number within the state).<br>
+</li>
+<li>the CRS is geographic coordinates in NAD83 (EPSG:4269)<br>
+</li>
+<li>
+<code>cb = TRUE</code> tell it to return a ‘cartographic boundary’ file (i.e., with water bodies removed)</li>
+</ul>
+</div>
+</div>
+<p>Pull out just Camden county:</p>
+<div class="cell">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">camden_bnd_sf</span> <span class="op">&lt;-</span> <span class="va">nj_counties_sf</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">NAME</span> <span class="op">==</span> <span class="st">"Camden"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Plot it:</p>
+<div class="cell">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">camden_bnd_sf</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Camden County, NJ"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="exercise01_import-geometries_files/figure-html/chunk06-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Save a copy to disk:</p>
+<div class="cell">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">saveRDS</a></span><span class="op">(</span><span class="va">camden_bnd_sf</span>, <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">my_data_dir</span>, <span class="st">"camden_bnd_sf.Rds"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><br></p>
+</section><section id="challenge" class="level2" data-number="2.4"><h2 data-number="2.4" class="anchored" data-anchor-id="challenge">
+<span class="header-section-number">2.4</span> CHALLENGE</h2>
+<p>Import and plot the county boundary where you live or work.</p>
+<div class="cell">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Your answer here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><br></p>
+</section><section id="import-census-tracts" class="level2" data-number="2.5"><h2 data-number="2.5" class="anchored" data-anchor-id="import-census-tracts">
+<span class="header-section-number">2.5</span> Import Census Tracts</h2>
+<p>Census tracts are designed to have about ~4,000 people. They are not the smallest unit, but they are important enumeration units because many of the census variables are only available at the tract level and larger.</p>
+<div class="cell">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">camden_tracts20_sf</span> <span class="op">&lt;-</span> <span class="fu">tigris</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/tigris/man/tracts.html">tracts</a></span><span class="op">(</span>state <span class="op">=</span> <span class="st">"NJ"</span>, county <span class="op">=</span> <span class="st">"Camden"</span>, year <span class="op">=</span> <span class="fl">2020</span>, </span>
+<span>                                     cb <span class="op">=</span> <span class="cn">TRUE</span>, progress_bar <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">camden_tracts20_sf</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 129</code></pre>
+</div>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">camden_tracts20_sf</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["STATEFP"],"name":[1],"type":["chr"],"align":["left"]},{"label":["COUNTYFP"],"name":[2],"type":["chr"],"align":["left"]},{"label":["TRACTCE"],"name":[3],"type":["chr"],"align":["left"]},{"label":["AFFGEOID"],"name":[4],"type":["chr"],"align":["left"]},{"label":["GEOID"],"name":[5],"type":["chr"],"align":["left"]},{"label":["NAME"],"name":[6],"type":["chr"],"align":["left"]},{"label":["NAMELSAD"],"name":[7],"type":["chr"],"align":["left"]},{"label":["STUSPS"],"name":[8],"type":["chr"],"align":["left"]},{"label":["NAMELSADCO"],"name":[9],"type":["chr"],"align":["left"]},{"label":["STATE_NAME"],"name":[10],"type":["chr"],"align":["left"]},{"label":["LSAD"],"name":[11],"type":["chr"],"align":["left"]},{"label":["ALAND"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["AWATER"],"name":[13],"type":["dbl"],"align":["right"]},{"label":["geometry"],"name":[14],"type":["s_MULTIP"],"align":["right"]}],"data":[{"1":"34","2":"007","3":"603100","4":"1400000US34007603100","5":"34007603100","6":"6031","7":"Census Tract 6031","8":"NJ","9":"Camden County","10":"New Jersey","11":"CT","12":"1537015","13":"0","14":"<s_MULTIP>","_rn_":"23"},{"1":"34","2":"007","3":"603505","4":"1400000US34007603505","5":"34007603505","6":"6035.05","7":"Census Tract 6035.05","8":"NJ","9":"Camden County","10":"New Jersey","11":"CT","12":"2914500","13":"0","14":"<s_MULTIP>","_rn_":"24"},{"1":"34","2":"007","3":"604200","4":"1400000US34007604200","5":"34007604200","6":"6042","7":"Census Tract 6042","8":"NJ","9":"Camden County","10":"New Jersey","11":"CT","12":"1015903","13":"157986","14":"<s_MULTIP>","_rn_":"25"},{"1":"34","2":"007","3":"606400","4":"1400000US34007606400","5":"34007606400","6":"6064","7":"Census Tract 6064","8":"NJ","9":"Camden County","10":"New Jersey","11":"CT","12":"2954983","13":"7018","14":"<s_MULTIP>","_rn_":"26"},{"1":"34","2":"007","3":"600900","4":"1400000US34007600900","5":"34007600900","6":"6009","7":"Census Tract 6009","8":"NJ","9":"Camden County","10":"New Jersey","11":"CT","12":"1787659","13":"302570","14":"<s_MULTIP>","_rn_":"27"},{"1":"34","2":"007","3":"611700","4":"1400000US34007611700","5":"34007611700","6":"6117","7":"Census Tract 6117","8":"NJ","9":"Camden County","10":"New Jersey","11":"CT","12":"1844768","13":"135781","14":"<s_MULTIP>","_rn_":"92"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p><br></p>
+<p>Note: The <code>GEOID</code> values are 10-digits wide (combination of state, county, and tract ID values).</p>
+<p><br></p>
+<section id="map-the-census-tracts" class="level3"><h3 class="anchored" data-anchor-id="map-the-census-tracts">Map the census tracts</h3>
+<p>Next, we plot the census tracks and the county boundary together.</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Check the CRS Before Plotting">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Check the CRS Before Plotting
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot()</a></code> does not do projection on-the-fly, so before we overlay the census tracts and county boundary, we need to verify they are in the same CRS:</p>
+<div class="cell">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/identical.html">identical</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html">st_crs</a></span><span class="op">(</span><span class="va">camden_tracts20_sf</span><span class="op">)</span>, <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html">st_crs</a></span><span class="op">(</span><span class="va">camden_bnd_sf</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+</div>
+</div>
+<p><br></p>
+<div class="cell">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">camden_tracts20_sf</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">camden_bnd_sf</span>, fill <span class="op">=</span> <span class="cn">NA</span>, lwd <span class="op">=</span> <span class="fl">1.2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Camden County Census Tracts"</span>,</span>
+<span>       subtitle <span class="op">=</span> <span class="st">"2020 Census"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="exercise01_import-geometries_files/figure-html/chunk11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><br></p>
+<p>Save a copy:</p>
+<div class="cell">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">saveRDS</a></span><span class="op">(</span><span class="va">camden_tracts20_sf</span>, <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">my_data_dir</span>, <span class="st">"camden_tracts20_sf.Rds"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section></section><section id="import-census-blocks" class="level2" data-number="2.6"><h2 data-number="2.6" class="anchored" data-anchor-id="import-census-blocks">
+<span class="header-section-number">2.6</span> Import Census Blocks</h2>
+<p>Using a similar approach as above:</p>
+<div class="cell">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">camden_blks20_sf</span> <span class="op">&lt;-</span> <span class="fu">tigris</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/tigris/man/blocks.html">blocks</a></span><span class="op">(</span>state <span class="op">=</span> <span class="st">"NJ"</span>, county <span class="op">=</span> <span class="st">"Camden"</span>, year <span class="op">=</span> <span class="fl">2020</span>, progress_bar <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">camden_blks20_sf</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 8770</code></pre>
+</div>
+</div>
+<p><br></p>
+<p>Plot:</p>
+<div class="cell">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">camden_blks20_sf</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">camden_bnd_sf</span>, fill <span class="op">=</span> <span class="cn">NA</span>, lwd <span class="op">=</span> <span class="fl">1.2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Camden County Census Blocks, NJ"</span>,</span>
+<span>       subtitle <span class="op">=</span> <span class="st">"2020"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_light</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="exercise01_import-geometries_files/figure-html/chunk14-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><br></p>
+<p>Save a copy:</p>
+<div class="cell">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">saveRDS</a></span><span class="op">(</span><span class="va">camden_blks20_sf</span>, <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">my_data_dir</span>, <span class="st">"camden_blks20_sf.Rds"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><br></p>
+</section><section id="challenge-1" class="level2" data-number="2.7"><h2 data-number="2.7" class="anchored" data-anchor-id="challenge-1">
+<span class="header-section-number">2.7</span> CHALLENGE</h2>
+<p>Import and plot the block groups for YOUR county.</p>
+<div class="cell">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Your answer here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><br></p>
+</section><section id="import-zip-codes" class="level2" data-number="2.8"><h2 data-number="2.8" class="anchored" data-anchor-id="import-zip-codes">
+<span class="header-section-number">2.8</span> Import Zip Codes</h2>
+<p><a href="https://en.wikipedia.org/wiki/ZIP_Code_Tabulation_Area">Zip codes</a> are not ideal for spatial analysis, but sometimes that’s all the location reference we have.</p>
+<p>We can import Zip Code Tabulation Areas (zctas), which are roughly the boundaries of zip codes (<a href="https://www.census.gov/programs-surveys/geography/guidance/geo-areas/zctas.html">details</a>).</p>
+<p>ztacs don’t have the name of a county as an attribute, so we have to take a different approach to select the ones we want to keep.</p>
+<p>Import zcta’s that start with 08 (southern half of New Jersey):</p>
+<div class="cell">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Uncomment the following to download the ZCTAs from the census API</span></span>
+<span><span class="co">## zcta_08_sf &lt;- tigris::zctas(year = 2020, starts_with = "08", progress_bar = FALSE)</span></span>
+<span></span>
+<span><span class="co">## Load a saved copy</span></span>
+<span><span class="va">zcta_08_sf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html">here</a></span><span class="op">(</span><span class="st">"exercises/data/zcta_08_sf.Rds"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">zcta_08_sf</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 290</code></pre>
+</div>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">zcta_08_sf</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["ZCTA5CE20"],"name":[1],"type":["chr"],"align":["left"]},{"label":["GEOID20"],"name":[2],"type":["chr"],"align":["left"]},{"label":["CLASSFP20"],"name":[3],"type":["chr"],"align":["left"]},{"label":["MTFCC20"],"name":[4],"type":["chr"],"align":["left"]},{"label":["FUNCSTAT20"],"name":[5],"type":["chr"],"align":["left"]},{"label":["ALAND20"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["AWATER20"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["INTPTLAT20"],"name":[8],"type":["chr"],"align":["left"]},{"label":["INTPTLON20"],"name":[9],"type":["chr"],"align":["left"]},{"label":["geometry"],"name":[10],"type":["s_MULTIP"],"align":["right"]}],"data":[{"1":"08002","2":"08002","3":"B5","4":"G6350","5":"S","6":"18670869","7":"266825","8":"+39.9346045","9":"-075.0253890","10":"<s_MULTIP>","_rn_":"10674"},{"1":"08037","2":"08037","3":"B5","4":"G6350","5":"S","6":"317218618","7":"5221204","8":"+39.6316810","9":"-074.7738934","10":"<s_MULTIP>","_rn_":"10675"},{"1":"08046","2":"08046","3":"B5","4":"G6350","5":"S","6":"19679399","7":"745679","8":"+40.0279495","9":"-074.8869838","10":"<s_MULTIP>","_rn_":"10676"},{"1":"08078","2":"08078","3":"B5","4":"G6350","5":"S","6":"4979952","7":"139326","8":"+39.8534114","9":"-075.0755019","10":"<s_MULTIP>","_rn_":"10677"},{"1":"08202","2":"08202","3":"B5","4":"G6350","5":"S","6":"17906264","7":"16025062","8":"+39.0966402","9":"-074.7397572","10":"<s_MULTIP>","_rn_":"10678"},{"1":"08327","2":"08327","3":"B5","4":"G6350","5":"S","6":"24823003","7":"646322","8":"+39.2555954","9":"-074.9495092","10":"<s_MULTIP>","_rn_":"10679"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p><br></p>
+<p>Plot them:</p>
+<div class="cell">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">zcta_08_sf</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">camden_bnd_sf</span>, fill <span class="op">=</span> <span class="cn">NA</span>, col <span class="op">=</span> <span class="st">"red"</span>, lwd <span class="op">=</span> <span class="fl">1.1</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Zip Code Tabulation Areas that Start with 081"</span>,</span>
+<span>       subtitle <span class="op">=</span> <span class="st">"2020"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="exercise01_import-geometries_files/figure-html/chunk17-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><br></p>
+<p>To select the zctas we want to keep, we have to do a spatial query:</p>
+<div class="cell">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">camden_zcta20_sf</span> <span class="op">&lt;-</span> <span class="va">zcta_08_sf</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_binary_ops.html">st_intersection</a></span><span class="op">(</span><span class="va">camden_bnd_sf</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: attribute variables are assumed to be spatially constant throughout
+all geometries</code></pre>
+</div>
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">camden_zcta20_sf</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 47</code></pre>
+</div>
+</div>
+<p><br></p>
+<p>Plot the Camden ZCTAs:</p>
+<div class="cell">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Define a color pallete</span></span>
+<span><span class="va">rand_cols</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">camden_zcta20_sf</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/grDevices/palettes.html">rainbow</a></span><span class="op">(</span>end<span class="op">=</span><span class="fl">5</span><span class="op">/</span><span class="fl">6</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">camden_zcta20_sf</span><span class="op">)</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">camden_zcta20_sf</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">rand_cols</span>, alpha <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">camden_bnd_sf</span>, fill <span class="op">=</span> <span class="cn">NA</span>, lwd <span class="op">=</span> <span class="fl">1.2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Camden County 081 ZCTAs, NJ"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="exercise01_import-geometries_files/figure-html/chunk19-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><br></p>
+<p>Save a local copy:</p>
+<div class="cell">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">saveRDS</a></span><span class="op">(</span><span class="va">camden_zcta20_sf</span>, <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">my_data_dir</span>, <span class="st">"camden_zcta20_sf.Rds"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><br></p>
+</section></section><section id="import-data-from-arcgis" class="level1" data-number="3"><h1 data-number="3">
+<span class="header-section-number">3</span> Import Data from ArcGIS</h1>
+<p><em>Many</em> state and local government agencies share GIS data using ArcGIS resources. Quite often, they use a product called <a href="https://hub.arcgis.com/">ArcGIS Hub</a> to make base layers available with the public thru an open data portal. Examples:</p>
+<ul>
+<li>
+<a href="https://camdencountynj-ccdpw.opendata.arcgis.com">Camden County ArcGIS Open Data Hub</a><br>
+</li>
+<li><a href="https://njogis-newjersey.opendata.arcgis.com">New Jersey Office of GIS</a></li>
+</ul>
+<p><br></p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Finding Open Data">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Finding Open Data
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You can also discover state and local data open sources, including non-ESRI platforms, at: <a href="https://www.opendatanetwork.com/" class="uri">https://www.opendatanetwork.com/</a>.</p>
+</div>
+</div>
+<p><br></p>
+<p>We will use the <a href="http://r.esri.com/arcgislayers/"><code>arcgislayers</code></a> package to bring these layers into R. Because these layers have been made publicly available, we do not need an ArcGIS account to download them.</p>
+<section id="setup-1" class="level2" data-number="3.1"><h2 data-number="3.1" class="anchored" data-anchor-id="setup-1">
+<span class="header-section-number">3.1</span> Setup</h2>
+<p>The easiest way to install <a href="http://r.esri.com/arcgislayers/"><code>arcgislayers</code></a> and a couple of other packages that are needed behind the scenes is to install the <a href="https://github.com/R-ArcGIS/arcgis"><code>arcgis</code></a> ‘meta package’.</p>
+<div class="cell">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># install.packages("arcgis")</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r.esri.com/arcgislayers/">arcgislayers</a></span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="import-municipality-boundaries" class="level2" data-number="3.2"><h2 data-number="3.2" class="anchored" data-anchor-id="import-municipality-boundaries">
+<span class="header-section-number">3.2</span> Import Municipality Boundaries</h2>
+<p>The Camden County Department of Public Works publishes municipalities boundaries on their <a href="https://camdencountynj-ccdpw.opendata.arcgis.com">Open Data Hub</a>. You can see the description page here:</p>
+<p><a href="https://camdencountynj-ccdpw.opendata.arcgis.com/datasets/9bea5658edfa490c9d00f98fd9efb6d6_0/" class="uri">https://camdencountynj-ccdpw.opendata.arcgis.com/datasets/9bea5658edfa490c9d00f98fd9efb6d6_0/</a></p>
+<p>To import it into R, we need to find the <strong>FeatureServer</strong> URL:</p>
+<ol type="1">
+<li>on the description page above, click ‘View Full Details’</li>
+<li>scroll down &gt; ‘Open in ArcGIS Online’</li>
+<li>Take note of the sublayer(s) in this Feature Layer</li>
+<li>scroll down &gt; copy URL</li>
+</ol>
+<p><code>https://services3.arcgis.com/JGF6qCAQFbROcocK/arcgis/rest/services/CamdenCountyMunicipalLayer/FeatureServer</code></p>
+<p>Now we’re ready to import it:</p>
+<div class="cell">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">camden_munip22_url</span> <span class="op">&lt;-</span> <span class="st">"https://services3.arcgis.com/JGF6qCAQFbROcocK/arcgis/rest/services/CamdenCountyMunicipalLayer/FeatureServer"</span></span>
+<span></span>
+<span><span class="co">## Step 1. Open the URL to get the FeatureServer connection</span></span>
+<span><span class="va">camden_munip22_ftsrv</span> <span class="op">&lt;-</span> <span class="fu">arcgislayers</span><span class="fu">::</span><span class="fu"><a href="https://r.esri.com/arcgislayers/reference/arc_open.html">arc_open</a></span><span class="op">(</span><span class="va">camden_munip22_url</span><span class="op">)</span></span>
+<span><span class="va">camden_munip22_ftsrv</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;FeatureServer &lt;1 layer, 0 tables&gt;&gt;
+CRS: 26918
+Capabilities: Query,Sync
+  0: CamdenCounty_Municipal2022 (esriGeometryPolygon)</code></pre>
+</div>
+</div>
+<p><br></p>
+<p>Next, we select the (sub)layer we want (in this case there is only one).</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Tip">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The indices of Feature Layers available from a Feature Server start at <strong>0</strong>.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">camden_munip22_ftlyr</span> <span class="op">&lt;-</span> <span class="fu">arcgislayers</span><span class="fu">::</span><span class="fu"><a href="https://r.esri.com/arcgislayers/reference/get_layer.html">get_layer</a></span><span class="op">(</span><span class="va">camden_munip22_ftsrv</span>, <span class="fl">0</span><span class="op">)</span></span>
+<span><span class="va">camden_munip22_ftlyr</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;FeatureLayer&gt;
+Name: CamdenCounty_Municipal2022
+Geometry Type: esriGeometryPolygon
+CRS: 26918
+Capabilities: Query,Sync</code></pre>
+</div>
+</div>
+<p><br></p>
+<p>Next, we import our chosen Feature Layer into R with <code><a href="https://r.esri.com/arcgislayers/reference/arc_select.html">arc_select()</a></code>:</p>
+<div class="cell">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">camden_munip22_prj_sf</span> <span class="op">&lt;-</span> <span class="fu">arcgislayers</span><span class="fu">::</span><span class="fu"><a href="https://r.esri.com/arcgislayers/reference/arc_select.html">arc_select</a></span><span class="op">(</span><span class="va">camden_munip22_ftlyr</span><span class="op">)</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Registered S3 method overwritten by 'jsonify':
+  method     from    
+  print.json jsonlite</code></pre>
+</div>
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">camden_munip22_prj_sf</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["FID"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["COUSUBNS"],"name":[2],"type":["chr"],"align":["left"]},{"label":["GEOID"],"name":[3],"type":["chr"],"align":["left"]},{"label":["NAMELSAD"],"name":[4],"type":["chr"],"align":["left"]},{"label":["CLASSFP"],"name":[5],"type":["chr"],"align":["left"]},{"label":["FUNCSTAT"],"name":[6],"type":["chr"],"align":["left"]},{"label":["ALAND"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["AWATER"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["INTPTLAT"],"name":[9],"type":["chr"],"align":["left"]},{"label":["INTPTLON"],"name":[10],"type":["chr"],"align":["left"]},{"label":["Shape_Leng"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["GEOCODE"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["GlobalID"],"name":[13],"type":["chr"],"align":["left"]},{"label":["Shape__Area"],"name":[14],"type":["dbl"],"align":["right"]},{"label":["Shape__Length"],"name":[15],"type":["dbl"],"align":["right"]},{"label":["geometry"],"name":[16],"type":["s_POLYGO"],"align":["right"]}],"data":[{"1":"1","2":"00885144","3":"3400702200","4":"Audubon borough","5":"C5","6":"F","7":"3838781","8":"35535","9":"+39.8901277","10":"-75.0723825","11":"9407.758","12":"3400702200","13":"81d661c6-35a7-42ed-8afd-5f35d0b0e807","14":"3871214.3","15":"9407.758","16":"<s_POLYGO>","_rn_":"1"},{"1":"2","2":"00885145","3":"3400702230","4":"Audubon Park borough","5":"C5","6":"F","7":"389606","8":"46935","9":"+39.8968373","10":"-75.0888190","11":"2734.678","12":"3400702230","13":"f8ccbea8-76dd-44e7-992b-e367d22e31a1","14":"436193.4","15":"2734.677","16":"<s_POLYGO>","_rn_":"2"},{"1":"3","2":"00885149","3":"3400703250","4":"Barrington borough","5":"C5","6":"F","7":"4095340","8":"0","9":"+39.8689349","10":"-75.0513618","11":"11456.984","12":"3400703250","13":"9e9086b1-16e4-429f-b5c4-d967de1dbd82","14":"4092066.6","15":"11456.984","16":"<s_POLYGO>","_rn_":"3"},{"1":"4","2":"00885154","3":"3400704750","4":"Bellmawr borough","5":"C5","6":"F","7":"7729295","8":"315734","9":"+39.8663560","10":"-75.0946695","11":"18085.472","12":"3400704750","13":"bdd07346-3ee8-471e-befd-b8b9e16eb0a9","14":"8038608.4","15":"18085.472","16":"<s_POLYGO>","_rn_":"4"},{"1":"5","2":"00885158","3":"3400705440","4":"Berlin borough","5":"C5","6":"F","7":"9307767","8":"35573","9":"+39.7920594","10":"-74.9369855","11":"14823.778","12":"3400705440","13":"032f4608-e579-4343-a5e1-7d3778ce56c5","14":"9335883.6","15":"14823.778","16":"<s_POLYGO>","_rn_":"5"},{"1":"6","2":"00882152","3":"3400705470","4":"Berlin township","5":"T1","6":"A","7":"8656740","8":"15360","9":"+39.8071159","10":"-74.9241780","11":"15771.555","12":"3400705470","13":"e17a4101-16d7-4093-b9da-43f1044ceef7","14":"8665169.9","15":"15771.555","16":"<s_POLYGO>","_rn_":"6"},{"1":"7","2":"00885172","3":"3400708170","4":"Brooklawn borough","5":"C5","6":"F","7":"1265110","8":"105763","9":"+39.8793503","10":"-75.1203958","11":"5697.801","12":"3400708170","13":"1e1a2ee3-3807-458d-8af0-7a2d5df7de30","14":"1369780.0","15":"5697.800","16":"<s_POLYGO>","_rn_":"7"},{"1":"8","2":"00885177","3":"3400710000","4":"Camden city","5":"C5","6":"F","7":"23106182","8":"3676392","9":"+39.9367868","10":"-75.1066438","11":"28004.054","12":"3400710000","13":"f5c8c982-1593-4592-a38a-485a23bd7d98","14":"26761218.9","15":"28004.054","16":"<s_POLYGO>","_rn_":"8"},{"1":"9","2":"00882155","3":"3400712280","4":"Cherry Hill township","5":"T1","6":"A","7":"62346260","8":"321495","9":"+39.9046107","10":"-74.9969997","11":"42634.514","12":"3400712280","13":"561f8439-f9d9-47af-a877-f4c81e30fd7a","14":"62617640.5","15":"42634.513","16":"<s_POLYGO>","_rn_":"9"},{"1":"10","2":"00885183","3":"3400712550","4":"Chesilhurst borough","5":"C5","6":"F","7":"4442825","8":"4000","9":"+39.7297952","10":"-74.8805311","11":"9002.410","12":"3400712550","13":"db06a511-84e0-41f6-a5d9-e8afa47e852f","14":"4443282.1","15":"9002.410","16":"<s_POLYGO>","_rn_":"10"},{"1":"11","2":"00885186","3":"3400713420","4":"Clementon borough","5":"C5","6":"F","7":"4902290","8":"150323","9":"+39.8026811","10":"-74.9837630","11":"11622.757","12":"3400713420","13":"c65c78b3-6f43-4656-beb0-c7d49c1f938b","14":"5048578.7","15":"11622.757","16":"<s_POLYGO>","_rn_":"11"},{"1":"12","2":"00885191","3":"3400714260","4":"Collingswood borough","5":"C5","6":"F","7":"4739731","8":"297275","9":"+39.9152748","10":"-75.0783915","11":"10844.364","12":"3400714260","13":"71f91a45-9323-46e6-98bb-0b173bc1be8d","14":"5032976.6","15":"10844.364","16":"<s_POLYGO>","_rn_":"12"},{"1":"13","2":"00885230","3":"3400726070","4":"Gibbsboro borough","5":"C5","6":"F","7":"5573837","8":"111534","9":"+39.8325671","10":"-74.9669070","11":"11192.913","12":"3400726070","13":"23e8d101-5f35-4d09-9576-7dac78a9ae04","14":"5680824.7","15":"11192.912","16":"<s_POLYGO>","_rn_":"13"},{"1":"14","2":"00882154","3":"3400726760","4":"Gloucester township","5":"T1","6":"A","7":"59451611","8":"884020","9":"+39.7921855","10":"-75.0360590","11":"50446.140","12":"3400726760","13":"86365841-812a-484e-ad02-8882bef916e3","14":"60287396.1","15":"50446.140","16":"<s_POLYGO>","_rn_":"14"},{"1":"15","2":"00885234","3":"3400726820","4":"Gloucester City city","5":"C5","6":"F","7":"5995139","8":"1159009","9":"+39.8916942","10":"-75.1166923","11":"13716.083","12":"3400726820","13":"45f53ad7-42c4-4c7b-ac6f-8c2115419623","14":"7148433.4","15":"13716.083","16":"<s_POLYGO>","_rn_":"15"},{"1":"16","2":"00882156","3":"3400728740","4":"Haddon township","5":"T1","6":"A","7":"6972793","8":"332198","9":"+39.9062159","10":"-75.0629510","11":"22573.632","12":"3400728740","13":"1ea155b6-a92e-4e45-9725-8a7ad5b6a1f4","14":"7299146.9","15":"22573.633","16":"<s_POLYGO>","_rn_":"16"},{"1":"17","2":"00885238","3":"3400728770","4":"Haddonfield borough","5":"C5","6":"F","7":"7242347","8":"116200","9":"+39.8954157","10":"-75.0344134","11":"16972.815","12":"3400728770","13":"8fefc8bc-880f-4442-9907-43dc259ffe00","14":"7352662.4","15":"16972.815","16":"<s_POLYGO>","_rn_":"17"},{"1":"18","2":"00885239","3":"3400728800","4":"Haddon Heights borough","5":"C5","6":"F","7":"4056622","8":"13573","9":"+39.8791269","10":"-75.0659184","11":"9772.125","12":"3400728800","13":"2bb7e6b7-1afd-49e9-b616-fba81eb3d5b8","14":"4066942.9","15":"9772.125","16":"<s_POLYGO>","_rn_":"18"},{"1":"19","2":"00885256","3":"3400732220","4":"Hi-Nella borough","5":"C5","6":"F","7":"576438","8":"0","9":"+39.8365157","10":"-75.0219649","11":"4501.274","12":"3400732220","13":"e60f5e91-fb8f-437f-8b78-28f18e88fc55","14":"575978.3","15":"4501.274","16":"<s_POLYGO>","_rn_":"19"},{"1":"20","2":"00885272","3":"3400739210","4":"Laurel Springs borough","5":"C5","6":"F","7":"1169240","8":"24856","9":"+39.8205431","10":"-75.0054446","11":"4933.208","12":"3400739210","13":"a9da64ef-8bc8-4516-9dc2-899b97b1baff","14":"1193144.0","15":"4933.208","16":"<s_POLYGO>","_rn_":"20"},{"1":"21","2":"00885274","3":"3400739420","4":"Lawnside borough","5":"C5","6":"F","7":"3704848","8":"0","9":"+39.8673079","10":"-75.0289028","11":"9340.725","12":"3400739420","13":"b1127b04-bd78-4518-a663-da4241f71e44","14":"3701881.6","15":"9340.725","16":"<s_POLYGO>","_rn_":"21"},{"1":"22","2":"00885279","3":"3400740440","4":"Lindenwold borough","5":"C5","6":"F","7":"10106242","8":"108551","9":"+39.8188320","10":"-74.9899655","11":"24674.882","12":"3400740440","13":"74bedb9a-2fbb-4c70-b5eb-f482be503bf6","14":"10206620.9","15":"24674.881","16":"<s_POLYGO>","_rn_":"22"},{"1":"23","2":"00885288","3":"3400742630","4":"Magnolia borough","5":"C5","6":"F","7":"2534168","8":"0","9":"+39.8561951","10":"-75.0363970","11":"7212.068","12":"3400742630","13":"da9ac036-49bc-4ef3-985c-a69f4193ba63","14":"2532141.7","15":"7212.068","16":"<s_POLYGO>","_rn_":"23"},{"1":"24","2":"00885297","3":"3400745510","4":"Merchantville borough","5":"C5","6":"F","7":"1537015","8":"0","9":"+39.9502216","10":"-75.0503373","11":"7005.462","12":"3400745510","13":"0483312f-9d6e-42e9-b006-56cefcd9477f","14":"1535788.0","15":"7005.461","16":"<s_POLYGO>","_rn_":"24"},{"1":"25","2":"00885313","3":"3400748750","4":"Mount Ephraim borough","5":"C5","6":"F","7":"2289568","8":"53375","9":"+39.8795238","10":"-75.0918141","11":"8224.382","12":"3400748750","13":"33f45939-3129-4643-afe0-b4294e94e637","14":"2341075.0","15":"8224.382","16":"<s_POLYGO>","_rn_":"25"},{"1":"26","2":"00885331","3":"3400753880","4":"Oaklyn borough","5":"C5","6":"F","7":"1624506","8":"154304","9":"+39.9023003","10":"-75.0805727","11":"6499.263","12":"3400753880","13":"8d57ffd3-fbdf-42b4-ab1b-f2213d2343af","14":"1777390.9","15":"6499.264","16":"<s_POLYGO>","_rn_":"26"},{"1":"27","2":"00882157","3":"3400757660","4":"Pennsauken township","5":"T1","6":"A","7":"27139813","8":"4268258","9":"+39.9683681","10":"-75.0578511","11":"42630.049","12":"3400757660","13":"555b5771-bb8d-4bb6-af16-52c52f2032fe","14":"31382967.3","15":"42630.049","16":"<s_POLYGO>","_rn_":"27"},{"1":"28","2":"00885352","3":"3400758770","4":"Pine Hill borough","5":"C5","6":"F","7":"10128463","8":"109439","9":"+39.7889740","10":"-74.9868845","11":"24640.138","12":"3400758770","13":"e038d639-00f5-4773-b8a6-c1dc74dd0f9e","14":"12739224.8","15":"19218.160","16":"<s_POLYGO>","_rn_":"28"},{"1":"29","2":"00885382","3":"3400765160","4":"Runnemede borough","5":"C5","6":"F","7":"5312195","8":"139326","9":"+39.8534114","10":"-75.0755019","11":"13503.499","12":"3400765160","13":"6b1059a4-60fa-4da0-b571-2f2ce574f1a3","14":"5447166.4","15":"13503.499","16":"<s_POLYGO>","_rn_":"29"},{"1":"30","2":"00885396","3":"3400768340","4":"Somerdale borough","5":"C5","6":"F","7":"3605154","8":"0","9":"+39.8454164","10":"-75.0217011","11":"12968.551","12":"3400768340","13":"a50b8712-f223-4a16-a53b-d9dd0b64594e","14":"3602272.8","15":"12968.552","16":"<s_POLYGO>","_rn_":"30"},{"1":"31","2":"00885411","3":"3400771220","4":"Stratford borough","5":"C5","6":"F","7":"4067300","8":"0","9":"+39.8289900","10":"-75.0155362","11":"11294.211","12":"3400771220","13":"1b851a96-4bb0-4e8a-bbde-41bcdfd5f478","14":"4064048.9","15":"11294.211","16":"<s_POLYGO>","_rn_":"31"},{"1":"32","2":"00885416","3":"3400772240","4":"Tavistock borough","5":"C5","6":"F","7":"706605","8":"7018","9":"+39.8762654","10":"-75.0298075","11":"4334.395","12":"3400772240","13":"629b9f84-6ae3-47d9-987a-16a75420189b","14":"713053.7","15":"4334.395","16":"<s_POLYGO>","_rn_":"32"},{"1":"33","2":"00882153","3":"3400776220","4":"Voorhees township","5":"T1","6":"A","7":"29709772","8":"435713","9":"+39.8485702","10":"-74.9528435","11":"32338.881","12":"3400776220","13":"a558994e-005c-4ae8-aeff-703f9ce5ab2d","14":"30121385.3","15":"32338.881","16":"<s_POLYGO>","_rn_":"33"},{"1":"34","2":"00882151","3":"3400777630","4":"Waterford township","5":"T1","6":"A","7":"93245748","8":"564544","9":"+39.7432143","10":"-74.8208615","11":"45030.938","12":"3400777630","13":"eab10001-0b29-4891-9c41-296318e8e51c","14":"93735819.1","15":"45030.938","16":"<s_POLYGO>","_rn_":"34"},{"1":"35","2":"00882150","3":"3400781740","4":"Winslow township","5":"T1","6":"A","7":"148710128","8":"2155460","9":"+39.7017223","10":"-74.9083512","11":"66066.512","12":"3400781740","13":"db6ec083-1431-49ef-8ab8-d172d653bd9d","14":"150745234.0","15":"66066.512","16":"<s_POLYGO>","_rn_":"35"},{"1":"36","2":"00885450","3":"3400782450","4":"Woodlynne borough","5":"C5","6":"F","7":"563497","8":"18198","9":"+39.9164778","10":"-75.0955486","11":"3178.027","12":"3400782450","13":"996f2d49-a6c0-401e-ba45-572f5e69fb69","14":"581232.2","15":"3178.027","16":"<s_POLYGO>","_rn_":"36"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p><br></p>
+<p><code><a href="https://r.esri.com/arcgislayers/reference/arc_select.html">arc_select()</a></code> returns a <code>sf</code> object, but it is in a different CRS than the layers from the US Census.</p>
+<div class="cell">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">camden_munip22_prj_sf</span> <span class="op">|&gt;</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html">st_crs</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Coordinate Reference System:
+  User input: EPSG:26918 
+  wkt:
+PROJCRS["NAD83 / UTM zone 18N",
+    BASEGEOGCRS["NAD83",
+        DATUM["North American Datum 1983",
+            ELLIPSOID["GRS 1980",6378137,298.257222101,
+                LENGTHUNIT["metre",1]]],
+        PRIMEM["Greenwich",0,
+            ANGLEUNIT["degree",0.0174532925199433]],
+        ID["EPSG",4269]],
+    CONVERSION["UTM zone 18N",
+        METHOD["Transverse Mercator",
+            ID["EPSG",9807]],
+        PARAMETER["Latitude of natural origin",0,
+            ANGLEUNIT["degree",0.0174532925199433],
+            ID["EPSG",8801]],
+        PARAMETER["Longitude of natural origin",-75,
+            ANGLEUNIT["degree",0.0174532925199433],
+            ID["EPSG",8802]],
+        PARAMETER["Scale factor at natural origin",0.9996,
+            SCALEUNIT["unity",1],
+            ID["EPSG",8805]],
+        PARAMETER["False easting",500000,
+            LENGTHUNIT["metre",1],
+            ID["EPSG",8806]],
+        PARAMETER["False northing",0,
+            LENGTHUNIT["metre",1],
+            ID["EPSG",8807]]],
+    CS[Cartesian,2],
+        AXIS["(E)",east,
+            ORDER[1],
+            LENGTHUNIT["metre",1]],
+        AXIS["(N)",north,
+            ORDER[2],
+            LENGTHUNIT["metre",1]],
+    USAGE[
+        SCOPE["Engineering survey, topographic mapping."],
+        AREA["North America - between 78°W and 72°W - onshore and offshore. Canada - Nunavut; Ontario; Quebec. United States (USA) - Connecticut; Delaware; Maryland; Massachusetts; New Hampshire; New Jersey; New York; North Carolina; Pennsylvania; Virginia; Vermont."],
+        BBOX[28.28,-78,84,-72]],
+    ID["EPSG",26918]]</code></pre>
+</div>
+</div>
+<p><br></p>
+<p>We can ‘unproject’ it to NAD83 with <code><a href="https://r-spatial.github.io/sf/reference/st_transform.html">sf::st_transform()</a></code>:</p>
+<div class="cell">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">camden_munip22_sf</span> <span class="op">&lt;-</span> <span class="va">camden_munip22_prj_sf</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html">st_transform</a></span><span class="op">(</span><span class="fl">4269</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><br></p>
+<p>Now we’re ready to plot it with the county boundary:</p>
+<div class="cell">
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">camden_munip22_sf</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">camden_bnd_sf</span>, fill <span class="op">=</span> <span class="cn">NA</span>, lwd <span class="op">=</span> <span class="fl">1.2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Camden County Municipalities, 2022"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_light</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="exercise01_import-geometries_files/figure-html/chunk28-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><br></p>
+<p>Save a local copy:</p>
+<div class="cell">
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">saveRDS</a></span><span class="op">(</span><span class="va">camden_munip22_sf</span>, <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">my_data_dir</span>, <span class="st">"camden_munip22_sf.Rds"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><br></p>
+</section><section id="import-wards" class="level2" data-number="3.3"><h2 data-number="3.3" class="anchored" data-anchor-id="import-wards">
+<span class="header-section-number">3.3</span> Import Wards</h2>
+<p>Using a similar process we can import the Wards for Camden County from the NJ Office of GIS <a href="https://njogis-newjersey.opendata.arcgis.com/datasets/b6df174950f54128bea05f8c01bd061f/">Open Data Hub</a>.</p>
+<p>After you find the URL for the Feature Server, we can get the layer:</p>
+<div class="cell">
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">nj_wards20_url</span> <span class="op">&lt;-</span> <span class="st">"https://services2.arcgis.com/XVOqAjTOJ5P6ngMu/arcgis/rest/services/Ward_Boundaries_for_New_Jersey/FeatureServer"</span></span>
+<span><span class="va">nj_wards20_ftsrv</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r.esri.com/arcgislayers/reference/arc_open.html">arc_open</a></span><span class="op">(</span><span class="va">nj_wards20_url</span><span class="op">)</span></span>
+<span><span class="va">nj_wards20_ftsrv</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;FeatureServer &lt;1 layer, 0 tables&gt;&gt;
+CRS: 3424
+Capabilities: Query,Extract
+  0: Govt_admin_ward (esriGeometryPolygon)</code></pre>
+</div>
+</div>
+<p><br></p>
+<div class="cell">
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">nj_wards20_ftlyr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r.esri.com/arcgislayers/reference/get_layer.html">get_layer</a></span><span class="op">(</span><span class="va">nj_wards20_ftsrv</span>, <span class="fl">0</span><span class="op">)</span></span>
+<span><span class="va">nj_wards20_ftlyr</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;FeatureLayer&gt;
+Name: Govt_admin_ward
+Geometry Type: esriGeometryPolygon
+CRS: 3424
+Capabilities: Query,Extract</code></pre>
+</div>
+</div>
+<p><br></p>
+<p><code>nj_wards20_ftlyr</code> contains the wards for the entire state of NJ, but we only need the Wards for Camden County. We can let the server do the filtering for us by using additional arguments in <code><a href="https://r.esri.com/arcgislayers/reference/arc_select.html">arc_select()</a></code>.</p>
+<p>First we need to construct a query expression we can use for the where argument. Let’s view the fields:</p>
+<div class="cell">
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">arcgislayers</span><span class="fu">::</span><span class="fu"><a href="https://r.esri.com/arcgislayers/reference/utils.html">list_fields</a></span><span class="op">(</span><span class="va">nj_wards20_ftlyr</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["type"],"name":[2],"type":["chr"],"align":["left"]},{"label":["alias"],"name":[3],"type":["chr"],"align":["left"]},{"label":["sqlType"],"name":[4],"type":["chr"],"align":["left"]},{"label":["nullable"],"name":[5],"type":["lgl"],"align":["right"]},{"label":["editable"],"name":[6],"type":["lgl"],"align":["right"]},{"label":["domain"],"name":[7],"type":["lgl"],"align":["right"]},{"label":["defaultValue"],"name":[8],"type":["lgl"],"align":["right"]},{"label":["length"],"name":[9],"type":["int"],"align":["right"]}],"data":[{"1":"OBJECTID","2":"esriFieldTypeOID","3":"OBJECTID","4":"sqlTypeOther","5":"FALSE","6":"FALSE","7":"NA","8":"NA","9":"NA","_rn_":"1"},{"1":"WARD_KEY","2":"esriFieldTypeString","3":"EL_KEY","4":"sqlTypeOther","5":"TRUE","6":"TRUE","7":"NA","8":"NA","9":"40","_rn_":"2"},{"1":"COUNTY","2":"esriFieldTypeString","3":"COUNTY","4":"sqlTypeOther","5":"TRUE","6":"TRUE","7":"NA","8":"NA","9":"20","_rn_":"3"},{"1":"MUN_NAME","2":"esriFieldTypeString","3":"MUN_NAME","4":"sqlTypeOther","5":"TRUE","6":"TRUE","7":"NA","8":"NA","9":"40","_rn_":"4"},{"1":"MCODE_SVRS","2":"esriFieldTypeString","3":"MCODE_SVRS","4":"sqlTypeOther","5":"TRUE","6":"TRUE","7":"NA","8":"NA","9":"4","_rn_":"5"},{"1":"MCODE_1040","2":"esriFieldTypeString","3":"MCODE_1040","4":"sqlTypeOther","5":"TRUE","6":"TRUE","7":"NA","8":"NA","9":"4","_rn_":"6"},{"1":"WARD_CODE","2":"esriFieldTypeString","3":"WARD_CODE","4":"sqlTypeOther","5":"TRUE","6":"TRUE","7":"NA","8":"NA","9":"15","_rn_":"7"},{"1":"Shape__Area","2":"esriFieldTypeDouble","3":"Shape__Area","4":"sqlTypeDouble","5":"TRUE","6":"FALSE","7":"NA","8":"NA","9":"NA","_rn_":"8"},{"1":"Shape__Length","2":"esriFieldTypeDouble","3":"Shape__Length","4":"sqlTypeDouble","5":"TRUE","6":"FALSE","7":"NA","8":"NA","9":"NA","_rn_":"9"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p><br></p>
+<p>We see a field called <code>COUNTY</code> that might work:</p>
+<div class="cell">
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">camden_wards20_prj_sf</span> <span class="op">&lt;-</span> <span class="fu">arcgislayers</span><span class="fu">::</span><span class="fu"><a href="https://r.esri.com/arcgislayers/reference/arc_select.html">arc_select</a></span><span class="op">(</span><span class="va">nj_wards20_ftlyr</span>, where <span class="op">=</span> <span class="st">"COUNTY = 'Camden'"</span><span class="op">)</span> </span>
+<span><span class="va">camden_wards20_prj_sf</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["OBJECTID"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["WARD_KEY"],"name":[2],"type":["chr"],"align":["left"]},{"label":["COUNTY"],"name":[3],"type":["chr"],"align":["left"]},{"label":["MUN_NAME"],"name":[4],"type":["chr"],"align":["left"]},{"label":["MCODE_SVRS"],"name":[5],"type":["chr"],"align":["left"]},{"label":["MCODE_1040"],"name":[6],"type":["chr"],"align":["left"]},{"label":["WARD_CODE"],"name":[7],"type":["chr"],"align":["left"]},{"label":["Shape__Area"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["Shape__Length"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["geometry"],"name":[10],"type":["s_POLYGO"],"align":["right"]}],"data":[{"1":"22","2":"007-0401-00","3":"Camden","4":"Audubon Borough","5":"0401","6":"0401","7":"00","8":"41621955","9":"30833.923","10":"<s_POLYGO>","_rn_":"1"},{"1":"23","2":"007-0402-00","3":"Camden","4":"Audubon Park Borough","5":"0402","6":"0402","7":"00","8":"4586997","9":"8883.261","10":"<s_POLYGO>","_rn_":"2"},{"1":"28","2":"007-0403-00","3":"Camden","4":"Barrington Borough","5":"0403","6":"0403","7":"00","8":"44092708","9":"37684.823","10":"<s_POLYGO>","_rn_":"3"},{"1":"41","2":"007-0404-00","3":"Camden","4":"Bellmawr Borough","5":"0404","6":"0404","7":"00","8":"86381402","9":"58378.473","10":"<s_POLYGO>","_rn_":"4"},{"1":"50","2":"007-0405-00","3":"Camden","4":"Berlin Borough","5":"0405","6":"0405","7":"00","8":"100794627","9":"48566.195","10":"<s_POLYGO>","_rn_":"5"},{"1":"51","2":"007-0406-00","3":"Camden","4":"Berlin Township","5":"0406","6":"0406","7":"00","8":"93130837","9":"51605.449","10":"<s_POLYGO>","_rn_":"6"},{"1":"83","2":"007-0407-00","3":"Camden","4":"Brooklawn Borough","5":"0407","6":"0407","7":"00","8":"14800263","9":"18644.985","10":"<s_POLYGO>","_rn_":"7"},{"1":"90","2":"007-0408-01","3":"Camden","4":"Camden City","5":"0408","6":"0408","7":"01","8":"99702784","9":"62923.707","10":"<s_POLYGO>","_rn_":"8"},{"1":"91","2":"007-0408-02","3":"Camden","4":"Camden City","5":"0408","6":"0408","7":"02","8":"65763622","9":"43772.541","10":"<s_POLYGO>","_rn_":"9"},{"1":"92","2":"007-0408-03","3":"Camden","4":"Camden City","5":"0408","6":"0408","7":"03","8":"41599603","9":"37706.179","10":"<s_POLYGO>","_rn_":"10"},{"1":"93","2":"007-0408-04","3":"Camden","4":"Camden City","5":"0408","6":"0408","7":"04","8":"84699735","9":"44816.186","10":"<s_POLYGO>","_rn_":"11"},{"1":"102","2":"007-0409-00","3":"Camden","4":"Cherry Hill Township","5":"0409","6":"0409","7":"00","8":"674043591","9":"139500.040","10":"<s_POLYGO>","_rn_":"12"},{"1":"103","2":"007-0410-00","3":"Camden","4":"Chesilhurst Borough","5":"0410","6":"0410","7":"00","8":"48083846","9":"29531.002","10":"<s_POLYGO>","_rn_":"13"},{"1":"115","2":"007-0411-00","3":"Camden","4":"Clementon Borough","5":"0411","6":"0411","7":"00","8":"54388526","9":"38220.833","10":"<s_POLYGO>","_rn_":"14"},{"1":"125","2":"007-0412-00","3":"Camden","4":"Collingswood Borough","5":"0412","6":"0412","7":"00","8":"53957390","9":"35711.203","10":"<s_POLYGO>","_rn_":"15"},{"1":"218","2":"007-0413-00","3":"Camden","4":"Gibbsboro Borough","5":"0413","6":"0413","7":"00","8":"61310503","9":"36747.950","10":"<s_POLYGO>","_rn_":"16"},{"1":"223","2":"007-0414-01","3":"Camden","4":"Gloucester City","5":"0414","6":"0414","7":"01","8":"24007109","9":"26893.543","10":"<s_POLYGO>","_rn_":"17"},{"1":"224","2":"007-0414-02","3":"Camden","4":"Gloucester City","5":"0414","6":"0414","7":"02","8":"20205298","9":"28591.278","10":"<s_POLYGO>","_rn_":"18"},{"1":"225","2":"007-0414-03","3":"Camden","4":"Gloucester City","5":"0414","6":"0414","7":"03","8":"33616383","9":"30811.293","10":"<s_POLYGO>","_rn_":"19"},{"1":"226","2":"007-0415-00","3":"Camden","4":"Gloucester Township","5":"0415","6":"0415","7":"00","8":"649288259","9":"165563.560","10":"<s_POLYGO>","_rn_":"20"},{"1":"236","2":"007-0418-00","3":"Camden","4":"Haddon Heights Borough","5":"0418","6":"0418","7":"00","8":"43818520","9":"32139.229","10":"<s_POLYGO>","_rn_":"21"},{"1":"237","2":"007-0416-00","3":"Camden","4":"Haddon Township","5":"0416","6":"0416","7":"00","8":"78787105","9":"73939.355","10":"<s_POLYGO>","_rn_":"22"},{"1":"238","2":"007-0417-00","3":"Camden","4":"Haddonfield Borough","5":"0417","6":"0417","7":"00","8":"79233639","9":"55578.167","10":"<s_POLYGO>","_rn_":"23"},{"1":"264","2":"007-0419-00","3":"Camden","4":"Hi-Nella Borough","5":"0419","6":"0419","7":"00","8":"6297884","9":"14464.062","10":"<s_POLYGO>","_rn_":"24"},{"1":"320","2":"007-0420-00","3":"Camden","4":"Laurel Springs Borough","5":"0420","6":"0420","7":"00","8":"12858730","9":"16196.275","10":"<s_POLYGO>","_rn_":"25"},{"1":"322","2":"007-0421-00","3":"Camden","4":"Lawnside Borough","5":"0421","6":"0421","7":"00","8":"39859022","9":"30703.254","10":"<s_POLYGO>","_rn_":"26"},{"1":"341","2":"007-0422-00","3":"Camden","4":"Lindenwold Borough","5":"0422","6":"0422","7":"00","8":"109956419","9":"80999.682","10":"<s_POLYGO>","_rn_":"27"},{"1":"363","2":"007-0423-00","3":"Camden","4":"Magnolia Borough","5":"0423","6":"0423","7":"00","8":"27274278","9":"23656.698","10":"<s_POLYGO>","_rn_":"28"},{"1":"381","2":"007-0424-00","3":"Camden","4":"Merchantville Borough","5":"0424","6":"0424","7":"00","8":"16650953","9":"23025.177","10":"<s_POLYGO>","_rn_":"29"},{"1":"415","2":"007-0425-00","3":"Camden","4":"Mount Ephraim Borough","5":"0425","6":"0425","7":"00","8":"25358128","9":"26969.727","10":"<s_POLYGO>","_rn_":"30"},{"1":"463","2":"007-0426-00","3":"Camden","4":"Oaklyn Borough","5":"0426","6":"0426","7":"00","8":"19559234","9":"21435.580","10":"<s_POLYGO>","_rn_":"31"},{"1":"499","2":"007-0427-00","3":"Camden","4":"Pennsauken Township","5":"0427","6":"0427","7":"00","8":"339373302","9":"140075.583","10":"<s_POLYGO>","_rn_":"32"},{"1":"517","2":"007-0428-00","3":"Camden","4":"Pine Hill Borough","5":"0428","6":"0428","7":"00","8":"110151784","9":"80974.640","10":"<s_POLYGO>","_rn_":"33"},{"1":"518","2":"007-0429-00","3":"Camden","4":"Pine Valley Borough","5":"0429","6":"0429","7":"00","8":"27153107","9":"23716.819","10":"<s_POLYGO>","_rn_":"34"},{"1":"589","2":"007-0430-00","3":"Camden","4":"Runnemede Borough","5":"0430","6":"0430","7":"00","8":"58689152","9":"44104.316","10":"<s_POLYGO>","_rn_":"35"},{"1":"610","2":"007-0431-00","3":"Camden","4":"Somerdale Borough","5":"0431","6":"0431","7":"00","8":"38742224","9":"42220.019","10":"<s_POLYGO>","_rn_":"36"},{"1":"635","2":"007-0432-00","3":"Camden","4":"Stratford Borough","5":"0432","6":"0432","7":"00","8":"43876388","9":"36993.271","10":"<s_POLYGO>","_rn_":"37"},{"1":"641","2":"007-0433-00","3":"Camden","4":"Tavistock Borough","5":"0433","6":"0433","7":"00","8":"7684489","9":"14231.765","10":"<s_POLYGO>","_rn_":"38"},{"1":"683","2":"007-0434-00","3":"Camden","4":"Voorhees Township","5":"0434","6":"0434","7":"00","8":"324113527","9":"106102.742","10":"<s_POLYGO>","_rn_":"39"},{"1":"693","2":"007-0435-00","3":"Camden","4":"Waterford Township","5":"0435","6":"0435","7":"00","8":"1009342236","9":"147423.505","10":"<s_POLYGO>","_rn_":"40"},{"1":"732","2":"007-0436-01","3":"Camden","4":"Winslow Township","5":"0436","6":"0436","7":"01","8":"931744596","9":"170977.959","10":"<s_POLYGO>","_rn_":"41"},{"1":"733","2":"007-0436-02","3":"Camden","4":"Winslow Township","5":"0436","6":"0436","7":"02","8":"381272561","9":"125706.935","10":"<s_POLYGO>","_rn_":"42"},{"1":"734","2":"007-0436-03","3":"Camden","4":"Winslow Township","5":"0436","6":"0436","7":"03","8":"152166521","9":"64282.063","10":"<s_POLYGO>","_rn_":"43"},{"1":"735","2":"007-0436-04","3":"Camden","4":"Winslow Township","5":"0436","6":"0436","7":"04","8":"158310548","9":"106572.457","10":"<s_POLYGO>","_rn_":"44"},{"1":"749","2":"007-0437-00","3":"Camden","4":"Woodlynne Borough","5":"0437","6":"0437","7":"00","8":"6175670","9":"10814.877","10":"<s_POLYGO>","_rn_":"45"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">camden_wards20_prj_sf</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["OBJECTID"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["WARD_KEY"],"name":[2],"type":["chr"],"align":["left"]},{"label":["COUNTY"],"name":[3],"type":["chr"],"align":["left"]},{"label":["MUN_NAME"],"name":[4],"type":["chr"],"align":["left"]},{"label":["MCODE_SVRS"],"name":[5],"type":["chr"],"align":["left"]},{"label":["MCODE_1040"],"name":[6],"type":["chr"],"align":["left"]},{"label":["WARD_CODE"],"name":[7],"type":["chr"],"align":["left"]},{"label":["Shape__Area"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["Shape__Length"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["geometry"],"name":[10],"type":["s_POLYGO"],"align":["right"]}],"data":[{"1":"22","2":"007-0401-00","3":"Camden","4":"Audubon Borough","5":"0401","6":"0401","7":"00","8":"41621955","9":"30833.923","10":"<s_POLYGO>","_rn_":"1"},{"1":"23","2":"007-0402-00","3":"Camden","4":"Audubon Park Borough","5":"0402","6":"0402","7":"00","8":"4586997","9":"8883.261","10":"<s_POLYGO>","_rn_":"2"},{"1":"28","2":"007-0403-00","3":"Camden","4":"Barrington Borough","5":"0403","6":"0403","7":"00","8":"44092708","9":"37684.823","10":"<s_POLYGO>","_rn_":"3"},{"1":"41","2":"007-0404-00","3":"Camden","4":"Bellmawr Borough","5":"0404","6":"0404","7":"00","8":"86381402","9":"58378.473","10":"<s_POLYGO>","_rn_":"4"},{"1":"50","2":"007-0405-00","3":"Camden","4":"Berlin Borough","5":"0405","6":"0405","7":"00","8":"100794627","9":"48566.195","10":"<s_POLYGO>","_rn_":"5"},{"1":"51","2":"007-0406-00","3":"Camden","4":"Berlin Township","5":"0406","6":"0406","7":"00","8":"93130837","9":"51605.449","10":"<s_POLYGO>","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p><br></p>
+<p>Aside from the projection, this looks good-to-go.</p>
+<div class="cell">
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">camden_wards20_sf</span> <span class="op">&lt;-</span> <span class="va">camden_wards20_prj_sf</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html">st_transform</a></span><span class="op">(</span><span class="fl">4269</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><br></p>
+<p>Plot:</p>
+<div class="cell">
+<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">camden_wards20_sf</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">camden_bnd_sf</span>, fill <span class="op">=</span> <span class="cn">NA</span>, lwd <span class="op">=</span> <span class="fl">1.2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Camden County Wards, 2020"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_light</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="exercise01_import-geometries_files/figure-html/chunk36-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><br></p>
+<p>And save:</p>
+<div class="cell">
+<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">saveRDS</a></span><span class="op">(</span><span class="va">camden_wards20_sf</span>, <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">my_data_dir</span>, <span class="st">"camden_wards20_sf.Rds"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><br></p>
+</section><section id="challenge-2" class="level2" data-number="3.4"><h2 data-number="3.4" class="anchored" data-anchor-id="challenge-2">
+<span class="header-section-number">3.4</span> CHALLENGE</h2>
+<p>Import the <a href="https://camdencountynj-ccdpw.opendata.arcgis.com/datasets/1fec6ca6c9e64104a420f87cdf64b3b9_0">Camden County Schools</a>, and plot them. (<a href="https://bit.ly/4dqGo1C">Solution</a>)</p>
+<div class="cell">
+<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Your answer here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><br></p>
+</section></section><section id="done" class="level1" data-number="4"><h1 data-number="4">
+<span class="header-section-number">4</span> DONE!</h1>
+<p>Remember to save your Quarto document. If you’re working on Posit Cloud, you can down a copy from the File Pane &gt; More &gt; Export.</p>
+</section></main><!-- /main column --><script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

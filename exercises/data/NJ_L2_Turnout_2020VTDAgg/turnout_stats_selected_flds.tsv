@@ -1,0 +1,22 @@
+vtd_geoid20	11-character GEOID corresponding to 2020 Census VTDs, based on L2 geo-referencing of individual voter addresses
+pp20200707_voted_all 	Count of voters who voted in the following election: presidential_primary_2020_07_07
+pp20200707_reg_all 	Count of voters registered on or before: 2020-07-07
+pp20200707_pct_voted_all 	Percent of voters registered on or before 2020-07-07 and who voted in: presidential_primary_2020_07_07
+pp20200707_voted_eur 	Count of voters who voted in the following election: presidential_primary_2020_07_07, L2 Race or Ethnicity: European
+pp20200707_reg_eur 	Count of voters registered on or before: 2020-07-07, L2 Race or Ethnicity: European
+pp20200707_pct_voted_eur 	Percent of voters registered on or before 2020-07-07 and who voted in: presidential_primary_2020_07_07, L2 Race or Ethnicity: European
+pp20200707_voted_hisp 	Count of voters who voted in the following election: presidential_primary_2020_07_07, L2 Race or Ethnicity: Hispanic and Portuguese
+pp20200707_reg_hisp 	Count of voters registered on or before: 2020-07-07, L2 Race or Ethnicity: Hispanic and Portuguese
+pp20200707_pct_voted_hisp	Percent of voters registered on or before 2020-07-07 and who voted in: presidential_primary_2020_07_07, L2 Race or Ethnicity: Hispanic and Portuguese
+pp20200707_voted_aa 	Count of voters who voted in the following election: presidential_primary_2020_07_07, L2 Race or Ethnicity: Likely African-American
+pp20200707_reg_aa 	Count of voters registered on or before: 2020-07-07, L2 Race or Ethnicity: Likely African-American
+pp20200707_pct_voted_aa 	Percent of voters registered on or before 2020-07-07 and who voted in: presidential_primary_2020_07_07, L2 Race or Ethnicity: Likely African-American
+pp20200707_voted_esa 	Count of voters who voted in the following election: presidential_primary_2020_07_07, L2 Race or Ethnicity: East and South Asian
+pp20200707_reg_esa 	Count of voters registered on or before: 2020-07-07, L2 Race or Ethnicity: East and South Asian
+pp20200707_pct_voted_esa 	Percent of voters registered on or before 2020-07-07 and who voted in: presidential_primary_2020_07_07, L2 Race or Ethnicity: East and South Asian
+pp20200707_voted_oth 	Count of voters who voted in the following election: presidential_primary_2020_07_07, L2 Race or Ethnicity: Other
+pp20200707_reg_oth 	Count of voters registered on or before: 2020-07-07, L2 Race or Ethnicity: Other
+pp20200707_pct_voted_oth 	Percent of voters registered on or before 2020-07-07 and who voted in: presidential_primary_2020_07_07, L2 Race or Ethnicity: Other
+pp20200707_voted_unk 	Count of voters who voted in the following election: presidential_primary_2020_07_07, L2 Race or Ethnicity: Unknown
+pp20200707_reg_unk 	Count of voters registered on or before: 2020-07-07, L2 Race or Ethnicity: Unknown
+pp20200707_pct_voted_unk 	Percent of voters registered on or before 2020-07-07 and who voted in: presidential_primary_2020_07_07, L2 Race or Ethnicity: Unknown

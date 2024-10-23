@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Exercise 2. Import and Map Voter Turnout Data</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+<script src="exercise02_import-voter-turnout_files/libs/clipboard/clipboard.min.js"></script>
+<script src="exercise02_import-voter-turnout_files/libs/quarto-html/quarto.js"></script>
+<script src="exercise02_import-voter-turnout_files/libs/quarto-html/popper.min.js"></script>
+<script src="exercise02_import-voter-turnout_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="exercise02_import-voter-turnout_files/libs/quarto-html/anchor.min.js"></script>
+<link href="exercise02_import-voter-turnout_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="exercise02_import-voter-turnout_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="exercise02_import-voter-turnout_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="exercise02_import-voter-turnout_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="exercise02_import-voter-turnout_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script src="exercise02_import-voter-turnout_files/libs/kePrint-0.0.1/kePrint.js"></script><link href="exercise02_import-voter-turnout_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+<link href="exercise02_import-voter-turnout_files/libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="exercise02_import-voter-turnout_files/libs/pagedtable-1.1/js/pagedtable.js"></script>
+</head>
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="2"><h2 id="toc-title">Table of contents</h2>
+   
+  <ul class="collapse">
+<li><a href="#summary" id="toc-summary" class="nav-link active" data-scroll-target="#summary"><span class="header-section-number">1</span> Summary</a></li>
+  <li><a href="#setup" id="toc-setup" class="nav-link" data-scroll-target="#setup"><span class="header-section-number">2</span> Setup</a></li>
+  <li><a href="#import-voting-districts" id="toc-import-voting-districts" class="nav-link" data-scroll-target="#import-voting-districts"><span class="header-section-number">3</span> Import Voting Districts</a></li>
+  <li>
+<a href="#import-2020-voter-turnout" id="toc-import-2020-voter-turnout" class="nav-link" data-scroll-target="#import-2020-voter-turnout"><span class="header-section-number">4</span> Import 2020 Voter Turnout</a>
+  <ul class="collapse">
+<li><a href="#select-columns-to-import" id="toc-select-columns-to-import" class="nav-link" data-scroll-target="#select-columns-to-import"><span class="header-section-number">4.1</span> Select columns to import</a></li>
+  <li><a href="#join-the-voter-turnout-data-to-the-spatial-data" id="toc-join-the-voter-turnout-data-to-the-spatial-data" class="nav-link" data-scroll-target="#join-the-voter-turnout-data-to-the-spatial-data"><span class="header-section-number">4.2</span> Join the voter turnout data to the spatial data</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#visualize-the-data" id="toc-visualize-the-data" class="nav-link" data-scroll-target="#visualize-the-data"><span class="header-section-number">5</span> Visualize the Data</a>
+  <ul class="collapse">
+<li><a href="#challenge" id="toc-challenge" class="nav-link" data-scroll-target="#challenge"><span class="header-section-number">5.1</span> CHALLENGE</a></li>
+  <li><a href="#create-facet-maps" id="toc-create-facet-maps" class="nav-link" data-scroll-target="#create-facet-maps"><span class="header-section-number">5.2</span> Create Facet Maps</a></li>
+  </ul>
+</li>
+  <li><a href="#done" id="toc-done" class="nav-link" data-scroll-target="#done"><span class="header-section-number">6</span> DONE!</a></li>
+  </ul></nav>
+</div>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<h1 class="title">Exercise 2. Import and Map Voter Turnout Data</h1>
+<p class="subtitle lead">Population Profiling with R, August 2024</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header><section id="summary" class="level1" data-number="1"><h1 data-number="1">
+<span class="header-section-number">1</span> Summary</h1>
+<p>In this exercise, we will:</p>
+<ul>
+<li>import the 2020 voting tabulation districts (VTDs) for Camden County NJ from a Shapefile<br>
+</li>
+<li>import a CSV with voter turnout data from the 2020 primary election<br>
+</li>
+<li>join the tabular voter turnout data to the VTD polygons<br>
+</li>
+<li>map the voter turnout for the July 2020 primary<br>
+</li>
+<li>transform the attribute table from a wide to long format<br>
+</li>
+<li>create facet maps (i.e., one map for each subset of the data)</li>
+</ul>
+<p>This notebook will feature the following packages:</p>
+<ul>
+<li><code>readr</code></li>
+<li><code>dplyr</code></li>
+<li><code>sf</code></li>
+<li><code>ggplot2</code></li>
+<li><code>tidyr</code></li>
+</ul>
+<p><br></p>
+</section><section id="setup" class="level1" data-number="2"><h1 data-number="2">
+<span class="header-section-number">2</span> Setup</h1>
+<p>Load the packages we need:</p>
+<div class="cell">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://readr.tidyverse.org">readr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org">tidyr</a></span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Define the common directory where we’ll save local copies:</p>
+<div class="cell">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">my_data_dir</span> <span class="op">&lt;-</span> <span class="fu">tools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/tools/userdir.html">R_user_dir</a></span><span class="op">(</span><span class="st">"datafordemocracy"</span>, which <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/files2.html">dir.exists</a></span><span class="op">(</span><span class="va">my_data_dir</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/files2.html">dir.create</a></span><span class="op">(</span><span class="va">my_data_dir</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu">tools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/tools/fileutils.html">file_path_as_absolute</a></span><span class="op">(</span><span class="va">my_data_dir</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "C:/Users/Andy/AppData/Roaming/R/data/R/datafordemocracy"</code></pre>
+</div>
+</div>
+<p>Import the county boundary for plotting:</p>
+<div class="cell">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">camden_bnd_sf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">my_data_dir</span>, <span class="st">"camden_bnd_sf.Rds"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><br></p>
+</section><section id="import-voting-districts" class="level1" data-number="3"><h1 data-number="3">
+<span class="header-section-number">3</span> Import Voting Districts</h1>
+<p>Although you can import Voting Tabulation Districts (VTDs) from the US Census (i.e., with <code>tigris</code>), here we will import a VTD Shapefile downloaded from <a href="https://redistrictingdatahub.org/state/new-jersey/">Redistricting Data Hub</a>.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Downloading data from Redistricting Data Hub">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Downloading data from Redistricting Data Hub
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><a href="https://redistrictingdatahub.org/">RDH</a> requires setting up a free account to download data.</p>
+</div>
+</div>
+<p><br></p>
+<p>Downloaded Shapefiles almost always come as zip files. The Shapefile for the New Jersey 2020 VTDs has already been downloaded from <a href="https://redistrictingdatahub.org/dataset/new-jersey-vtd-boundaries-2020/">here</a> and unzipped in the data folder.</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Keep Shapefiles Together">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Keep Shapefiles Together
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>‘Shapefiles’ are actually several files (3-9) that have the same base name. Only one of them has the <code>.shp</code> extension, but they must all stay together or you won’t be able to import the layer.</p>
+</div>
+</div>
+<p><br></p>
+<p>To import it, we’ll first save the path to the Shapefile as a variable, and check to make sure it exists before proceeding:</p>
+<div class="cell">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">nj_vtd20_shp</span> <span class="op">&lt;-</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html">here</a></span><span class="op">(</span><span class="st">"exercises/data/nj_vtd_2020.shp"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/files.html">file.exists</a></span><span class="op">(</span><span class="va">nj_vtd20_shp</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+<p>Import the Shapefile with <code><a href="https://r-spatial.github.io/sf/reference/st_read.html">sf::st_read()</a></code>.</p>
+<div class="cell">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">nj_vtd20_sf</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html">st_read</a></span><span class="op">(</span><span class="va">nj_vtd20_shp</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Reading layer `nj_vtd_2020' from data source 
+  `D:\Workshops\R-Census\Data for Democracy 2024\dfd2024\exercises\data\nj_vtd_2020.shp' 
+  using driver `ESRI Shapefile'
+Simple feature collection with 6361 features and 14 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: -75.56359 ymin: 38.78866 xmax: -73.88506 ymax: 41.35761
+Geodetic CRS:  NAD83</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Import Zipped Shapefiles without Unzipping!">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Import Zipped Shapefiles without Unzipping!
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You can import a zipped up Shapefile <em>without</em> unzipping. Simply change the extension of the zip file to <code>.shp.zip</code>, then you can import them with <code><a href="https://r-spatial.github.io/sf/reference/st_read.html">st_read()</a></code> as usual. (On Ubuntu systems you may also have to pre-pend <code>/vsizip//</code> to the path). Examples:</p>
+<div class="cell">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Windows</span></span>
+<span><span class="co"># st_read( here::here("exercises/data/zips/nj_vtd_2020.shp.zip"))</span></span>
+<span></span>
+<span><span class="co">## Linux (Posit Cloud)</span></span>
+<span><span class="co"># st_read(paste0("/vsizip/", here::here("exercises/data/zips/nj_vtd_2020.shp.zip")))</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<p><br></p>
+<p>Preview what we imported:</p>
+<div class="cell">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">nj_vtd20_sf</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 6361</code></pre>
+</div>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">nj_vtd20_sf</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["STATEFP20"],"name":[1],"type":["chr"],"align":["left"]},{"label":["COUNTYFP20"],"name":[2],"type":["chr"],"align":["left"]},{"label":["VTDST20"],"name":[3],"type":["chr"],"align":["left"]},{"label":["GEOID20"],"name":[4],"type":["chr"],"align":["left"]},{"label":["VTDI20"],"name":[5],"type":["chr"],"align":["left"]},{"label":["NAME20"],"name":[6],"type":["chr"],"align":["left"]},{"label":["NAMELSAD20"],"name":[7],"type":["chr"],"align":["left"]},{"label":["LSAD20"],"name":[8],"type":["chr"],"align":["left"]},{"label":["MTFCC20"],"name":[9],"type":["chr"],"align":["left"]},{"label":["FUNCSTAT20"],"name":[10],"type":["chr"],"align":["left"]},{"label":["ALAND20"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["AWATER20"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["INTPTLAT20"],"name":[13],"type":["chr"],"align":["left"]},{"label":["INTPTLON20"],"name":[14],"type":["chr"],"align":["left"]},{"label":["geometry"],"name":[15],"type":["s_MULTIP"],"align":["right"]}],"data":[{"1":"34","2":"035","3":"005008","4":"34035005008","5":"P","6":"Bedminster township voting district 8","7":"Bedminster township voting district 8","8":"00","9":"G5240","10":"S","11":"563225","12":"0","13":"+40.6538049","14":"-074.6292110","15":"<s_MULTIP>","_rn_":"1"},{"1":"34","2":"035","3":"040212","4":"34035040212","5":"A","6":"Franklin township ward 2 voting district 12","7":"Franklin township ward 2 voting district 12","8":"00","9":"G5240","10":"N","11":"7875871","12":"83176","13":"+40.5330992","14":"-074.5459246","15":"<s_MULTIP>","_rn_":"2"},{"1":"34","2":"035","3":"040438","4":"34035040438","5":"A","6":"Franklin township ward 4 voting district 38","7":"Franklin township ward 4 voting district 38","8":"00","9":"G5240","10":"N","11":"964234","12":"0","13":"+40.4904876","14":"-074.4967129","15":"<s_MULTIP>","_rn_":"3"},{"1":"34","2":"035","3":"105001","4":"34035105001","5":"A","6":"Watchung borough voting district 1","7":"Watchung borough voting district 1","8":"00","9":"G5240","10":"N","11":"2144555","12":"53833","13":"+40.6360417","14":"-074.4618981","15":"<s_MULTIP>","_rn_":"4"},{"1":"34","2":"035","3":"030036","4":"34035030036","5":"A","6":"Bridgewater township voting district 36","7":"Bridgewater township voting district 36","8":"00","9":"G5240","10":"N","11":"757901","12":"0","13":"+40.5936693","14":"-074.6695360","15":"<s_MULTIP>","_rn_":"5"},{"1":"34","2":"035","3":"030003","4":"34035030003","5":"A","6":"Bridgewater township voting district 3","7":"Bridgewater township voting district 3","8":"00","9":"G5240","10":"N","11":"2364886","12":"136415","13":"+40.5604495","14":"-074.5922802","15":"<s_MULTIP>","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p><br></p>
+<p>We only need the VTDs for Camden County:</p>
+<div class="cell">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">camden_vtd20_sf</span> <span class="op">&lt;-</span> <span class="va">nj_vtd20_sf</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">COUNTYFP20</span> <span class="op">==</span> <span class="st">"007"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">camden_vtd20_sf</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 344</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Filter When Importing">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Filter When Importing
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You can apply an attribute filter when you import the data by using the <code>query</code> argument of <code><a href="https://r-spatial.github.io/sf/reference/st_read.html">st_read()</a></code>. The previous two steps could have been combined:</p>
+<div class="cell">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># nj_vtd20_sf &lt;- sf::st_read(nj_vtd20_shp, query = "SELECT * FROM nj_vtd_2020 WHERE COUNTYFP20 = '007'")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<p><br></p>
+<p>Plot to make sure we got the right ones:</p>
+<div class="cell">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">camden_vtd20_sf</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">camden_bnd_sf</span>, fill <span class="op">=</span> <span class="cn">NA</span>, lwd <span class="op">=</span> <span class="fl">1.2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Camden County VTDs, 2020"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="exercise02_import-voter-turnout_files/figure-html/chunk10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Save a copy:</p>
+<div class="cell">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">saveRDS</a></span><span class="op">(</span><span class="va">camden_vtd20_sf</span>, <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">my_data_dir</span>, <span class="st">"camden_vtd20_sf.Rds"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><br></p>
+</section><section id="import-2020-voter-turnout" class="level1" data-number="4"><h1 data-number="4">
+<span class="header-section-number">4</span> Import 2020 Voter Turnout</h1>
+<p>RDH publishes Voter Turnout data as CSV files. Looking at the <a href="https://redistrictingdatahub.org/state/new-jersey/">available data</a> for New Jersey, we see they have statewide <a href="https://redistrictingdatahub.org/dataset/2020-new-jersey-elections-turnout-by-race-ethnicity-aggregated-to-2020-census-vtds/">voter turnout data from the 2020 elections by VTD</a>. The CSV file has already been downloaded and saved in the exercises data folder:</p>
+<div class="cell">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">nj_vto20_csv</span> <span class="op">&lt;-</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html">here</a></span><span class="op">(</span><span class="st">"exercises/data/NJ_L2_Turnout_2020VTDAgg/NJ_l2_turnout_stats_vtd20.csv"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/files.html">file.exists</a></span><span class="op">(</span><span class="va">nj_vto20_csv</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+<p><br></p>
+<p>Import the whole thing using <code><a href="https://readr.tidyverse.org/reference/read_delim.html">readr::read_csv()</a></code>:</p>
+<div class="cell">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">nj_vto20_tbl</span> <span class="op">&lt;-</span> <span class="fu">readr</span><span class="fu">::</span><span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv</a></span><span class="op">(</span><span class="va">nj_vto20_csv</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 6353 Columns: 212
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr   (1): vtd_geoid20
+dbl (211): total_reg, p20210608_voted_all, p20210608_reg_all, p20210608_pct_...
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+<p>View the column names:</p>
+<div class="cell">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">nj_vto20_tbl</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  [1] "vtd_geoid20"               "total_reg"                
+  [3] "p20210608_voted_all"       "p20210608_reg_all"        
+  [5] "p20210608_pct_voted_all"   "p20210608_voted_eur"      
+  [7] "p20210608_reg_eur"         "p20210608_pct_voted_eur"  
+  [9] "p20210608_voted_hisp"      "p20210608_reg_hisp"       
+ [11] "p20210608_pct_voted_hisp"  "p20210608_voted_aa"       
+ [13] "p20210608_reg_aa"          "p20210608_pct_voted_aa"   
+ [15] "p20210608_voted_esa"       "p20210608_reg_esa"        
+ [17] "p20210608_pct_voted_esa"   "p20210608_voted_oth"      
+ [19] "p20210608_reg_oth"         "p20210608_pct_voted_oth"  
+ [21] "p20210608_voted_unk"       "p20210608_reg_unk"        
+ [23] "p20210608_pct_voted_unk"   "s20210420_voted_all"      
+ [25] "s20210420_reg_all"         "s20210420_pct_voted_all"  
+ [27] "s20210420_voted_eur"       "s20210420_reg_eur"        
+ [29] "s20210420_pct_voted_eur"   "s20210420_voted_hisp"     
+ [31] "s20210420_reg_hisp"        "s20210420_pct_voted_hisp" 
+ [33] "s20210420_voted_aa"        "s20210420_reg_aa"         
+ [35] "s20210420_pct_voted_aa"    "s20210420_voted_esa"      
+ [37] "s20210420_reg_esa"         "s20210420_pct_voted_esa"  
+ [39] "s20210420_voted_oth"       "s20210420_reg_oth"        
+ [41] "s20210420_pct_voted_oth"   "s20210420_voted_unk"      
+ [43] "s20210420_reg_unk"         "s20210420_pct_voted_unk"  
+ [45] "r20201215_voted_all"       "r20201215_reg_all"        
+ [47] "r20201215_pct_voted_all"   "r20201215_voted_eur"      
+ [49] "r20201215_reg_eur"         "r20201215_pct_voted_eur"  
+ [51] "r20201215_voted_hisp"      "r20201215_reg_hisp"       
+ [53] "r20201215_pct_voted_hisp"  "r20201215_voted_aa"       
+ [55] "r20201215_reg_aa"          "r20201215_pct_voted_aa"   
+ [57] "r20201215_voted_esa"       "r20201215_reg_esa"        
+ [59] "r20201215_pct_voted_esa"   "r20201215_voted_oth"      
+ [61] "r20201215_reg_oth"         "r20201215_pct_voted_oth"  
+ [63] "r20201215_voted_unk"       "r20201215_reg_unk"        
+ [65] "r20201215_pct_voted_unk"   "g20201103_voted_all"      
+ [67] "g20201103_reg_all"         "g20201103_pct_voted_all"  
+ [69] "g20201103_voted_eur"       "g20201103_reg_eur"        
+ [71] "g20201103_pct_voted_eur"   "g20201103_voted_hisp"     
+ [73] "g20201103_reg_hisp"        "g20201103_pct_voted_hisp" 
+ [75] "g20201103_voted_aa"        "g20201103_reg_aa"         
+ [77] "g20201103_pct_voted_aa"    "g20201103_voted_esa"      
+ [79] "g20201103_reg_esa"         "g20201103_pct_voted_esa"  
+ [81] "g20201103_voted_oth"       "g20201103_reg_oth"        
+ [83] "g20201103_pct_voted_oth"   "g20201103_voted_unk"      
+ [85] "g20201103_reg_unk"         "g20201103_pct_voted_unk"  
+ [87] "p20200707_voted_all"       "p20200707_reg_all"        
+ [89] "p20200707_pct_voted_all"   "p20200707_voted_eur"      
+ [91] "p20200707_reg_eur"         "p20200707_pct_voted_eur"  
+ [93] "p20200707_voted_hisp"      "p20200707_reg_hisp"       
+ [95] "p20200707_pct_voted_hisp"  "p20200707_voted_aa"       
+ [97] "p20200707_reg_aa"          "p20200707_pct_voted_aa"   
+ [99] "p20200707_voted_esa"       "p20200707_reg_esa"        
+[101] "p20200707_pct_voted_esa"   "p20200707_voted_oth"      
+[103] "p20200707_reg_oth"         "p20200707_pct_voted_oth"  
+[105] "p20200707_voted_unk"       "p20200707_reg_unk"        
+[107] "p20200707_pct_voted_unk"   "pp20200707_voted_all"     
+[109] "pp20200707_reg_all"        "pp20200707_pct_voted_all" 
+[111] "pp20200707_voted_eur"      "pp20200707_reg_eur"       
+[113] "pp20200707_pct_voted_eur"  "pp20200707_voted_hisp"    
+[115] "pp20200707_reg_hisp"       "pp20200707_pct_voted_hisp"
+[117] "pp20200707_voted_aa"       "pp20200707_reg_aa"        
+[119] "pp20200707_pct_voted_aa"   "pp20200707_voted_esa"     
+[121] "pp20200707_reg_esa"        "pp20200707_pct_voted_esa" 
+[123] "pp20200707_voted_oth"      "pp20200707_reg_oth"       
+[125] "pp20200707_pct_voted_oth"  "pp20200707_voted_unk"     
+[127] "pp20200707_reg_unk"        "pp20200707_pct_voted_unk" 
+[129] "s20200512_voted_all"       "s20200512_reg_all"        
+[131] "s20200512_pct_voted_all"   "s20200512_voted_eur"      
+[133] "s20200512_reg_eur"         "s20200512_pct_voted_eur"  
+[135] "s20200512_voted_hisp"      "s20200512_reg_hisp"       
+[137] "s20200512_pct_voted_hisp"  "s20200512_voted_aa"       
+[139] "s20200512_reg_aa"          "s20200512_pct_voted_aa"   
+[141] "s20200512_voted_esa"       "s20200512_reg_esa"        
+[143] "s20200512_pct_voted_esa"   "s20200512_voted_oth"      
+[145] "s20200512_reg_oth"         "s20200512_pct_voted_oth"  
+[147] "s20200512_voted_unk"       "s20200512_reg_unk"        
+[149] "s20200512_pct_voted_unk"   "s20200310_voted_all"      
+[151] "s20200310_reg_all"         "s20200310_pct_voted_all"  
+[153] "s20200310_voted_eur"       "s20200310_reg_eur"        
+[155] "s20200310_pct_voted_eur"   "s20200310_voted_hisp"     
+[157] "s20200310_reg_hisp"        "s20200310_pct_voted_hisp" 
+[159] "s20200310_voted_aa"        "s20200310_reg_aa"         
+[161] "s20200310_pct_voted_aa"    "s20200310_voted_esa"      
+[163] "s20200310_reg_esa"         "s20200310_pct_voted_esa"  
+[165] "s20200310_voted_oth"       "s20200310_reg_oth"        
+[167] "s20200310_pct_voted_oth"   "s20200310_voted_unk"      
+[169] "s20200310_reg_unk"         "s20200310_pct_voted_unk"  
+[171] "s20200215_voted_all"       "s20200215_reg_all"        
+[173] "s20200215_pct_voted_all"   "s20200215_voted_eur"      
+[175] "s20200215_reg_eur"         "s20200215_pct_voted_eur"  
+[177] "s20200215_voted_hisp"      "s20200215_reg_hisp"       
+[179] "s20200215_pct_voted_hisp"  "s20200215_voted_aa"       
+[181] "s20200215_reg_aa"          "s20200215_pct_voted_aa"   
+[183] "s20200215_voted_esa"       "s20200215_reg_esa"        
+[185] "s20200215_pct_voted_esa"   "s20200215_voted_oth"      
+[187] "s20200215_reg_oth"         "s20200215_pct_voted_oth"  
+[189] "s20200215_voted_unk"       "s20200215_reg_unk"        
+[191] "s20200215_pct_voted_unk"   "s20200128_voted_all"      
+[193] "s20200128_reg_all"         "s20200128_pct_voted_all"  
+[195] "s20200128_voted_eur"       "s20200128_reg_eur"        
+[197] "s20200128_pct_voted_eur"   "s20200128_voted_hisp"     
+[199] "s20200128_reg_hisp"        "s20200128_pct_voted_hisp" 
+[201] "s20200128_voted_aa"        "s20200128_reg_aa"         
+[203] "s20200128_pct_voted_aa"    "s20200128_voted_esa"      
+[205] "s20200128_reg_esa"         "s20200128_pct_voted_esa"  
+[207] "s20200128_voted_oth"       "s20200128_reg_oth"        
+[209] "s20200128_pct_voted_oth"   "s20200128_voted_unk"      
+[211] "s20200128_reg_unk"         "s20200128_pct_voted_unk"  </code></pre>
+</div>
+</div>
+<p><strong>That’s a lot of columns!</strong> And far more VTDs than we need!</p>
+<p><br></p>
+<section id="select-columns-to-import" class="level2" data-number="4.1"><h2 data-number="4.1" class="anchored" data-anchor-id="select-columns-to-import">
+<span class="header-section-number">4.1</span> Select columns to import</h2>
+<p>It isn’t uncommon to encouter tabular data that has far more columns than you need. To determine which columns you need, you have to go thru the painstaking work of reading a <a href="https://redistrictingdatahub.org/wp-content/uploads/2021/10/NJ_L2_turnout_vtd20_readme.txt">data dictionary</a>.</p>
+<p>For this exercise, we will only import the following columns that provide the turnout per VTD for the July-2020 presidential primary:</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-striped table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<thead><tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">var</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">def</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">vtd_geoid20</td>
+<td style="text-align: left;">11-character GEOID corresponding to 2020 Census VTDs, based on L2 geo-referencing of individual voter addresses</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pp20200707_voted_all</td>
+<td style="text-align: left;">Count of voters who voted in the following election: presidential_primary_2020_07_07</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">pp20200707_reg_all</td>
+<td style="text-align: left;">Count of voters registered on or before: 2020-07-07</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pp20200707_pct_voted_all</td>
+<td style="text-align: left;">Percent of voters registered on or before 2020-07-07 and who voted in: presidential_primary_2020_07_07</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">pp20200707_voted_eur</td>
+<td style="text-align: left;">Count of voters who voted in the following election: presidential_primary_2020_07_07, L2 Race or Ethnicity: European</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pp20200707_reg_eur</td>
+<td style="text-align: left;">Count of voters registered on or before: 2020-07-07, L2 Race or Ethnicity: European</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">pp20200707_pct_voted_eur</td>
+<td style="text-align: left;">Percent of voters registered on or before 2020-07-07 and who voted in: presidential_primary_2020_07_07, L2 Race or Ethnicity: European</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pp20200707_voted_hisp</td>
+<td style="text-align: left;">Count of voters who voted in the following election: presidential_primary_2020_07_07, L2 Race or Ethnicity: Hispanic and Portuguese</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">pp20200707_reg_hisp</td>
+<td style="text-align: left;">Count of voters registered on or before: 2020-07-07, L2 Race or Ethnicity: Hispanic and Portuguese</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pp20200707_pct_voted_hisp</td>
+<td style="text-align: left;">Percent of voters registered on or before 2020-07-07 and who voted in: presidential_primary_2020_07_07, L2 Race or Ethnicity: Hispanic and Portuguese</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">pp20200707_voted_aa</td>
+<td style="text-align: left;">Count of voters who voted in the following election: presidential_primary_2020_07_07, L2 Race or Ethnicity: Likely African-American</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pp20200707_reg_aa</td>
+<td style="text-align: left;">Count of voters registered on or before: 2020-07-07, L2 Race or Ethnicity: Likely African-American</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">pp20200707_pct_voted_aa</td>
+<td style="text-align: left;">Percent of voters registered on or before 2020-07-07 and who voted in: presidential_primary_2020_07_07, L2 Race or Ethnicity: Likely African-American</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pp20200707_voted_esa</td>
+<td style="text-align: left;">Count of voters who voted in the following election: presidential_primary_2020_07_07, L2 Race or Ethnicity: East and South Asian</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">pp20200707_reg_esa</td>
+<td style="text-align: left;">Count of voters registered on or before: 2020-07-07, L2 Race or Ethnicity: East and South Asian</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pp20200707_pct_voted_esa</td>
+<td style="text-align: left;">Percent of voters registered on or before 2020-07-07 and who voted in: presidential_primary_2020_07_07, L2 Race or Ethnicity: East and South Asian</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">pp20200707_voted_oth</td>
+<td style="text-align: left;">Count of voters who voted in the following election: presidential_primary_2020_07_07, L2 Race or Ethnicity: Other</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pp20200707_reg_oth</td>
+<td style="text-align: left;">Count of voters registered on or before: 2020-07-07, L2 Race or Ethnicity: Other</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">pp20200707_pct_voted_oth</td>
+<td style="text-align: left;">Percent of voters registered on or before 2020-07-07 and who voted in: presidential_primary_2020_07_07, L2 Race or Ethnicity: Other</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pp20200707_voted_unk</td>
+<td style="text-align: left;">Count of voters who voted in the following election: presidential_primary_2020_07_07, L2 Race or Ethnicity: Unknown</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">pp20200707_reg_unk</td>
+<td style="text-align: left;">Count of voters registered on or before: 2020-07-07, L2 Race or Ethnicity: Unknown</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pp20200707_pct_voted_unk</td>
+<td style="text-align: left;">Percent of voters registered on or before 2020-07-07 and who voted in: presidential_primary_2020_07_07, L2 Race or Ethnicity: Unknown</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><br></p>
+<p>To import just these columns we can use the <code>col_select</code> argument of <code><a href="https://readr.tidyverse.org/reference/read_delim.html">readr::read_csv()</a></code>:</p>
+<div class="cell">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">nj_pri20_vto_tbl</span> <span class="op">&lt;-</span> <span class="fu">readr</span><span class="fu">::</span><span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv</a></span><span class="op">(</span><span class="va">nj_vto20_csv</span>,</span>
+<span>                             col_select <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
+<span>                               <span class="va">vtd_geoid20</span>,</span>
+<span>                               <span class="va">pp20200707_voted_all</span>,</span>
+<span>                               <span class="va">pp20200707_reg_all</span>,</span>
+<span>                               <span class="va">pp20200707_pct_voted_all</span>,</span>
+<span>                               <span class="va">pp20200707_voted_eur</span>,</span>
+<span>                               <span class="va">pp20200707_reg_eur</span>,</span>
+<span>                               <span class="va">pp20200707_pct_voted_eur</span>,</span>
+<span>                               <span class="va">pp20200707_voted_hisp</span>,</span>
+<span>                               <span class="va">pp20200707_reg_hisp</span>,</span>
+<span>                               <span class="va">pp20200707_pct_voted_hisp</span>,</span>
+<span>                               <span class="va">pp20200707_voted_aa</span>,</span>
+<span>                               <span class="va">pp20200707_reg_aa</span>,</span>
+<span>                               <span class="va">pp20200707_pct_voted_aa</span>,</span>
+<span>                               <span class="va">pp20200707_voted_esa</span>,</span>
+<span>                               <span class="va">pp20200707_reg_esa</span>,</span>
+<span>                               <span class="va">pp20200707_pct_voted_esa</span>,</span>
+<span>                               <span class="va">pp20200707_voted_oth</span>,</span>
+<span>                               <span class="va">pp20200707_reg_oth</span>,</span>
+<span>                               <span class="va">pp20200707_pct_voted_oth</span>,</span>
+<span>                               <span class="va">pp20200707_voted_unk</span>,</span>
+<span>                               <span class="va">pp20200707_reg_unk</span>,</span>
+<span>                               <span class="va">pp20200707_pct_voted_unk</span><span class="op">)</span>,</span>
+<span>                             show_col_types <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">nj_pri20_vto_tbl</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 6353   22</code></pre>
+</div>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">nj_pri20_vto_tbl</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["vtd_geoid20"],"name":[1],"type":["chr"],"align":["left"]},{"label":["pp20200707_voted_all"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["pp20200707_reg_all"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["pp20200707_pct_voted_all"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["pp20200707_voted_eur"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["pp20200707_reg_eur"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["pp20200707_pct_voted_eur"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["pp20200707_voted_hisp"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["pp20200707_reg_hisp"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["pp20200707_pct_voted_hisp"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["pp20200707_voted_aa"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["pp20200707_reg_aa"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["pp20200707_pct_voted_aa"],"name":[13],"type":["dbl"],"align":["right"]},{"label":["pp20200707_voted_esa"],"name":[14],"type":["dbl"],"align":["right"]},{"label":["pp20200707_reg_esa"],"name":[15],"type":["dbl"],"align":["right"]},{"label":["pp20200707_pct_voted_esa"],"name":[16],"type":["dbl"],"align":["right"]},{"label":["pp20200707_voted_oth"],"name":[17],"type":["dbl"],"align":["right"]},{"label":["pp20200707_reg_oth"],"name":[18],"type":["dbl"],"align":["right"]},{"label":["pp20200707_pct_voted_oth"],"name":[19],"type":["dbl"],"align":["right"]},{"label":["pp20200707_voted_unk"],"name":[20],"type":["dbl"],"align":["right"]},{"label":["pp20200707_reg_unk"],"name":[21],"type":["dbl"],"align":["right"]},{"label":["pp20200707_pct_voted_unk"],"name":[22],"type":["dbl"],"align":["right"]}],"data":[{"1":"34001005203","2":"244","3":"778","4":"0.3136","5":"205","6":"641","7":"0.3198","8":"5","9":"31","10":"0.1613","11":"4","12":"9","13":"0.4444","14":"1","15":"15","16":"0.0667","17":"10","18":"18","19":"0.5556","20":"19","21":"64","22":"0.2969"},{"1":"34001010203","2":"297","3":"1151","4":"0.2580","5":"18","6":"109","7":"0.1651","8":"75","9":"391","10":"0.1918","11":"194","12":"607","13":"0.3196","14":"1","15":"5","16":"0.2000","17":"3","18":"15","19":"0.2000","20":"6","21":"24","22":"0.2500"},{"1":"34001010601","2":"364","3":"1186","4":"0.3069","5":"115","6":"409","7":"0.2812","8":"46","9":"260","10":"0.1769","11":"7","12":"19","13":"0.3684","14":"65","15":"230","16":"0.2826","17":"97","18":"172","19":"0.5640","20":"34","21":"96","22":"0.3542"},{"1":"34001040004","2":"426","3":"1507","4":"0.2827","5":"352","6":"1226","7":"0.2871","8":"11","9":"74","10":"0.1486","11":"2","12":"2","13":"1.0000","14":"8","15":"26","16":"0.3077","17":"10","18":"25","19":"0.4000","20":"43","21":"154","22":"0.2792"},{"1":"34001055001","2":"396","3":"1580","4":"0.2506","5":"326","6":"1193","7":"0.2733","8":"17","9":"114","10":"0.1491","11":"8","12":"32","13":"0.2500","14":"6","15":"44","16":"0.1364","17":"10","18":"35","19":"0.2857","20":"29","21":"162","22":"0.1790"},{"1":"34001010304","2":"519","3":"1625","4":"0.3194","5":"33","6":"159","7":"0.2075","8":"25","9":"178","10":"0.1404","11":"439","12":"1211","13":"0.3625","14":"4","15":"19","16":"0.2105","17":"13","18":"34","19":"0.3824","20":"5","21":"24","22":"0.2083"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Selecting Fields to Import">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Selecting Fields to Import
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You can also save the names of the fields you wish to import in a text file (one field per line), and import them as follows:</p>
+<div class="cell">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">turnout_selflds_txt</span> <span class="op">&lt;-</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html">here</a></span><span class="op">(</span><span class="st">"exercises/data/NJ_L2_Turnout_2020VTDAgg/turnout_stats_selected_flds.txt"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv</a></span><span class="op">(</span><span class="va">nj_vto20_csv</span>, col_select <span class="op">=</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_lines.html">read_lines</a></span><span class="op">(</span><span class="va">turnout_selflds_txt</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<p><br></p>
+</section><section id="join-the-voter-turnout-data-to-the-spatial-data" class="level2" data-number="4.2"><h2 data-number="4.2" class="anchored" data-anchor-id="join-the-voter-turnout-data-to-the-spatial-data">
+<span class="header-section-number">4.2</span> Join the voter turnout data to the spatial data</h2>
+<p>To map voter turnout, we need to join the table to the spatial data, using an attribute join (i.e., join on a common column).</p>
+<p>First, we preview both tables to identify the columns we can use to link join together:</p>
+<div class="cell">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">camden_vtd20_sf</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["STATEFP20"],"name":[1],"type":["chr"],"align":["left"]},{"label":["COUNTYFP20"],"name":[2],"type":["chr"],"align":["left"]},{"label":["VTDST20"],"name":[3],"type":["chr"],"align":["left"]},{"label":["GEOID20"],"name":[4],"type":["chr"],"align":["left"]},{"label":["VTDI20"],"name":[5],"type":["chr"],"align":["left"]},{"label":["NAME20"],"name":[6],"type":["chr"],"align":["left"]},{"label":["NAMELSAD20"],"name":[7],"type":["chr"],"align":["left"]},{"label":["LSAD20"],"name":[8],"type":["chr"],"align":["left"]},{"label":["MTFCC20"],"name":[9],"type":["chr"],"align":["left"]},{"label":["FUNCSTAT20"],"name":[10],"type":["chr"],"align":["left"]},{"label":["ALAND20"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["AWATER20"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["INTPTLAT20"],"name":[13],"type":["chr"],"align":["left"]},{"label":["INTPTLON20"],"name":[14],"type":["chr"],"align":["left"]},{"label":["geometry"],"name":[15],"type":["s_MULTIP"],"align":["right"]}],"data":[{"1":"34","2":"007","3":"075017","4":"34007075017","5":"A","6":"Gloucester township voting district 17","7":"Gloucester township voting district 17","8":"00","9":"G5240","10":"N","11":"5779525","12":"83472","13":"+39.7793901","14":"-075.0403790","15":"<s_MULTIP>","_rn_":"1"},{"1":"34","2":"007","3":"075023","4":"34007075023","5":"A","6":"Gloucester township voting district 23","7":"Gloucester township voting district 23","8":"00","9":"G5240","10":"N","11":"677864","12":"8859","13":"+39.7999754","14":"-075.0300066","15":"<s_MULTIP>","_rn_":"2"},{"1":"34","2":"007","3":"075038","4":"34007075038","5":"A","6":"Gloucester township voting district 38","7":"Gloucester township voting district 38","8":"00","9":"G5240","10":"N","11":"2515587","12":"7978","13":"+39.7867188","14":"-075.0150018","15":"<s_MULTIP>","_rn_":"3"},{"1":"34","2":"007","3":"075014","4":"34007075014","5":"A","6":"Gloucester township voting district 14","7":"Gloucester township voting district 14","8":"00","9":"G5240","10":"N","11":"747894","12":"0","13":"+39.7985106","14":"-075.0362283","15":"<s_MULTIP>","_rn_":"4"},{"1":"34","2":"007","3":"075027","4":"34007075027","5":"A","6":"Gloucester township voting district 27","7":"Gloucester township voting district 27","8":"00","9":"G5240","10":"N","11":"1099985","12":"0","13":"+39.7984177","14":"-075.0467953","15":"<s_MULTIP>","_rn_":"5"},{"1":"34","2":"007","3":"075039","4":"34007075039","5":"A","6":"Gloucester township voting district 39","7":"Gloucester township voting district 39","8":"00","9":"G5240","10":"N","11":"796929","12":"11630","13":"+39.7709440","14":"-075.0386952","15":"<s_MULTIP>","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">nj_pri20_vto_tbl</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["vtd_geoid20"],"name":[1],"type":["chr"],"align":["left"]},{"label":["pp20200707_voted_all"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["pp20200707_reg_all"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["pp20200707_pct_voted_all"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["pp20200707_voted_eur"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["pp20200707_reg_eur"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["pp20200707_pct_voted_eur"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["pp20200707_voted_hisp"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["pp20200707_reg_hisp"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["pp20200707_pct_voted_hisp"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["pp20200707_voted_aa"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["pp20200707_reg_aa"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["pp20200707_pct_voted_aa"],"name":[13],"type":["dbl"],"align":["right"]},{"label":["pp20200707_voted_esa"],"name":[14],"type":["dbl"],"align":["right"]},{"label":["pp20200707_reg_esa"],"name":[15],"type":["dbl"],"align":["right"]},{"label":["pp20200707_pct_voted_esa"],"name":[16],"type":["dbl"],"align":["right"]},{"label":["pp20200707_voted_oth"],"name":[17],"type":["dbl"],"align":["right"]},{"label":["pp20200707_reg_oth"],"name":[18],"type":["dbl"],"align":["right"]},{"label":["pp20200707_pct_voted_oth"],"name":[19],"type":["dbl"],"align":["right"]},{"label":["pp20200707_voted_unk"],"name":[20],"type":["dbl"],"align":["right"]},{"label":["pp20200707_reg_unk"],"name":[21],"type":["dbl"],"align":["right"]},{"label":["pp20200707_pct_voted_unk"],"name":[22],"type":["dbl"],"align":["right"]}],"data":[{"1":"34001005203","2":"244","3":"778","4":"0.3136","5":"205","6":"641","7":"0.3198","8":"5","9":"31","10":"0.1613","11":"4","12":"9","13":"0.4444","14":"1","15":"15","16":"0.0667","17":"10","18":"18","19":"0.5556","20":"19","21":"64","22":"0.2969"},{"1":"34001010203","2":"297","3":"1151","4":"0.2580","5":"18","6":"109","7":"0.1651","8":"75","9":"391","10":"0.1918","11":"194","12":"607","13":"0.3196","14":"1","15":"5","16":"0.2000","17":"3","18":"15","19":"0.2000","20":"6","21":"24","22":"0.2500"},{"1":"34001010601","2":"364","3":"1186","4":"0.3069","5":"115","6":"409","7":"0.2812","8":"46","9":"260","10":"0.1769","11":"7","12":"19","13":"0.3684","14":"65","15":"230","16":"0.2826","17":"97","18":"172","19":"0.5640","20":"34","21":"96","22":"0.3542"},{"1":"34001040004","2":"426","3":"1507","4":"0.2827","5":"352","6":"1226","7":"0.2871","8":"11","9":"74","10":"0.1486","11":"2","12":"2","13":"1.0000","14":"8","15":"26","16":"0.3077","17":"10","18":"25","19":"0.4000","20":"43","21":"154","22":"0.2792"},{"1":"34001055001","2":"396","3":"1580","4":"0.2506","5":"326","6":"1193","7":"0.2733","8":"17","9":"114","10":"0.1491","11":"8","12":"32","13":"0.2500","14":"6","15":"44","16":"0.1364","17":"10","18":"35","19":"0.2857","20":"29","21":"162","22":"0.1790"},{"1":"34001010304","2":"519","3":"1625","4":"0.3194","5":"33","6":"159","7":"0.2075","8":"25","9":"178","10":"0.1404","11":"439","12":"1211","13":"0.3625","14":"4","15":"19","16":"0.2105","17":"13","18":"34","19":"0.3824","20":"5","21":"24","22":"0.2083"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>Here we see the two tables have <code>GEOID20</code> and <code>vtd_geoid20</code> columns respectively that match the rows.</p>
+<p>Make the join:</p>
+<div class="cell">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">camden_pri20_vto_vtd_sf</span> <span class="op">&lt;-</span> <span class="va">camden_vtd20_sf</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span><span class="va">nj_pri20_vto_tbl</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"GEOID20"</span> <span class="op">=</span><span class="st">"vtd_geoid20"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">GEOID20</span>, <span class="va">NAME20</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">starts_with</a></span><span class="op">(</span><span class="st">"pp"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Tip">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>To join two tables when the matching columns have different names, you can pass a <em>named vector</em> to the <code>by</code> argument (as shown above).</p>
+</div>
+</div>
+<p><br></p>
+<p>After making a join, you should always inspect the results to make sure:</p>
+<ul>
+<li>the joined table has the right number of rows<br>
+</li>
+<li>there are no unexpected <code>NAs</code> (which are usually a sign that a matching row wasn’t found)</li>
+</ul>
+<div class="cell">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># camden_pri20_vto_vtd_sf |&gt; View()</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><br></p>
+<p>Lastly, save the joined tables to disk:</p>
+<div class="cell">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">saveRDS</a></span><span class="op">(</span><span class="va">camden_pri20_vto_vtd_sf</span>, <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">my_data_dir</span>, <span class="st">"camden_pri20_vto_vtd_sf.Rds"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><br></p>
+</section></section><section id="visualize-the-data" class="level1" data-number="5"><h1 data-number="5">
+<span class="header-section-number">5</span> Visualize the Data</h1>
+<p>A good way to map data with continuous values is with a choropleth map:</p>
+<div class="cell">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">camden_pri20_vto_vtd_sf</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">pp20200707_pct_voted_all</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_fill_distiller</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Greens"</span>, direction <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Percent of All Registered Voters Who Voted"</span>, </span>
+<span>       subtitle <span class="op">=</span> <span class="st">"Camden County NJ, July 2020 Primary"</span>,</span>
+<span>       fill <span class="op">=</span> <span class="st">"Percent"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_void</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="exercise02_import-voter-turnout_files/figure-html/chunk22-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Customizing the Color Ramp">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Customizing the Color Ramp
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>There are a number of color ramps you can use with <code>scale_fill_*</code> functions.</p>
+<p>For example, try substituting <code>scale_fill_gradient(low = "grey", high = "brown")</code></p>
+<p>To view Brewer scales, run <code><a href="https://rdrr.io/pkg/RColorBrewer/man/ColorBrewer.html">RColorBrewer::display.brewer.all()</a></code></p>
+<p>See also <a href="https://ggplot2-book.org/scales-colour" class="uri">https://ggplot2-book.org/scales-colour</a></p>
+</div>
+</div>
+<p><br></p>
+<section id="challenge" class="level2" data-number="5.1"><h2 data-number="5.1" class="anchored" data-anchor-id="challenge">
+<span class="header-section-number">5.1</span> CHALLENGE</h2>
+<p>Select a different column from the VTD voter turnout data, and map it.</p>
+<div class="cell">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Your answer here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><br></p>
+</section><section id="create-facet-maps" class="level2" data-number="5.2"><h2 data-number="5.2" class="anchored" data-anchor-id="create-facet-maps">
+<span class="header-section-number">5.2</span> Create Facet Maps</h2>
+<p>Suppose we wanted to create a series of maps, each one showing the percentage of eligible voters who actually voted in the July 2020 presidential primary, broken down by the different racial groups.</p>
+<p>The columns that contain turnout percentages by racial group include:</p>
+<p><code>pp20200707_pct_voted_eur</code> <code>pp20200707_pct_voted_hisp</code> <code>pp20200707_pct_voted_aa</code> <code>pp20200707_pct_voted_esa</code> <code>pp20200707_pct_voted_oth</code> <code>pp20200707_pct_voted_unk</code></p>
+<p>To map these as a series of maps, we have two options:</p>
+<ol type="1">
+<li><p>Create a loop that makes a map for each one of these columns, then plot them side by side</p></li>
+<li><p>Reshape the data from ‘wide’ to ‘long’, then use the built-in facet options in ggplot.</p></li>
+</ol>
+<p><br></p>
+<p>We will use option #2, which is the more elegant approach as long as you can make your data tidy:</p>
+<div class="cell">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">camden_pri20_vto_vtd_WIDE_sf</span> <span class="op">&lt;-</span> <span class="va">camden_pri20_vto_vtd_sf</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">!</span><span class="va">pp20200707_pct_voted_all</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span> <span class="va">GEOID20</span>, <span class="va">NAME20</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">starts_with</a></span><span class="op">(</span><span class="st">"pp20200707_pct_voted"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a></span><span class="op">(</span>cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">pp20200707_pct_voted_eur</span>, <span class="va">pp20200707_pct_voted_hisp</span>, <span class="va">pp20200707_pct_voted_aa</span>,</span>
+<span>                        <span class="va">pp20200707_pct_voted_esa</span>, <span class="va">pp20200707_pct_voted_oth</span>, <span class="va">pp20200707_pct_voted_unk</span><span class="op">)</span>,</span>
+<span>               names_to <span class="op">=</span> <span class="st">"RACE_ETHNICITY"</span>,</span>
+<span>               names_prefix <span class="op">=</span> <span class="st">"^pp20200707_pct_voted_"</span>,   <span class="co">## chop out</span></span>
+<span>               values_to <span class="op">=</span> <span class="st">"PCT_TURNOUT"</span></span>
+<span>    <span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>RACE_ETHNICITY <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span><span class="va">RACE_ETHNICITY</span> <span class="op">==</span> <span class="st">"eur"</span> <span class="op">~</span> <span class="st">"European"</span>,</span>
+<span>                                    <span class="va">RACE_ETHNICITY</span> <span class="op">==</span> <span class="st">"hisp"</span> <span class="op">~</span> <span class="st">"Hispanic and Portuguese"</span>,</span>
+<span>                                    <span class="va">RACE_ETHNICITY</span> <span class="op">==</span> <span class="st">"aa"</span> <span class="op">~</span> <span class="st">"African-American"</span>,</span>
+<span>                                    <span class="va">RACE_ETHNICITY</span> <span class="op">==</span> <span class="st">"esa"</span> <span class="op">~</span> <span class="st">"East and South Asian"</span>,</span>
+<span>                                    <span class="va">RACE_ETHNICITY</span> <span class="op">==</span> <span class="st">"oth"</span> <span class="op">~</span> <span class="st">"Other"</span>,</span>
+<span>                                    <span class="va">RACE_ETHNICITY</span> <span class="op">==</span> <span class="st">"unk"</span> <span class="op">~</span> <span class="st">"Unknown"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/relocate.html">relocate</a></span><span class="op">(</span><span class="va">GEOID20</span>, <span class="va">NAME20</span>, <span class="va">RACE_ETHNICITY</span>, <span class="va">PCT_TURNOUT</span>, <span class="va">geometry</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">camden_pri20_vto_vtd_WIDE_sf</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["GEOID20"],"name":[1],"type":["chr"],"align":["left"]},{"label":["NAME20"],"name":[2],"type":["chr"],"align":["left"]},{"label":["RACE_ETHNICITY"],"name":[3],"type":["chr"],"align":["left"]},{"label":["PCT_TURNOUT"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["geometry"],"name":[5],"type":["s_MULTIP"],"align":["right"]}],"data":[{"1":"34007075017","2":"Gloucester township voting district 17","3":"European","4":"0.2054","5":"<s_MULTIP>"},{"1":"34007075017","2":"Gloucester township voting district 17","3":"Hispanic and Portuguese","4":"0.1263","5":"<s_MULTIP>"},{"1":"34007075017","2":"Gloucester township voting district 17","3":"African-American","4":"0.3514","5":"<s_MULTIP>"},{"1":"34007075017","2":"Gloucester township voting district 17","3":"East and South Asian","4":"0.1569","5":"<s_MULTIP>"},{"1":"34007075017","2":"Gloucester township voting district 17","3":"Other","4":"0.1667","5":"<s_MULTIP>"},{"1":"34007075017","2":"Gloucester township voting district 17","3":"Unknown","4":"0.2108","5":"<s_MULTIP>"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p><br></p>
+<p>Now that we have race or ethnicity saved in the RACE_ETHNICITY column, we can use the <code><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap()</a></code> to make the subplots:</p>
+<p>Plot:</p>
+<div class="cell">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">camden_pri20_vto_vtd_WIDE_sf</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">PCT_TURNOUT</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_fill_distiller</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Greens"</span>, direction <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Percent of All Registered Voters Who Voted By Race or Ethnicity"</span>, </span>
+<span>       subtitle <span class="op">=</span> <span class="st">"Camden County NJ, July 2020 Primary"</span>,</span>
+<span>       fill <span class="op">=</span> <span class="st">"Percent"</span>,</span>
+<span>       caption <span class="op">=</span> <span class="st">"Source: RDH"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html">vars</a></span><span class="op">(</span><span class="va">RACE_ETHNICITY</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_void</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="exercise02_import-voter-turnout_files/figure-html/chunk25-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section></section><section id="done" class="level1" data-number="6"><h1 data-number="6">
+<span class="header-section-number">6</span> DONE!</h1>
+</section></main><!-- /main column --><script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

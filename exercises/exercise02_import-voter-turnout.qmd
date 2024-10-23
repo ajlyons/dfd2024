@@ -1,0 +1,393 @@
+---
+title: "Exercise 2. Import and Map Voter Turnout Data"
+subtitle: "Population Profiling with R, August 2024"
+format:
+  html:
+    df-print: paged
+    code-link: true
+    toc: true
+    toc-depth: 2
+    toc-expand: 2
+    number-sections: true
+    number-depth: 2
+editor: source
+---
+
+# Summary
+
+In this exercise, we will:
+
+- import the 2020 voting tabulation districts (VTDs) for Camden County NJ from a Shapefile  
+- import a CSV with voter turnout data from the 2020 primary election  
+- join the tabular voter turnout data to the VTD polygons  
+- map the voter turnout for the July 2020 primary   
+- transform the attribute table from a wide to long format  
+- create facet maps (i.e., one map for each subset of the data)
+
+This notebook will feature the following packages:
+
+ - `readr`
+ - `dplyr`
+ - `sf`
+ - `ggplot2`
+ - `tidyr`
+ 
+\
+
+# Setup
+
+Load the packages we need:
+
+```{r chunk01, message=FALSE}
+library(sf)
+library(dplyr)
+library(readr)
+library(ggplot2)
+library(tidyr)
+```
+
+Define the common directory where we'll save local copies:
+
+```{r chunk02}
+my_data_dir <- tools::R_user_dir("datafordemocracy", which = "data")
+if (!dir.exists(my_data_dir)) dir.create(my_data_dir, recursive = TRUE)
+tools::file_path_as_absolute(my_data_dir)
+```
+
+Import the county boundary for plotting:
+
+```{r chunk03}
+camden_bnd_sf <- readRDS(file.path(my_data_dir, "camden_bnd_sf.Rds"))
+```
+
+\
+
+# Import Voting Districts
+
+Although you can import Voting Tabulation Districts (VTDs) from the US Census (i.e., with `tigris`), here we will import a VTD Shapefile downloaded from [Redistricting Data Hub](https://redistrictingdatahub.org/state/new-jersey/).
+
+::: {.callout-note title="Downloading data from Redistricting Data Hub"}
+[RDH](https://redistrictingdatahub.org/) requires setting up a free account to download data.
+:::
+
+\
+
+Downloaded Shapefiles almost always come as zip files. The Shapefile for the New Jersey 2020 VTDs has already been downloaded from [here](https://redistrictingdatahub.org/dataset/new-jersey-vtd-boundaries-2020/) and unzipped in the data folder.
+
+::: {.callout-tip title="Keep Shapefiles Together"}
+'Shapefiles' are actually several files (3-9) that have the same base name. Only one of them has the `.shp` extension, but they must all stay together or you won't be able to import the layer.
+:::
+
+\
+
+To import it, we'll first save the path to the Shapefile as a variable, and check to make sure it exists before proceeding:
+
+```{r chunk04, cache = TRUE}
+nj_vtd20_shp <- here::here("exercises/data/nj_vtd_2020.shp")
+file.exists(nj_vtd20_shp)
+```
+
+Import the Shapefile with `sf::st_read()`.
+
+```{r chunk05, cache = TRUE}
+nj_vtd20_sf <- sf::st_read(nj_vtd20_shp)
+```
+
+::: {.callout-tip title="Import Zipped Shapefiles without Unzipping!"}
+You can import a zipped up Shapefile *without* unzipping. Simply change the extension of the zip file to `.shp.zip`, then you can import them with `st_read()` as usual. (On Ubuntu systems you may also have to pre-pend `/vsizip//` to the path). Examples:
+
+```{r chunk06}
+## Windows
+# st_read( here::here("exercises/data/zips/nj_vtd_2020.shp.zip"))
+
+## Linux (Posit Cloud)
+# st_read(paste0("/vsizip/", here::here("exercises/data/zips/nj_vtd_2020.shp.zip")))
+```
+:::
+
+\
+
+Preview what we imported:
+
+```{r chunk07}
+nrow(nj_vtd20_sf)
+head(nj_vtd20_sf)
+```
+
+\
+
+We only need the VTDs for Camden County:
+
+```{r chunk08, cache = TRUE}
+camden_vtd20_sf <- nj_vtd20_sf |> filter(COUNTYFP20 == "007")
+
+nrow(camden_vtd20_sf)
+```
+
+::: {.callout-tip title="Filter When Importing"}
+You can apply an attribute filter when you import the data by using the `query` argument of `st_read()`. The previous two steps could have been combined:
+
+```{r chunk09}
+# nj_vtd20_sf <- sf::st_read(nj_vtd20_shp, query = "SELECT * FROM nj_vtd_2020 WHERE COUNTYFP20 = '007'")
+```
+:::
+
+\
+
+Plot to make sure we got the right ones:
+
+```{r chunk10, cache = TRUE}
+ggplot(camden_vtd20_sf) + 
+  geom_sf() + 
+  geom_sf(data = camden_bnd_sf, fill = NA, lwd = 1.2) +
+  labs(title = "Camden County VTDs, 2020")
+```
+
+Save a copy:
+
+```{r chunk11, cache = TRUE}
+saveRDS(camden_vtd20_sf, file.path(my_data_dir, "camden_vtd20_sf.Rds"))
+```
+
+\
+
+# Import 2020 Voter Turnout
+
+RDH publishes Voter Turnout data as CSV files. Looking at the [available data](https://redistrictingdatahub.org/state/new-jersey/) for New Jersey, we see they have statewide [voter turnout data from the 2020 elections by VTD](https://redistrictingdatahub.org/dataset/2020-new-jersey-elections-turnout-by-race-ethnicity-aggregated-to-2020-census-vtds/). The CSV file has already been downloaded and saved in the exercises data folder:
+
+```{r chunk12}
+nj_vto20_csv <- here::here("exercises/data/NJ_L2_Turnout_2020VTDAgg/NJ_l2_turnout_stats_vtd20.csv")
+file.exists(nj_vto20_csv)
+```
+
+\
+
+Import the whole thing using `readr::read_csv()`:
+
+```{r chunk13}
+nj_vto20_tbl <- readr::read_csv(nj_vto20_csv)
+```
+
+View the column names:
+
+```{r chunk14}
+names(nj_vto20_tbl)
+```
+
+**That's a lot of columns!** And far more VTDs than we need!
+
+\
+
+## Select columns to import
+
+It isn't uncommon to encouter tabular data that has far more columns than you need. To determine which columns you need, you have to go thru the painstaking work of reading a [data dictionary](https://redistrictingdatahub.org/wp-content/uploads/2021/10/NJ_L2_turnout_vtd20_readme.txt). 
+
+For this exercise, we will only import the following columns that provide the turnout per VTD for the July-2020 presidential primary:
+
+```{r chunk15, echo = FALSE}
+here::here("exercises/data/NJ_L2_Turnout_2020VTDAgg/turnout_stats_selected_flds.tsv") |> 
+  read_tsv(col_names = c("var", "def"), trim_ws = TRUE, show_col_types = FALSE) |> 
+  knitr::kable(format = "html") |> 
+  kableExtra::kable_styling(bootstrap_options = c("striped", "condensed"))
+```
+
+\
+
+To import just these columns we can use the `col_select` argument of `readr::read_csv()`:
+
+```{r chunk16}
+nj_pri20_vto_tbl <- readr::read_csv(nj_vto20_csv,
+                             col_select = c(
+                               vtd_geoid20,
+                               pp20200707_voted_all,
+                               pp20200707_reg_all,
+                               pp20200707_pct_voted_all,
+                               pp20200707_voted_eur,
+                               pp20200707_reg_eur,
+                               pp20200707_pct_voted_eur,
+                               pp20200707_voted_hisp,
+                               pp20200707_reg_hisp,
+                               pp20200707_pct_voted_hisp,
+                               pp20200707_voted_aa,
+                               pp20200707_reg_aa,
+                               pp20200707_pct_voted_aa,
+                               pp20200707_voted_esa,
+                               pp20200707_reg_esa,
+                               pp20200707_pct_voted_esa,
+                               pp20200707_voted_oth,
+                               pp20200707_reg_oth,
+                               pp20200707_pct_voted_oth,
+                               pp20200707_voted_unk,
+                               pp20200707_reg_unk,
+                               pp20200707_pct_voted_unk),
+                             show_col_types = FALSE)
+
+dim(nj_pri20_vto_tbl)
+nj_pri20_vto_tbl |> head()
+```
+
+
+::: {.callout-tip title="Selecting Fields to Import"}
+You can also save the names of the fields you wish to import in a text file (one field per line), and import them as follows:
+
+```{r chunk17, eval = FALSE}
+turnout_selflds_txt <- here::here("exercises/data/NJ_L2_Turnout_2020VTDAgg/turnout_stats_selected_flds.txt")
+read_csv(nj_vto20_csv, col_select = read_lines(turnout_selflds_txt))
+```
+
+:::
+
+\
+
+## Join the voter turnout data to the spatial data
+
+To map voter turnout, we need to join the table to the spatial data, using an attribute join (i.e., join on a common column). 
+
+First, we preview both tables to identify the columns we can use to link join together:
+
+```{r chunk18, cache=TRUE}
+head(camden_vtd20_sf)
+head(nj_pri20_vto_tbl)
+```
+
+Here we see the two tables have `GEOID20` and `vtd_geoid20` columns respectively that match the rows.
+
+Make the join:
+
+```{r chunk19}
+camden_pri20_vto_vtd_sf <- camden_vtd20_sf |> 
+  left_join(nj_pri20_vto_tbl, by = c("GEOID20" ="vtd_geoid20")) |> 
+  select(GEOID20, NAME20, starts_with("pp"))
+```
+
+::: {.callout-tip title="Tip"}
+To join two tables when the matching columns have different names, you can pass a *named vector* to the `by` argument (as shown above).
+:::
+
+\
+
+After making a join, you should always inspect the results to make sure:  
+
+ - the joined table has the right number of rows  
+ - there are no unexpected `NAs` (which are usually a sign that a matching row wasn't found)
+ 
+```{r chunk20}
+# camden_pri20_vto_vtd_sf |> View()
+```
+
+\
+
+Lastly, save the joined tables to disk:
+
+```{r chunk21}
+saveRDS(camden_pri20_vto_vtd_sf, file.path(my_data_dir, "camden_pri20_vto_vtd_sf.Rds"))
+```
+
+\
+
+
+# Visualize the Data
+
+A good way to map data with continuous values is with a choropleth map:
+
+```{r chunk22, cache=TRUE}
+ggplot(camden_pri20_vto_vtd_sf, aes(fill = pp20200707_pct_voted_all)) +
+  geom_sf() +
+  scale_fill_distiller(palette = "Greens", direction = 1) +
+  labs(title = "Percent of All Registered Voters Who Voted", 
+       subtitle = "Camden County NJ, July 2020 Primary",
+       fill = "Percent") +
+  theme_void()
+```
+
+
+::: {.callout-tip title="Customizing the Color Ramp"}
+There are a number of color ramps you can use with `scale_fill_*` functions. 
+
+For example, try substituting `scale_fill_gradient(low = "grey", high = "brown")`
+
+To view Brewer scales, run `RColorBrewer::display.brewer.all()`
+
+See also <https://ggplot2-book.org/scales-colour>
+:::
+
+\
+
+## CHALLENGE
+
+Select a different column from the VTD voter turnout data, and map it.
+
+```{r chunk23}
+## Your answer here
+```
+
+
+\
+
+## Create Facet Maps
+
+Suppose we wanted to create a series of maps, each one showing the percentage of eligible voters who actually voted in the July 2020 presidential primary, broken down by the different racial groups. 
+
+The columns that contain turnout percentages by racial group include:
+
+`pp20200707_pct_voted_eur`
+`pp20200707_pct_voted_hisp`
+`pp20200707_pct_voted_aa`
+`pp20200707_pct_voted_esa`
+`pp20200707_pct_voted_oth`
+`pp20200707_pct_voted_unk`
+
+To map these as a series of maps, we have two options:
+
+1. Create a loop that makes a map for each one of these columns, then plot them side by side
+
+2. Reshape the data from 'wide' to 'long', then use the built-in facet options in ggplot.
+
+\
+
+We will use option #2, which is the more elegant approach as long as you can make your data tidy:
+
+```{r chunk24}
+camden_pri20_vto_vtd_WIDE_sf <- camden_pri20_vto_vtd_sf |> 
+  select(!pp20200707_pct_voted_all) |> 
+  select( GEOID20, NAME20, starts_with("pp20200707_pct_voted")) |> 
+  pivot_longer(cols = c(pp20200707_pct_voted_eur, pp20200707_pct_voted_hisp, pp20200707_pct_voted_aa,
+                        pp20200707_pct_voted_esa, pp20200707_pct_voted_oth, pp20200707_pct_voted_unk),
+               names_to = "RACE_ETHNICITY",
+               names_prefix = "^pp20200707_pct_voted_",   ## chop out
+               values_to = "PCT_TURNOUT"
+    ) |>
+  mutate(RACE_ETHNICITY = case_when(RACE_ETHNICITY == "eur" ~ "European",
+                                    RACE_ETHNICITY == "hisp" ~ "Hispanic and Portuguese",
+                                    RACE_ETHNICITY == "aa" ~ "African-American",
+                                    RACE_ETHNICITY == "esa" ~ "East and South Asian",
+                                    RACE_ETHNICITY == "oth" ~ "Other",
+                                    RACE_ETHNICITY == "unk" ~ "Unknown")) |> 
+  relocate(GEOID20, NAME20, RACE_ETHNICITY, PCT_TURNOUT, geometry)
+
+head(camden_pri20_vto_vtd_WIDE_sf)
+```
+
+\
+
+Now that we have race or ethnicity saved in the RACE_ETHNICITY column, we can use the `facet_wrap()` to make the subplots:
+
+Plot:
+
+```{r chunk25}
+ggplot(camden_pri20_vto_vtd_WIDE_sf, aes(fill = PCT_TURNOUT)) +
+  geom_sf() +
+  scale_fill_distiller(palette = "Greens", direction = 1) +
+  labs(title = "Percent of All Registered Voters Who Voted By Race or Ethnicity", 
+       subtitle = "Camden County NJ, July 2020 Primary",
+       fill = "Percent",
+       caption = "Source: RDH") +
+  facet_wrap(vars(RACE_ETHNICITY)) +
+  theme_void()
+
+```
+
+
+# DONE!
+
+

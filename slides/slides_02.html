@@ -1,0 +1,651 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <meta name="author" content=" Data for Democracy, Fall 2024 Andy Lyons" />
+  <meta name="copyright" content="<a href='https://ajlyons.github.io/d4d2024/' style='color:#444;'>https://ajlyons.github.io/d4d2024/</a>"/>
+  <title>DFD Pt2</title>
+  <style type="text/css">
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+            pre > code.sourceCode { white-space: pre; position: relative; }
+            pre > code.sourceCode > span { line-height: 1.25; }
+            pre > code.sourceCode > span:empty { height: 1.2em; }
+            .sourceCode { overflow: visible; }
+            code.sourceCode > span { color: inherit; text-decoration: inherit; }
+            div.sourceCode { margin: 1em 0; }
+            pre.sourceCode { margin: 0; }
+            @media screen {
+            div.sourceCode { overflow: auto; }
+            }
+            @media print {
+            pre > code.sourceCode { white-space: pre-wrap; }
+            pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+            }
+            pre.numberSource code
+              { counter-reset: source-line 0; }
+            pre.numberSource code > span
+              { position: relative; left: -4em; counter-increment: source-line; }
+            pre.numberSource code > span > a:first-child::before
+              { content: counter(source-line);
+                position: relative; left: -1em; text-align: right; vertical-align: baseline;
+                border: none; display: inline-block;
+                -webkit-touch-callout: none; -webkit-user-select: none;
+                -khtml-user-select: none; -moz-user-select: none;
+                -ms-user-select: none; user-select: none;
+                padding: 0 4px; width: 4em;
+                color: #aaaaaa;
+              }
+            pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+            div.sourceCode
+              {   }
+            @media screen {
+            pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+            }
+            code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+            code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+            code span.at { color: #7d9029; } /* Attribute */
+            code span.bn { color: #40a070; } /* BaseN */
+            code span.bu { color: #008000; } /* BuiltIn */
+            code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+            code span.ch { color: #4070a0; } /* Char */
+            code span.cn { color: #880000; } /* Constant */
+            code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+            code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+            code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+            code span.dt { color: #902000; } /* DataType */
+            code span.dv { color: #40a070; } /* DecVal */
+            code span.er { color: #ff0000; font-weight: bold; } /* Error */
+            code span.ex { } /* Extension */
+            code span.fl { color: #40a070; } /* Float */
+            code span.fu { color: #06287e; } /* Function */
+            code span.im { color: #008000; font-weight: bold; } /* Import */
+            code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+            code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+            code span.op { color: #666666; } /* Operator */
+            code span.ot { color: #007020; } /* Other */
+            code span.pp { color: #bc7a00; } /* Preprocessor */
+            code span.sc { color: #4070a0; } /* SpecialChar */
+            code span.ss { color: #bb6688; } /* SpecialString */
+            code span.st { color: #4070a0; } /* String */
+            code span.va { color: #19177c; } /* Variable */
+            code span.vs { color: #4070a0; } /* VerbatimString */
+            code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+          </style>
+  <style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <script src="lib/header-attrs-2.27/header-attrs.js"></script>
+  <link href="lib/slidy-2/styles/slidy.css" rel="stylesheet" />
+  <script src="lib/slidy-2/scripts/slidy.js"></script>
+  <script src="lib/slidy_shiny-1/slidy_shiny.js"></script>
+  <link rel="stylesheet" type="text/css" media="screen, projection, print"
+   href="slidy2022.css" />
+</head>
+<body>
+<div class="slide titlepage">
+  <h1 class="title">Analyzing Voter Turnout Data with R</h1>
+  <h1 class="subtitle">Part 2: Joining Tabular Data to Shapefiles</h1>
+  <p class="author">
+<img src='images/savi-logo_500x130.jpg' style='width:500px; height:130px; margin-top:0.5em; margin-bottom:1em;'/><br/>Data
+for Democracy, Fall 2024<br/>Andy Lyons
+  </p>
+  <p class="date"><a href='https://ajlyons.github.io/d4d2024/' style='color:darkgreen; font-size:105%; font-family:monospace;'>https://ajlyons.github.io/d4d2024/</a></p>
+</div>
+<div class="slide section level1">
+
+<script>
+w3c_slidy.mouse_click_enabled = false;
+</script>
+<p><br />
+</p>
+<p><br />
+</p>
+<p><img src="images/postit_bg-trans_with-note_320x320.png"
+style="display:block; margin:1em auto; border:none;" /></p>
+<p><br />
+</p>
+</div>
+<div id="outline" class="slide section level1">
+<h1>Outline</h1>
+<div class="compact">
+<ul>
+<li>better ways to import tabular data</li>
+<li>importing Shapefiles and other GIS data on disk</li>
+<li>importing spatial data from US Census with
+<code>tidyCensus</code></li>
+<li>joining tables</li>
+<li>reshaping data from wide to long</li>
+<li><span class="exercise">Exercise 2. Import and Map Voter Turnout
+Data</span></li>
+</ul>
+</div>
+<p><br />
+</p>
+</div>
+<div id="voter-turnout-data" class="slide section level1">
+<h1>Voter Turnout Data</h1>
+<p>Responsibility of counties and states to collect and report voting
+precinct boundaries and turnout</p>
+<p>Availability, quality, and format varies <strong>a lot</strong> from
+state-to-state</p>
+<p>Organizations &amp; initiatives that collect and publish election
+data:</p>
+<div class="indented1">
+<ul>
+<li><p>state election boards</p></li>
+<li><p><a href="https://redistrictingdatahub.org/">Redistricting Data
+Hub</a> - project under New Venture Fund (NVF), implemented by
+HaystaqDNA</p></li>
+<li><p><a href="https://mggg.org/">MGGG Redistricting Lab</a> - Tufts
+University, Cornell</p></li>
+</ul>
+</div>
+<p><br />
+</p>
+</div>
+<div id="redistricting-data-hub" class="slide section level1">
+<h1>Redistricting Data Hub</h1>
+<p><span style="font-family:monospace;"><a
+href="https://redistrictingdatahub.org/">https://redistrictingdatahub.org/</a></span></p>
+<h2 id="rdh-mission">RDH Mission</h2>
+<div
+style="margin:0 3em; padding-left:0.2em; font-style:italic; border-left:1px solid grey;">
+<p>The nonpartisan Redistricting Data Hub provides individuals, good
+government organizations, and community groups the data, resources, and
+knowledge to participate effectively in the redistricting process.</p>
+</div>
+<p><br />
+</p>
+<h2 id="resources">Resources</h2>
+<div class="li-single indented1">
+<ul>
+<li>RDH collects, cleans, and aggregates census election data
+including:</li>
+</ul>
+<div class="li-single indented2">
+<ul>
+<li><a
+href="https://redistrictingdatahub.org/data/about-our-data/precinct-boundaries-and-election-results/">Precinct
+Boundaries and Election Results</a> <img
+src="images/red-star-animated_18x18.gif" /></li>
+<li>Voter Files<br />
+</li>
+<li>Incumbent Addresses<br />
+</li>
+<li>Population Projections<br />
+</li>
+<li>PL 94-171<br />
+</li>
+<li>Legislative Boundaries<br />
+</li>
+<li>American Community Survey (ACS)<br />
+</li>
+<li>Citizen Voting Age Population (CVAP)<br />
+</li>
+<li>TIGER Boundary Files<br />
+</li>
+<li>Community of Interest (COI) maps<br />
+</li>
+<li>Public redistricting testimony<br />
+</li>
+<li>Official adjusted state redistricting datasets<br />
+</li>
+<li>Official adopted legislative boundaries<br />
+</li>
+</ul>
+</div>
+<ul>
+<li>Download data with a free account<br />
+</li>
+<li>Most layers are available as a Shapefile and CSV</li>
+<li>Training, Case Studies, Articles, FAQs<br />
+</li>
+</ul>
+</div>
+<p><br />
+</p>
+</div>
+<div id="better-ways-to-import-tabular-data"
+class="slide section level1">
+<h1>Better Ways to Import Tabular Data</h1>
+<p><img src="images/readr_logo_121x140.png"
+style="margin-left:2em;" /> <img src="images/readxl-logo_121x140.png"
+style="margin-left:2em;" /> <img
+src="images/googlesheets4_140x121.png" style="margin-left:2em;" /></p>
+<p><br />
+</p>
+<p>These packages allow you to:</p>
+<div class="indented2 li-single">
+<ul>
+<li>import tabular data in different formats<br />
+</li>
+<li>skip rows that don’t actually contain data<br />
+</li>
+<li>specify whether the file contains a header<br />
+</li>
+<li>rename columns as part of the importing<br />
+</li>
+<li>specify the data type for each column</li>
+</ul>
+</div>
+<p><br />
+</p>
+<p>Example:</p>
+<div class="indented2 indented2r">
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>my_tbl <span class="ot">=</span> <span class="fu">read_xlsx</span>(<span class="at">path =</span> <span class="st">&quot;plot_data.xlsx&quot;</span>, </span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>                   <span class="at">sheet =</span> <span class="st">&quot;Sheet2&quot;</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>                   <span class="at">skip =</span> <span class="dv">3</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>                   <span class="at">col_names =</span> <span class="fu">c</span>(<span class="st">&quot;plot_num&quot;</span>, <span class="st">&quot;date&quot;</span>, <span class="st">&quot;species&quot;</span>, <span class="st">&quot;count&quot;</span>),</span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>                   <span class="at">col_types =</span> <span class="fu">c</span>(<span class="st">&quot;text&quot;</span>, <span class="st">&quot;date&quot;</span>, <span class="st">&quot;text&quot;</span>, <span class="st">&quot;integer&quot;</span>))</span></code></pre></div>
+</div>
+<p><br />
+</p>
+<div class="centerblock">
+<p><a
+href="https://rawgit.com/rstudio/cheatsheets/master/data-import.pdf"
+target="_blank" rel="noopener"><img
+src="images/data-import-cheatsheet_600x460x256.png"
+style="border:1px solid grey;" /></a></p>
+</div>
+<p><br />
+</p>
+</div>
+<div id="importing-vector-gis-data-with-sf"
+class="slide section level1">
+<h1>Importing Vector GIS Data with <code>sf</code></h1>
+<p>To import GIS data with <code>sf</code>, you have to specify a
+<strong>source</strong> and <strong>layer</strong>.</p>
+<p><br />
+</p>
+<p>The <span style="color:green; font-weight:bold;">Source</span> can be
+a:</p>
+<div class="indented1">
+<p><strong>folder</strong>: <em><code>"./gis_data"</code></em></p>
+<p><strong>geodatabase</strong> (which is really a folder):
+<em><code>"./gis_data/yose_roads.gdb"</code></em></p>
+<p><strong>file</strong>: <em><code>"trail_heads.kml"</code>,
+<code>"cell_towers.geojson"</code></em></p>
+<p><strong>database connection string</strong>:
+<em><code>"PG:dbname=postgis"</code></em></p>
+</div>
+<div class="infobox">
+<p>In <code>sf</code> functions, the argument where you provide the
+source is often named <strong><code>dsn</code></strong> (data source
+name)</p>
+</div>
+<p><br />
+</p>
+<p>The <span style="color:green; font-weight:bold;">Layer</span> can be
+a:</p>
+<div class="indented1">
+<p><strong>Shapefile name</strong> (minus the shp extension)</p>
+<p>a named <strong>layer</strong> in the database / file</p>
+</div>
+</div>
+<div id="import-functions" class="slide section level1">
+<h1>Import Functions</h1>
+<p>The two main functions for importing vector data are:</p>
+<div class="indented1">
+<p><span
+style="font-family:monospace; font-weight:bold;">st_layers(<em>source</em>)</span>
+<span style="font-style:italic;"> - returns the names of available
+layers in a source</span></p>
+<p><span
+style="font-family:monospace; font-weight:bold;">st_read(<em>source</em>,
+<em>layer</em>)</span> <span style="font-style:italic;"> - import into
+R</span></p>
+</div>
+<div class="infobox">
+<p>Most of the functions in the sf package start with
+<strong><code>st_</code></strong>, which stands for ‘space time’, and
+matches the names of similar functions in PostGIS.</p>
+</div>
+<div class="tip">
+<p>To view the metadata of a layer before bringing it into R, use
+<code>rgdal::ogrInfo()</code></p>
+</div>
+</div>
+<div id="importing-shapefiles" class="slide section level1">
+<h1>Importing Shapefiles</h1>
+<h2 id="shapefile-format">Shapefile format</h2>
+<div class="compact">
+<ul>
+<li>Old format dating back to the early 90s<br />
+</li>
+<li>Originally from ESRI</li>
+<li>Well-supported by nearly all GIS software<br />
+</li>
+<li>Actually requires 4-9 files with extensions <code>\*.shp</code>,
+<code>\*.shx</code>, <code>\*.prj</code>, <code>\*.dbf</code>,
+etc.<br />
+</li>
+<li>Often shared as a zip file</li>
+<li>Column names in attribute table limited to 10 characters<br />
+</li>
+<li>Better options available today<br />
+</li>
+</ul>
+</div>
+<p><br />
+</p>
+<h2 id="importing-a-shapefile">Importing a Shapefile</h2>
+<div class="indented1">
+<p><code>st_read(dsn, layer)</code></p>
+<div style="margin-left:4em;">
+<p><em>dsn</em> - directory, or shp filename<br />
+<em>layer</em> - shp filename (minus .shp), or omitted</p>
+</div>
+</div>
+<p><br />
+</p>
+<h2 id="example">Example:</h2>
+<div class="indented2 indented2r">
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>yose_bnd_ll <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="at">dsn=</span><span class="st">&quot;./data&quot;</span>, <span class="at">layer=</span><span class="st">&quot;yose_boundary&quot;</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="do">## This would also work:</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="do">## yose_bnd_ll &lt;- st_read(dsn=&quot;./data/yose_boundary.shp&quot;)</span></span></code></pre></div>
+<p><br />
+</p>
+<p>View contents:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>yose_bnd_ll</span></code></pre></div>
+<pre><code>## Simple feature collection with 1 feature and 11 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: -119.8864 ymin: 37.4947 xmax: -119.1964 ymax: 38.18515
+## Geodetic CRS:  North_American_Datum_1983
+##   UNIT_CODE
+## 1      YOSE
+##                                                                             GIS_NOTES
+## 1 Lands - http://landsnet.nps.gov/tractsnet/documents/YOSE/METADATA/yose_metadata.xml
+##                UNIT_NAME  DATE_EDIT STATE REGION GNIS_ID     UNIT_TYPE
+## 1 Yosemite National Park 2016-01-27    CA     PW  255923 National Park
+##   CREATED_BY                                               METADATA PARKNAME
+## 1      Lands http://nrdata.nps.gov/programs/Lands/YOSE_METADATA.xml Yosemite
+##                         geometry
+## 1 POLYGON ((-119.8456 37.8327...</code></pre>
+<p><br />
+</p>
+<p>Plot:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">plot</span>(yose_bnd_ll<span class="sc">$</span>geometry, <span class="at">axes=</span><span class="cn">TRUE</span>)</span></code></pre></div>
+<p><img src="slides_02_files/figure-slidy/unnamed-chunk-17-1.png" width="768" /></p>
+</div>
+<p><br />
+</p>
+</div>
+<div id="joining-tables" class="slide section level1">
+<h1>Joining Tables</h1>
+<h2 id="join-operations">Join operations</h2>
+<table class="tbl_compact">
+<tbody>
+<tr>
+<td style="text-align:left;width: 12em; ">
+join data frames on a column
+</td>
+<td style="text-align:left;font-family: monospace;">
+left_join(), right_join(), inner_join()
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 12em; ">
+stack data frames
+</td>
+<td style="text-align:left;font-family: monospace;">
+bind_rows()
+</td>
+</tr>
+</tbody>
+</table>
+<p><br />
+</p>
+<h2 id="join-tables-on-a-common-column">Join tables on a common
+column</h2>
+<p><img src="images/table_join01_820x442x256.png" /></p>
+<p>To join two data frames based on a common column, you can use:</p>
+<div class="indented1">
+<p><tt><strong>left_join(<em>x</em>, <em>y</em>,
+<em>by</em>)</strong></tt></p>
+</div>
+<p>where <em>x</em> and <em>y</em> are data frames, and <em>by</em> is
+the name of a column they have in common.</p>
+<div class="tip">
+<p>If there is only one column in common, and if it has the same name in
+both data frames, you can omit the <em>by</em> argument.</p>
+<p>If the common column is named differently in the two data frames, you
+can deal with that by passing a named vector as the <em>by</em>
+argument. See below.</p>
+</div>
+<!--- tip --->
+<p>To illustrate a table join, we’ll first import a csv with some fake
+data about the genetics of different iris species:</p>
+<div class="indented2 indented2r">
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="co"># Create a data frame with additional info about the three IRIS species</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>iris_genetics <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Species=</span><span class="fu">c</span>(<span class="st">&quot;setosa&quot;</span>, <span class="st">&quot;versicolor&quot;</span>, <span class="st">&quot;virginica&quot;</span>),</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>                          <span class="at">num_genes =</span> <span class="fu">c</span>(<span class="dv">42000</span>, <span class="dv">41000</span>, <span class="dv">43000</span>),</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>                          <span class="at">prp_alles_recessive =</span> <span class="fu">c</span>(<span class="fl">0.8</span>, <span class="fl">0.76</span>, <span class="fl">0.65</span>))</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>iris_genetics</span></code></pre></div>
+<pre><code>##      Species num_genes prp_alles_recessive
+## 1     setosa     42000                0.80
+## 2 versicolor     41000                0.76
+## 3  virginica     43000                0.65</code></pre>
+</div>
+<p>We can join these additional columns to the iris data frame with
+<code>left_join()</code>:</p>
+<div class="indented2 indented2r">
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>iris <span class="sc">|&gt;</span> </span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>  <span class="fu">left_join</span>(iris_genetics, <span class="at">by =</span> <span class="st">&quot;Species&quot;</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>)</span></code></pre></div>
+<pre><code>##    Sepal.Length Sepal.Width Petal.Length Petal.Width Species num_genes
+## 1           5.1         3.5          1.4         0.2  setosa     42000
+## 2           4.9         3.0          1.4         0.2  setosa     42000
+## 3           4.7         3.2          1.3         0.2  setosa     42000
+## 4           4.6         3.1          1.5         0.2  setosa     42000
+## 5           5.0         3.6          1.4         0.2  setosa     42000
+## 6           5.4         3.9          1.7         0.4  setosa     42000
+## 7           4.6         3.4          1.4         0.3  setosa     42000
+## 8           5.0         3.4          1.5         0.2  setosa     42000
+## 9           4.4         2.9          1.4         0.2  setosa     42000
+## 10          4.9         3.1          1.5         0.1  setosa     42000
+##    prp_alles_recessive
+## 1                  0.8
+## 2                  0.8
+## 3                  0.8
+## 4                  0.8
+## 5                  0.8
+## 6                  0.8
+## 7                  0.8
+## 8                  0.8
+## 9                  0.8
+## 10                 0.8</code></pre>
+</div>
+<p><br />
+</p>
+<div class="infobox">
+<p>If you need to join tables on multiple columns, add additional column
+names to the <code>by</code> argument.</p>
+<p>Join columns must be the same data type (i.e., both numeric or both
+character).</p>
+<p>There are several variants of <code>left_join()</code>, the most
+common being <strong><code>right_join()</code></strong> and
+<strong><code>inner_join()</code></strong>. See help for details.</p>
+</div>
+<!--- info-box --->
+<h2 id="joining-tables-when-the-column-name-is-different">Joining Tables
+When the Column Name is Different</h2>
+<p>If the join column is named differently in the two tables, you can
+pass a named character vector as the <code>by</code> argument. A named
+vector is a vector whose elements have been assigned names. You can
+construct a named vector with <code>c()</code>.</p>
+<p><img src="images/table_join02_820x442x256.png" /></p>
+<p>For example if the join column was named ‘<em>SpeciesName</em>’ in
+<em>x</em>, and just ‘<em>Species</em>’ in <em>y</em>, your expression
+would be:</p>
+<div class="indented2">
+<strong><code>left_join(x, y, by = c("SpeciesName" = "Species"))</code></strong>
+</div>
+<p><br />
+</p>
+</div>
+<div id="reshaping-data" class="slide section level1">
+<h1>Reshaping Data</h1>
+<p><img src="images/tidyr_240x277.png"
+style="width:140px; float:right;" /></p>
+<p><em>Reshaping</em> data includes:</p>
+<div class="compact">
+<ul>
+<li>turning rows into columns (aka pivot tables, cross tab query)<br />
+</li>
+<li>turning columns into rows</li>
+</ul>
+</div>
+<p>The go-to Tidyverse package for reshaping data frames is <a
+href="https://tidyr.tidyverse.org" target="_blank"
+rel="noopener"><tt><strong>tidyr</strong></tt></a></p>
+<p><br />
+</p>
+<div class="centerblock">
+<p><a href="https://rawgit.com/rstudio/cheatsheets/master/tidyr.pdf"
+target="_blank" rel="noopener"><img
+src="images/tidyr_cheatsheet_600x464x256.png"
+style="border:1px solid grey;" /></a></p>
+</div>
+<p><br />
+</p>
+</div>
+<div id="pivot-functions" class="slide section level1">
+<h1>Pivot Functions</h1>
+<div class="indented2" style="text-align:center;">
+<p><em><code>pivot_longer()</code></em><br />
+<img src="images/pivot_longer_566x212x256.png" /></p>
+<p><em><code>pivot_wider()</code></em><br />
+<img src="images/pivot_wider_674x336x256.png" /></p>
+</div>
+<p>More info and examples in the tidyr <a
+href="https://tidyr.tidyverse.org/articles/pivot.html" target="_blank"
+rel="noopener"><strong>Pivoting Vignette</strong></a></p>
+<p><br />
+</p>
+<p><br />
+</p>
+</div>
+<div id="exercise-2-import-and-map-voter-turnout-data"
+class="slide section level1">
+<h1>Exercise 2: Import and Map Voter Turnout Data</h1>
+<p>In this exercise, we will:</p>
+<div class="indented1 compact">
+<ol style="list-style-type: decimal">
+<li>import the 2020 voting tabulation districts (VTDs) for Camden County
+NJ from a Shapefile<br />
+</li>
+<li>import a CSV with voter turnout data from the 2020 primary
+election<br />
+</li>
+<li>join the tabular voter turnout data to the VTD polygons<br />
+</li>
+<li>save the data to disk (for use in other exercises)<br />
+</li>
+<li>map the voter turnout for the July 2020 primary<br />
+</li>
+<li>reshape the attribute table from a wide to long format<br />
+</li>
+<li>create facet maps (i.e., one map for each subset of the data)</li>
+</ol>
+</div>
+<p><br />
+</p>
+<div style="text-align:center; font-family:monospace; font-size:150%;">
+<p><a
+href="https://posit.cloud/content/8521414">https://posit.cloud/content/8521414</a></p>
+</div>
+</div>
+<div id="break" class="slide section level1">
+<h1>Break!</h1>
+<p><img src="images/stretch-break-1130x590x256.png"
+style="display:block; margin:1em auto; border:none;" /></p>
+</div>
+
+  <!-- dynamically load mathjax for compatibility with self-contained -->
+  <script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,194 @@
+---
+title: "Exercise 4. Areal Interpolation"
+subtitle: "Population Profiling with R, August 2024"
+format:
+  html:
+    df-print: paged
+    code-link: true
+    toc: true
+    toc-depth: 2
+    toc-expand: 2
+    number-sections: true
+    number-depth: 2
+editor: source
+---
+
+# Summary
+
+In this notebook, we will:
+
+- import voting tabulation districts (VTDs) for Camden County NJ that were in use in 2020
+- import voter turnout data for 2020
+- plot the voter turnout for the July 2020 primary by race
+
+This notebook will feature functions from the following packages:
+
+ - `areal`
+ - `sf`
+ - `dplyr`
+ - `ggplot`
+ - `patchwork`
+ 
+\
+
+# Setup
+
+Load the packages we need:
+
+```{r chunk01, results='hide'}
+library(sf)
+library(areal)
+library(ggplot2)
+library(patchwork)
+library(dplyr, warn.conflicts = FALSE)
+```
+
+Define the common directory where we'll save local copies:
+
+```{r chunk02}
+my_data_dir <- tools::R_user_dir("datafordemocracy", which = "data")
+if (!dir.exists(my_data_dir)) dir.create(my_data_dir, recursive = TRUE)
+tools::file_path_as_absolute(my_data_dir)
+```
+
+Import the county boundary for plotting:
+
+```{r chunk03}
+camden_bnd_sf <- readRDS(file.path(my_data_dir, "camden_bnd_sf.Rds"))
+```
+
+\
+
+# Areal Interpolation
+
+*Areal interpolation is the process making estimates from a source set of polygons to an overlapping but incongruent set of target polygons. This is required if, for example, a researcher wants to derive population estimates for neighborhoods in a U.S. city from the Census Bureau’s census tracts.* ([Chris Prener](https://chris-prener.github.io/areal/)).
+
+![](./images/areal-interpolation_600x240.png)
+
+The [`areal`](https://chris-prener.github.io/areal/) package does most of the heavy lifting for you, but requires that the target and source layers are:
+
+ 1. `sf` objects
+ 2. in projected coordinates
+
+## Estimate Voter Turnout by Ward
+
+We have voter turnout data for Camden County NJ for the July 2022 presidential primary election by VTD. But what if we need estimate by ward?
+
+Perhaps we want to give a prize to whichever Ward councilor had the most improved voter turnout. That's where Areal Interpolation comes in.
+
+First, import the VTD and ward polygon layers (which we created in previous exercises):
+
+```{r chunk04}
+exercise_data_dir <- here::here("exercises/data")
+camden_pri20_vto_vtd_sf  <- readRDS(file.path(exercise_data_dir, "camden_pri20_vto_vtd_sf.Rds"))
+camden_wards20_sf <- readRDS(file.path(exercise_data_dir, "camden_wards20_sf.Rds"))
+```
+
+\
+
+Next, plot them side-by-side:
+
+```{r chunk05}
+g1 <- ggplot(camden_pri20_vto_vtd_sf, aes(fill = pp20200707_pct_voted_all)) +
+  geom_sf() +
+  scale_fill_distiller(palette = "Greens", direction = 1) +
+  labs(title = "Percent Registered Voters Who Voted", 
+       subtitle = "By VTD, July 2020 Primary",
+       fill = "Percent") +
+  theme_void()
+
+g2 <- ggplot(camden_wards20_sf) + 
+  geom_sf() + 
+  geom_sf(data = camden_bnd_sf, fill = NA, lwd = 1.2) +
+  labs(title = "Camden County Wards, 2020") +
+  theme_void()
+
+## Display them side-by-side
+g1 | g2
+```
+
+## Project the Layers
+
+Next, we need to project these layers. We will project them in to *EPSG 3424 (NAD83 / New Jersey (ftUS))* which is used by the [NJ Office of GIS](https://njogis-newjersey.opendata.arcgis.com/).
+
+```{r chunk06}
+nj_epsg <- 3424
+
+camden_pri20vto_vtdprj_sf <- camden_pri20_vto_vtd_sf |> 
+  st_transform(nj_epsg)
+
+camden_wards20_prj_sf <- camden_wards20_sf |> 
+  st_transform(nj_epsg)
+
+camden_bnd_prj_sf <- camden_bnd_sf |> 
+  st_transform(nj_epsg)
+```
+
+\
+
+Now we can use `areal::aw_interpolate()`:
+
+::: {.callout-note title="intensive or extensive?"}
+
+If the variables you are trying to resample are percentages, pass their names to `intesnsive`.
+
+For count variables, use the `extensive` argument
+:::
+
+
+```{r chunk07}
+camden_wards20_vto_pct_sf <- camden_wards20_prj_sf |> 
+  st_make_valid() |> 
+  select(WARD_KEY, COUNTY, MUN_NAME) |> 
+  areal::aw_interpolate(tid = WARD_KEY, 
+                 source = camden_pri20vto_vtdprj_sf,
+                 sid = GEOID20,
+                 weight = "sum",
+                 output = "sf",
+                 intensive = "pp20200707_pct_voted_all") |> 
+  rename(PCT_VOTED_EST = pp20200707_pct_voted_all)
+```
+
+\
+
+Inspect the results:
+
+```{r chunk08}
+camden_wards20_vto_pct_sf |> head()
+```
+
+\
+
+Plot them side-by-side:
+
+```{r chunk09}
+g3 <- ggplot(camden_wards20_vto_pct_sf, aes(fill = PCT_VOTED_EST)) +
+  geom_sf() +
+  scale_fill_distiller(palette = "Greens", direction = 1) +
+  labs(title = "Percent Registered Voters Who Voted", 
+       subtitle = "By Ward, July 2020 Primary",
+       fill = "Percent") +
+  theme_void()
+
+g1 | g3
+```
+
+\
+
+## CHALLENGE
+
+Compute the total number of voters who voted by ward, and map them. [Solution](https://bit.ly/4fM1o4q)
+
+*HINT*: Remember that count variables require extensive interpolation.
+
+```{r}
+## Your answer here
+```
+
+
+Think of another variable and/or geography to resample spatially. 
+
+\
+
+# DONE!
+
